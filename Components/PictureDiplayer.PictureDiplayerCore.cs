@@ -31,12 +31,23 @@ namespace DispelTools.Components
             private readonly Pen dataTipPen;
             private readonly Brush dataTipBrush;
             private Color selectedPixel;
+            private Point selectedPixelCoords;
             private bool showHex = false;
+
+
+            //SELECTION
+            private bool selecting;
+            private Point selectStart;
+            private Point selectEnd;
 
             private ImageAnalyzer.DataAnalyzedBitmap.DataPixel selectedPixelData;
             public ImageAnalyzer.DataAnalyzedBitmap DataAnalyzedBitamp { private get; set; }
 
             private readonly PictureDiplayer pictureDisplayer;
+
+            private Bitmap Image => ((Bitmap)pictureDisplayer.Image);
+
+            public bool ShowDataTip { get; internal set; } = true;
 
             public PictureDiplayerCore(PictureDiplayer pictureDisplayer)
             {
@@ -117,7 +128,7 @@ namespace DispelTools.Components
             {
                 if (Image != null)
                 {
-                    if (e.Button == MouseButtons.Right)
+                    if (e.Button == MouseButtons.Right && !selecting)
                     {
                         Cursor.Current = Cursors.Hand;
                         panning = true;
@@ -125,9 +136,26 @@ namespace DispelTools.Components
                     }
                     else
                     {
-                        selectedPixel = Image.GetPixel(highlight.X, highlight.Y);
-                        selectedPixelData = DataAnalyzedBitamp?.GetPixel(highlight.X, highlight.Y);
-                        showHex = ModifierKeys == Keys.Shift;
+                        switch (pictureDisplayer.CurrentMouseMode)
+                        {
+                            case MouseMode.RectSelector:
+                            case MouseMode.RowSelector:
+                            {
+                                selectStart = selectEnd = ConvertToImageCoords(pointingAt);
+                                selecting = true;
+                            }
+                            break;
+                            case MouseMode.Pointer:
+                            default:
+                            {
+                                selectedPixel = Image.GetPixel(highlight.X, highlight.Y);
+                                selectedPixelData = DataAnalyzedBitamp?.GetPixel(highlight.X, highlight.Y);
+                                showHex = ModifierKeys == Keys.Shift;
+                                selectedPixelCoords = highlight;
+                                pictureDisplayer.PixelSelectedEvent?.Invoke(this, new PictureDiplayer.PixelSelectedArgs(selectedPixelCoords, selectedPixel));
+                            }
+                            break;
+                        }
                     }
                 }
             }
@@ -136,6 +164,7 @@ namespace DispelTools.Components
             {
                 Cursor.Current = Cursors.Default;
                 panning = false;
+                selecting = false;
             }
 
             public void MouseWheelAction(object sender, MouseEventArgs e)
@@ -167,7 +196,7 @@ namespace DispelTools.Components
 
             public void MouseMoveAction(object sender, MouseEventArgs e)
             {
-                if (pictureDisplayer.Image != null)
+                if (Image != null)
                 {
                     if (panning)
                     {
@@ -180,6 +209,10 @@ namespace DispelTools.Components
                     {
                         pointingAt = e.Location;
                         Highlight(ConvertToImageCoords(pointingAt));
+                    }
+                    if (selecting)
+                    {
+                        selectEnd = ConvertToImageCoords(pointingAt);
                     }
                     pictureDisplayer.Invalidate();
                 }
@@ -204,7 +237,7 @@ namespace DispelTools.Components
 
             public void PaintAction(object sender, PaintEventArgs e)
             {
-                if (pictureDisplayer.Image != null)
+                if (Image != null)
                 {
                     e.Graphics.Clear(Color.Transparent);
                     e.Graphics.DrawImage(pictureDisplayer.Image, new Rectangle(movingPoint, CalculateZoomedImageSize()));
@@ -214,16 +247,24 @@ namespace DispelTools.Components
                         var coords = ConvertToPictureBoxCoords(highlight);
                         e.Graphics.DrawRectangle(highlightPen, coords.X, coords.Y, zoom, zoom);
                     }
-                    if (ShowDataTip)
+                    if (pictureDisplayer.CurrentMouseMode != MouseMode.Pointer && selectStart != Point.Empty && selectEnd != Point.Empty)
+                    {
+                        DisplaySelection(e.Graphics);
+                    }
+                    if (ShowDataTip && pictureDisplayer.CurrentMouseMode == MouseMode.Pointer)
                     {
                         DisplayDataTip(e.Graphics);
                     }
                 }
             }
 
-            private Bitmap Image => ((Bitmap)pictureDisplayer.Image);
-
-            public bool ShowDataTip { get; internal set; } = true;
+            private void DisplaySelection(Graphics g)
+            {
+                var start = Point.Round(ConvertToPictureBoxCoords(selectStart));
+                var size = new Size(selectEnd.X - selectStart.X + 1, selectEnd.Y - selectStart.Y + 1);
+                var sizeScaled = new Size((int)(size.Width * zoomStepsTable[currentZoomStepNumber]), (int)(size.Height * zoomStepsTable[currentZoomStepNumber]));
+                g.DrawRectangle(highlightPen, new Rectangle(start, sizeScaled));
+            }
 
             private void DisplayDataTip(Graphics g)
             {

@@ -41,6 +41,7 @@ namespace DispelTools.ImageProcessing
         public bool HasPalette { get; private set; }
         public abstract void SetPallete(Color[] bytes);
         public abstract Color ProduceColor(byte[] bytes);
+        public abstract byte[] ProduceBytes(Color color);
 
         internal class RGB24 : ColorManagement
         {
@@ -50,6 +51,8 @@ namespace DispelTools.ImageProcessing
                 HasPalette = false;
                 HasTransparency = false;
             }
+
+            public override byte[] ProduceBytes(Color color) => new byte[] { color.R, color.G, color.B };
 
             public override Color ProduceColor(byte[] bytes)
             {
@@ -73,6 +76,8 @@ namespace DispelTools.ImageProcessing
                 HasTransparency = false;
             }
 
+            public override byte[] ProduceBytes(Color color) => new byte[] { color.B, color.G, color.R };
+
             public override Color ProduceColor(byte[] bytes)
             {
                 if (bytes.Length == BytesConsumed)
@@ -95,6 +100,7 @@ namespace DispelTools.ImageProcessing
                 HasTransparency = false;
             }
 
+            public override byte[] ProduceBytes(Color color) => new byte[] { color.R };
             public override Color ProduceColor(byte[] bytes)
             {
                 if (bytes.Length == BytesConsumed)
@@ -116,6 +122,7 @@ namespace DispelTools.ImageProcessing
                 HasPalette = false;
                 HasTransparency = false;
             }
+            public override byte[] ProduceBytes(Color color) => new byte[] { color.B, color.R };
 
             public override Color ProduceColor(byte[] bytes)
             {
@@ -142,6 +149,18 @@ namespace DispelTools.ImageProcessing
                 BytesConsumed = 2;
                 HasPalette = false;
                 HasTransparency = false;
+            }
+            public override byte[] ProduceBytes(Color color)
+            {
+                ushort red_masked = (ushort)((byte)(color.R >> 3) << 11);
+                ushort green_masked = (ushort)((byte)(color.G >> 2) << 5);
+                ushort blue_masked = (byte)(color.B >> 3);
+
+                ushort value = (ushort)((ushort)(red_masked + green_masked) + blue_masked);
+
+                byte byte0 = (byte)value;
+                byte byte1 = (byte)(value >> 8);
+                return new byte[] { byte0, byte1 };
             }
 
             public override Color ProduceColor(byte[] bytes)
@@ -180,6 +199,18 @@ namespace DispelTools.ImageProcessing
                 HasTransparency = false;
             }
 
+            public override byte[] ProduceBytes(Color color)
+            {
+                ushort red_masked = (ushort)((byte)(color.R >> 3) << 11);
+                ushort green_masked = (ushort)((byte)(color.G >> 2) << 5);
+                ushort blue_masked = (byte)(color.B >> 3);
+
+                ushort value = (ushort)((ushort)(red_masked + green_masked) + blue_masked);
+
+                byte byte0 = (byte)value;
+                byte byte1 = (byte)(value >> 8);
+                return new byte[] { byte0, byte1, 0, 0 };
+            }
             public override Color ProduceColor(byte[] bytes)
             {
                 if (bytes.Length == BytesConsumed)
@@ -214,6 +245,18 @@ namespace DispelTools.ImageProcessing
                 BytesConsumed = 2;
                 HasPalette = false;
                 HasTransparency = false;
+            }
+            public override byte[] ProduceBytes(Color color)
+            {
+                ushort red_masked = (ushort)((byte)(color.R >> 3) << 10);
+                ushort green_masked = (ushort)((byte)(color.G >> 3) << 5);
+                ushort blue_masked = (byte)(color.B >> 3);
+
+                ushort value = (ushort)((ushort)(red_masked + green_masked) + blue_masked);
+
+                byte byte0 = (byte)value;
+                byte byte1 = (byte)(value >> 8);
+                return new byte[] { byte0, byte1 };
             }
 
             public override Color ProduceColor(byte[] bytes)
@@ -276,6 +319,8 @@ namespace DispelTools.ImageProcessing
                     throw new ArgumentException($"Palette bytes number is incorrect. Got {colors.Length} expected 256");
                 }
             }
+
+            public override byte[] ProduceBytes(Color color) => new byte[] { (byte)Array.IndexOf(palette, color) };
         }
         internal class DATA32 : ColorManagement
         {
@@ -285,6 +330,8 @@ namespace DispelTools.ImageProcessing
                 HasPalette = false;
                 HasTransparency = false;
             }
+
+            public override byte[] ProduceBytes(Color color) => new byte[] { color.R, color.G, color.B, color.A };
 
             public override Color ProduceColor(byte[] bytes)
             {
@@ -316,12 +363,13 @@ namespace DispelTools.ImageProcessing
                 HasTransparency = true;
             }
 
+            public override byte[] ProduceBytes(Color color) => new byte[] { color.B, color.G, color.R, color.A };
+
             public override Color ProduceColor(byte[] bytes)
             {
                 if (bytes.Length == BytesConsumed)
                 {
                     return Color.FromArgb(bytes[3], bytes[2], bytes[1], bytes[0]);
-
                 }
                 else
                 {
@@ -331,7 +379,7 @@ namespace DispelTools.ImageProcessing
             public override void SetPallete(Color[] bytes) => throw new NotImplementedException();
         }
 
-        internal class ColorBytesNumberException : ArgumentException
+        public class ColorBytesNumberException : ArgumentException
         {
             internal static ColorBytesNumberException Create(int bytesLength, int bytesConsumed) => new ColorBytesNumberException($"Color bytes number is incorrect. Got {bytesLength} expected {bytesConsumed}");
 

@@ -17,13 +17,20 @@ namespace DispelTools.Common
 
         protected GCHandle BitsHandle { get; private set; }
 
+        public static DirectBitmap From(DirectBitmap bitmap)
+        {
+            var newBitmap = new DirectBitmap(bitmap.Width, bitmap.Height);
+            Array.Copy(bitmap.Bits, newBitmap.Bits, bitmap.Bits.Length);
+            return newBitmap;
+        }
+
         public DirectBitmap(int width, int height)
         {
             Width = width;
             Height = height;
             Bits = new int[width * height];
             BitsHandle = GCHandle.Alloc(Bits, GCHandleType.Pinned);
-            Bitmap = new Bitmap(width, height, width * 4, PixelFormat.Format32bppPArgb, BitsHandle.AddrOfPinnedObject());
+            Bitmap = new Bitmap(width, height, width * 4, PixelFormat.Format32bppArgb, BitsHandle.AddrOfPinnedObject());
         }
 
         public void SetPixel(int x, int y, Color colour)

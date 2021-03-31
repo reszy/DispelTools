@@ -11,7 +11,7 @@ namespace DispelTools.ImageAnalyzer
         public enum Analyzer { NONE, COLOR_LEVELS, VALUE_HIGHLIGHT, CHANNEL_VIEW };
         private Analyzer checkedAnalyzer;
         private bool oneChannelSelected;
-
+        public Analyzer CurrentAnalyzer { get => checkedAnalyzer; }
 
         internal event EventHandler AnalyzerChangedEvent;
 

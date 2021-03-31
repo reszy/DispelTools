@@ -24,6 +24,26 @@ namespace DispelTools.Components
 
         public InterpolationMode InterpolationMode { get; set; } = InterpolationMode.NearestNeighbor;
 
+        public struct PixelSelectedArgs
+        {
+            public PixelSelectedArgs(Point position, Color pixelColor)
+            {
+                Position = position;
+                PixelColor = pixelColor;
+            }
+
+            public Point Position { get; set; }
+            public Color PixelColor { get; set; }
+        }
+
+        public delegate void PixelSelectedHandler(object sender, PixelSelectedArgs point);
+
+        public event PixelSelectedHandler PixelSelectedEvent;
+
+        public enum MouseMode { Pointer, RectSelector, RowSelector };
+
+        public MouseMode CurrentMouseMode { get; set; }
+
         [DefaultValue(true)]
         public bool ToolTip { get => pictureDiplayerCore.ShowDataTip; set => pictureDiplayerCore.ShowDataTip = value; }
 

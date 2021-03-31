@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DispelTools.Components;
+using System;
 using System.IO;
 using System.Windows.Forms;
 
@@ -17,9 +18,14 @@ namespace DispelTools.ImageAnalyzer
         {
             InitializeComponent();
             imageAlignControls.OptionsChangedEvent += AutoAlign;
-            imageAnalyzeControls1.AnalyzerChangedEvent += RefreshImage;
+            imageAnalyzeControls.AnalyzerChangedEvent += RefreshImage;
+            imageEditControls.EditToolChangedEvent += SetSelection;
+            pictureDisplayer.PixelSelectedEvent += imageEditControls.PixelSelected;
 
             imageAnalyzerCore = new ImageAnalyzerCore();
+            imageEditControls.SetImages(ref imageAnalyzerCore);
+            imageEditControls.ChangesMadeEvent += RefreshImage;
+            imageAnalyzerCore.CreatedNewLayerEvent += RefreshImage;
         }
 
         private void openButton_Click(object sender, EventArgs e)
@@ -33,6 +39,7 @@ namespace DispelTools.ImageAnalyzer
                 filename = openDialog.FileName;
                 ready = true;
                 filenameLabel.Text = Path.GetFileNameWithoutExtension(filename);
+                imageAnalyzerCore.ClearAll();
             }
         }
 
@@ -57,15 +64,55 @@ namespace DispelTools.ImageAnalyzer
         {
             if (ready)
             {
-                imageAnalyzerCore.ApplyFilter(imageAnalyzeControls1.AnalyzePixel);
-                pictureDisplayer.SetImage(imageAnalyzerCore.FilteredImage, false, imageAnalyzerCore.RawImageAnalyzed);
+                if (imageAnalyzeControls.CurrentAnalyzer != ImageAnalyzeControls.Analyzer.NONE)
+                {
+                    imageAnalyzerCore.ApplyFilter(imageAnalyzeControls.AnalyzePixel);
+                    pictureDisplayer.SetImage(imageAnalyzerCore.FilteredImage.Bitmap, false, imageAnalyzerCore.RawImageAnalyzed);
+                }
+                else if (imageAnalyzerCore.EditedImage != null)
+                {
+                    pictureDisplayer.SetImage(imageAnalyzerCore.EditedImage.Bitmap, false, imageAnalyzerCore.RawImageAnalyzed);
+                }
+                else
+                {
+                    pictureDisplayer.SetImage(imageAnalyzerCore.RawImage.Bitmap, false, imageAnalyzerCore.RawImageAnalyzed);
+                }
+            }
+        }
+
+        private void SetSelection(object sender, EventArgs e)
+        {
+            switch (imageEditControls.CurrentEditTool)
+            {
+                case ImageEditControls.EditTool.ROW_SELECTOR:
+                    if (pictureDisplayer.CurrentMouseMode != PictureDiplayer.MouseMode.RectSelector)
+                    {
+                        pictureDisplayer.CurrentMouseMode = PictureDiplayer.MouseMode.RectSelector;
+                    }
+                    break;
+                case ImageEditControls.EditTool.RECT_SELECTOR:
+                    if (pictureDisplayer.CurrentMouseMode != PictureDiplayer.MouseMode.RowSelector)
+                    {
+                        pictureDisplayer.CurrentMouseMode = PictureDiplayer.MouseMode.RowSelector;
+                    }
+                    break;
+                case ImageEditControls.EditTool.NONE:
+                case ImageEditControls.EditTool.COLOR_PICKER:
+                case ImageEditControls.EditTool.PENCIL:
+                default:
+                    if (pictureDisplayer.CurrentMouseMode != PictureDiplayer.MouseMode.Pointer)
+                    {
+                        pictureDisplayer.CurrentMouseMode = PictureDiplayer.MouseMode.Pointer;
+                    }
+                    break;
             }
         }
 
         private void createImage(ImageAlignControls.Options options)
         {
+            imageEditControls.ColorManagmentChanged(options.colorMode);
             imageAnalyzerCore.LoadImage(filename, options);
-            pictureDisplayer.SetImage(imageAnalyzerCore.RawImage, true, imageAnalyzerCore.RawImageAnalyzed);
+            pictureDisplayer.SetImage(imageAnalyzerCore.RawImage.Bitmap, true, imageAnalyzerCore.RawImageAnalyzed);
             RefreshImage(null, EventArgs.Empty);
         }
 
@@ -83,6 +130,30 @@ namespace DispelTools.ImageAnalyzer
                 {
                     pictureDisplayer.Image.Save(saveDialog.FileName);
                 }
+            }
+        }
+
+        private void reloadButton_Click(object sender, EventArgs e)
+        {
+            imageAnalyzerCore.ClearAll();
+            createImage(imageAlignControls.ImageOptions);
+        }
+
+        private void overwriteButton_Click(object sender, EventArgs e)
+        {
+            if (imageAnalyzerCore.EditedImage == null) return;
+            string orginalBackup = filename + "orginalbackup.bak";
+            try
+            {
+                if (!File.Exists(orginalBackup))
+                {
+                    File.Copy(filename, orginalBackup);
+                }
+                imageAnalyzerCore.SaveEditedImage(filename);
+            }
+            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
+            {
+                MessageBox.Show($"Cannot write in directory {Path.GetDirectoryName(orginalBackup)}");
             }
         }
     }

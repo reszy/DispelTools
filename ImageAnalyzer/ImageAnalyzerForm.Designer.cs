@@ -36,12 +36,15 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.imageAlignControls = new DispelTools.ImageAnalyzer.ImageAlignControls();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.imageEditControls = new DispelTools.ImageAnalyzer.ImageEditControls();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.imageAnalyzeControls1 = new DispelTools.ImageAnalyzer.ImageAnalyzeControls();
-            this.button1 = new System.Windows.Forms.Button();
+            this.imageAnalyzeControls = new DispelTools.ImageAnalyzer.ImageAnalyzeControls();
+            this.overwriteButton = new System.Windows.Forms.Button();
             this.pictureDisplayer = new DispelTools.Components.PictureDiplayer();
+            this.reloadButton = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureDisplayer)).BeginInit();
             this.SuspendLayout();
@@ -80,7 +83,7 @@
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(120, 23);
             this.saveButton.TabIndex = 23;
-            this.saveButton.Text = "Save Image";
+            this.saveButton.Text = "Save Preview";
             this.saveButton.UseVisualStyleBackColor = true;
             this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
@@ -116,6 +119,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.imageEditControls);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -124,9 +128,17 @@
             this.tabPage2.Text = "Edit";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // imageEditControls
+            // 
+            this.imageEditControls.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imageEditControls.Location = new System.Drawing.Point(3, 3);
+            this.imageEditControls.Name = "imageEditControls";
+            this.imageEditControls.Size = new System.Drawing.Size(460, 384);
+            this.imageEditControls.TabIndex = 0;
+            // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.imageAnalyzeControls1);
+            this.tabPage3.Controls.Add(this.imageAnalyzeControls);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
@@ -135,27 +147,30 @@
             this.tabPage3.Text = "Analyze";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // imageAnalyzeControls1
+            // imageAnalyzeControls
             // 
-            this.imageAnalyzeControls1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.imageAnalyzeControls1.Location = new System.Drawing.Point(3, 3);
-            this.imageAnalyzeControls1.Name = "imageAnalyzeControls1";
-            this.imageAnalyzeControls1.Size = new System.Drawing.Size(460, 384);
-            this.imageAnalyzeControls1.TabIndex = 25;
+            this.imageAnalyzeControls.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imageAnalyzeControls.Location = new System.Drawing.Point(3, 3);
+            this.imageAnalyzeControls.Name = "imageAnalyzeControls";
+            this.imageAnalyzeControls.Size = new System.Drawing.Size(460, 384);
+            this.imageAnalyzeControls.TabIndex = 25;
             // 
-            // button1
+            // overwriteButton
             // 
-            this.button1.Location = new System.Drawing.Point(362, 564);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(120, 23);
-            this.button1.TabIndex = 28;
-            this.button1.Text = "Save File";
-            this.button1.UseVisualStyleBackColor = true;
+            this.overwriteButton.Location = new System.Drawing.Point(362, 564);
+            this.overwriteButton.Name = "overwriteButton";
+            this.overwriteButton.Size = new System.Drawing.Size(120, 23);
+            this.overwriteButton.TabIndex = 28;
+            this.overwriteButton.Text = "Overwrite File";
+            this.overwriteButton.UseVisualStyleBackColor = true;
+            this.overwriteButton.Click += new System.EventHandler(this.overwriteButton_Click);
             // 
             // pictureDisplayer
             // 
             this.pictureDisplayer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureDisplayer.CurrentMouseMode = DispelTools.Components.PictureDiplayer.MouseMode.Pointer;
             this.pictureDisplayer.Font = new System.Drawing.Font("Courier New", 10F);
+            this.pictureDisplayer.Image = null;
             this.pictureDisplayer.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
             this.pictureDisplayer.Location = new System.Drawing.Point(489, 9);
             this.pictureDisplayer.Margin = new System.Windows.Forms.Padding(0);
@@ -166,12 +181,23 @@
             this.pictureDisplayer.TabIndex = 0;
             this.pictureDisplayer.TabStop = false;
             // 
+            // reloadButton
+            // 
+            this.reloadButton.Location = new System.Drawing.Point(12, 535);
+            this.reloadButton.Name = "reloadButton";
+            this.reloadButton.Size = new System.Drawing.Size(75, 23);
+            this.reloadButton.TabIndex = 29;
+            this.reloadButton.Text = "Reload";
+            this.reloadButton.UseVisualStyleBackColor = true;
+            this.reloadButton.Click += new System.EventHandler(this.reloadButton_Click);
+            // 
             // ImageAnalyzerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1087, 632);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.reloadButton);
+            this.Controls.Add(this.overwriteButton);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.filenameLabel);
@@ -182,6 +208,7 @@
             this.Text = "ImageAnalyzer";
             this.tabControl.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureDisplayer)).EndInit();
             this.ResumeLayout(false);
@@ -201,8 +228,10 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
         private ImageAlignControls imageAlignControls;
-        private System.Windows.Forms.Button button1;
-        private ImageAnalyzeControls imageAnalyzeControls1;
+        private System.Windows.Forms.Button overwriteButton;
+        private ImageAnalyzeControls imageAnalyzeControls;
+        private ImageEditControls imageEditControls;
+        private System.Windows.Forms.Button reloadButton;
     }
 }
 

@@ -104,6 +104,7 @@
             // btlCheckBox
             // 
             this.btlCheckBox.AutoSize = true;
+            this.btlCheckBox.Enabled = false;
             this.btlCheckBox.Location = new System.Drawing.Point(1038, 388);
             this.btlCheckBox.Name = "btlCheckBox";
             this.btlCheckBox.Size = new System.Drawing.Size(46, 17);
@@ -115,6 +116,7 @@
             // bldgCheckBox
             // 
             this.bldgCheckBox.AutoSize = true;
+            this.bldgCheckBox.Enabled = false;
             this.bldgCheckBox.Location = new System.Drawing.Point(1038, 412);
             this.bldgCheckBox.Name = "bldgCheckBox";
             this.bldgCheckBox.Size = new System.Drawing.Size(55, 17);
@@ -139,6 +141,7 @@
             // tileDiplayer
             // 
             this.tileDiplayer.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.tileDiplayer.CurrentMouseMode = DispelTools.Components.PictureDiplayer.MouseMode.Pointer;
             this.tileDiplayer.Font = new System.Drawing.Font("Courier New", 10F);
             this.tileDiplayer.Image = null;
             this.tileDiplayer.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
@@ -162,6 +165,7 @@
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.pictureBox1.CurrentMouseMode = DispelTools.Components.PictureDiplayer.MouseMode.Pointer;
             this.pictureBox1.Font = new System.Drawing.Font("Courier New", 10F);
             this.pictureBox1.Image = null;
             this.pictureBox1.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;

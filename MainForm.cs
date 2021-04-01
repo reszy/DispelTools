@@ -111,5 +111,11 @@ namespace DispelTools
             selectMenuButton(sender);
             nestForm(new DataExtractor.ExtractorForm(new DataExtractor.RgbConverter.RgbConverterFactory()));
         }
+
+        private void gifCreatorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            selectMenuButton(sender);
+            nestForm(new GifCreator.GifCreatorForm());
+        }
     }
 }

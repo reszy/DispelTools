@@ -39,12 +39,13 @@ namespace DispelTools
             this.stringExtractorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mapImageExtractorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.allExtractorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rgbConverterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.simpleEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gifCreatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.contentPanel = new System.Windows.Forms.Panel();
-            this.rgbConverterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -64,6 +65,7 @@ namespace DispelTools
             this.analyzersToolStripMenuItem,
             this.extractorsToolStripMenuItem,
             this.editorsToolStripMenuItem,
+            this.gifCreatorToolStripMenuItem,
             this.exitToolStripMenuItem,
             this.exitToolStripMenuItem1});
             this.programToolStripMenuItem.Name = "programToolStripMenuItem";
@@ -103,7 +105,7 @@ namespace DispelTools
             // 
             this.imageExtractorToolStripMenuItem.CheckOnClick = true;
             this.imageExtractorToolStripMenuItem.Name = "imageExtractorToolStripMenuItem";
-            this.imageExtractorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.imageExtractorToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.imageExtractorToolStripMenuItem.Text = "ImageExtractor";
             this.imageExtractorToolStripMenuItem.Click += new System.EventHandler(this.imageExtractorToolStripMenuItem_Click);
             // 
@@ -111,7 +113,7 @@ namespace DispelTools
             // 
             this.soundExtractorToolStripMenuItem.CheckOnClick = true;
             this.soundExtractorToolStripMenuItem.Name = "soundExtractorToolStripMenuItem";
-            this.soundExtractorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.soundExtractorToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.soundExtractorToolStripMenuItem.Text = "SoundExtractor";
             this.soundExtractorToolStripMenuItem.Click += new System.EventHandler(this.soundExtractorToolStripMenuItem_Click);
             // 
@@ -119,7 +121,7 @@ namespace DispelTools
             // 
             this.stringExtractorToolStripMenuItem.CheckOnClick = true;
             this.stringExtractorToolStripMenuItem.Name = "stringExtractorToolStripMenuItem";
-            this.stringExtractorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.stringExtractorToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.stringExtractorToolStripMenuItem.Text = "StringExtractor";
             this.stringExtractorToolStripMenuItem.Click += new System.EventHandler(this.stringExtractorToolStripMenuItem_Click);
             // 
@@ -127,7 +129,7 @@ namespace DispelTools
             // 
             this.mapImageExtractorToolStripMenuItem.CheckOnClick = true;
             this.mapImageExtractorToolStripMenuItem.Name = "mapImageExtractorToolStripMenuItem";
-            this.mapImageExtractorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mapImageExtractorToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.mapImageExtractorToolStripMenuItem.Text = "MapImageExtractor";
             this.mapImageExtractorToolStripMenuItem.Click += new System.EventHandler(this.mapImageExtractorToolStripMenuItem_Click);
             // 
@@ -135,9 +137,16 @@ namespace DispelTools
             // 
             this.allExtractorToolStripMenuItem.CheckOnClick = true;
             this.allExtractorToolStripMenuItem.Name = "allExtractorToolStripMenuItem";
-            this.allExtractorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.allExtractorToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.allExtractorToolStripMenuItem.Text = "AllExtractor";
             this.allExtractorToolStripMenuItem.Click += new System.EventHandler(this.allExtractorToolStripMenuItem_Click);
+            // 
+            // rgbConverterToolStripMenuItem
+            // 
+            this.rgbConverterToolStripMenuItem.Name = "rgbConverterToolStripMenuItem";
+            this.rgbConverterToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.rgbConverterToolStripMenuItem.Text = "RgbConverter";
+            this.rgbConverterToolStripMenuItem.Click += new System.EventHandler(this.rgbConverterToolStripMenuItem_Click);
             // 
             // editorsToolStripMenuItem
             // 
@@ -154,6 +163,14 @@ namespace DispelTools
             this.simpleEditorToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.simpleEditorToolStripMenuItem.Text = "SimpleEditor";
             this.simpleEditorToolStripMenuItem.Click += new System.EventHandler(this.simpleEditorToolStripMenuItem_Click);
+            // 
+            // gifCreatorToolStripMenuItem
+            // 
+            this.gifCreatorToolStripMenuItem.CheckOnClick = true;
+            this.gifCreatorToolStripMenuItem.Name = "gifCreatorToolStripMenuItem";
+            this.gifCreatorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.gifCreatorToolStripMenuItem.Text = "GifCreator";
+            this.gifCreatorToolStripMenuItem.Click += new System.EventHandler(this.gifCreatorToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
@@ -179,13 +196,6 @@ namespace DispelTools
             this.contentPanel.Size = new System.Drawing.Size(484, 137);
             this.contentPanel.TabIndex = 1;
             this.contentPanel.Resize += new System.EventHandler(this.contentPanel_Resize);
-            // 
-            // rgbConverterToolStripMenuItem
-            // 
-            this.rgbConverterToolStripMenuItem.Name = "rgbConverterToolStripMenuItem";
-            this.rgbConverterToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.rgbConverterToolStripMenuItem.Text = "RgbConverter";
-            this.rgbConverterToolStripMenuItem.Click += new System.EventHandler(this.rgbConverterToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -225,6 +235,7 @@ namespace DispelTools
         private System.Windows.Forms.ToolStripMenuItem editorsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem simpleEditorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rgbConverterToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem gifCreatorToolStripMenuItem;
     }
 }
 

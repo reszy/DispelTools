@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO.Abstractions;
 
 namespace DispelTools.DataExtractor
 {
     public class ExtractionManager
     {
+        public IFileSystem fs;
         private readonly BackgroundWorker backgroundWorker;
         private readonly List<string> filenames;
         private readonly string outputDirectory;
@@ -18,8 +20,9 @@ namespace DispelTools.DataExtractor
 
         public enum ExtractorType { MULTI_FILE, DIRECTORY }
 
-        public ExtractionManager(Extractor extractor, List<string> filenames, string outputDirectory, BackgroundWorker backgroundWorker)
+        public ExtractionManager(IFileSystem fs, Extractor extractor, List<string> filenames, string outputDirectory, BackgroundWorker backgroundWorker)
         {
+            this.fs = fs;
             this.backgroundWorker = backgroundWorker;
             if (backgroundWorker != null)
             {
@@ -28,6 +31,11 @@ namespace DispelTools.DataExtractor
             this.filenames = filenames;
             this.outputDirectory = outputDirectory;
             this.extractor = extractor;
+        }
+
+        public ExtractionManager(Extractor extractor, List<string> filenames, string outputDirectory, BackgroundWorker backgroundWorker)
+            : this(new FileSystem(), extractor, filenames, outputDirectory, backgroundWorker)
+        {
         }
 
         public void RaportFileCreatedDetail(ExtractionFileProcess process, string filename)
@@ -44,10 +52,7 @@ namespace DispelTools.DataExtractor
             progress.CompleteStatus(currentFileInProcess, filesAtStartCount);
             backgroundWorker.ReportProgress(0, progress);
         }
-        public void ReportDetail(SimpleDetail detail)
-        {
-            backgroundWorker.ReportProgress(0, detail);
-        }
+        public void ReportDetail(SimpleDetail detail) => backgroundWorker.ReportProgress(0, detail);
 
         public void Start()
         {

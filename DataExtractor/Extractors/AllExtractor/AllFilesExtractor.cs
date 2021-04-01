@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -9,9 +10,17 @@ namespace DispelTools.DataExtractor.AllExtractor
 {
     public class AllFilesExtractor : Extractor
     {
+        public AllFilesExtractor()
+        {
+        }
+
+        public AllFilesExtractor(IFileSystem fs) : base(fs)
+        {
+        }
+
         public override void ExtractFile(ExtractionFileProcess process)
         {
-            Directory.CreateDirectory(process.OutputDirectory);
+            fs.Directory.CreateDirectory(process.OutputDirectory);
             switch (process.Extension.ToLower())
             {
                 case ".spr":
@@ -45,8 +54,8 @@ namespace DispelTools.DataExtractor.AllExtractor
             if (isDispelDirectory(gameDirectory))
             {
                 return GetAllFiles(gameDirectory)
-                    .Where(file => fileExtensions.Contains(Path.GetExtension(file)))
-                    .OrderBy(file => Path.GetExtension(file).ToLower())
+                    .Where(file => fileExtensions.Contains(fs.Path.GetExtension(file.ToLower())))
+                    .OrderBy(file => fs.Path.GetExtension(file).ToLower())
                     .Select(file => new ExtractionFile(file, CreateOutputDirectoryName(file.Replace(gameDirectory, outputDirectory))))
                     .ToList();
             }
@@ -60,10 +69,10 @@ namespace DispelTools.DataExtractor.AllExtractor
         private string CreateOutputDirectoryName(string path)
         {
             string[] mapFileExtensions = new string[] { ".map", ".btl", ".gtl" };
-            string directory = Path.GetDirectoryName(path);
-            if (mapFileExtensions.Contains(Path.GetExtension(path)))
+            string directory = fs.Path.GetDirectoryName(path);
+            if (mapFileExtensions.Contains(fs.Path.GetExtension(path)))
             {
-                return Path.Combine(directory, Path.GetFileName(path).Replace(".", "_"));
+                return fs.Path.Combine(directory, fs.Path.GetFileName(path).Replace(".", "_"));
             }
             else
             {
@@ -73,13 +82,13 @@ namespace DispelTools.DataExtractor.AllExtractor
 
         private bool isDispelDirectory(string gameDirectory)
         {
-            string[] filesInDirectory = Directory.GetFiles(gameDirectory);
-            string[] directoriesInDirectory = Directory.GetDirectories(gameDirectory);
-            return filesInDirectory.Select(path => Path.GetFileName(path))
+            string[] filesInDirectory = fs.Directory.GetFiles(gameDirectory);
+            string[] directoriesInDirectory = fs.Directory.GetDirectories(gameDirectory);
+            return filesInDirectory.Select(path => fs.Path.GetFileName(path))
                 .Where(file => file == "Dispel.exe" || file == "AllMap.ini")
                 .Count() == 2
                 &&
-                directoriesInDirectory.Select(path => Path.GetFileName(path))
+                directoriesInDirectory.Select(path => fs.Path.GetFileName(path))
                 .Where(dir => dir == "CharacterInGame" || dir == "Main")
                 .Count() == 2;
         }
@@ -90,8 +99,8 @@ namespace DispelTools.DataExtractor.AllExtractor
             {
                 return new List<string>();
             }
-            var files = Directory.GetFiles(directory).ToList();
-            string[] directories = Directory.GetDirectories(directory);
+            var files = fs.Directory.GetFiles(directory).ToList();
+            string[] directories = fs.Directory.GetDirectories(directory);
 
             foreach (string downDirectory in directories)
             {

@@ -22,7 +22,7 @@ namespace DispelTools.DataExtractor.ImageExtractor
                 if (calculatedArea == area && area > 1 && x < 40000 && y < 40000 && x > 1 && y > 1 && file.BaseStream.Position + (area * 2) < file.BaseStream.Length)
                 {
                     string createdFileName = ReadImage(process, file, x, y, area, $"{process.Filename}.{i++}");
-                    file.BaseStream.Seek(nextCheckPosition, SeekOrigin.Begin);
+                    //file.BaseStream.Seek(nextCheckPosition, SeekOrigin.Begin); don't need that, condition is enough to find all
                     process.Extractor.RaportFileCreatedDetail(process, createdFileName);
                 }
                 else

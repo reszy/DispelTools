@@ -11,9 +11,6 @@ namespace DispelTools
         {
             InitializeComponent();
             Text = title;
-            //nestForm(new DataExtractor.ExtractorForm(new DataExtractor.MapImageExtractor.MapImageExtractorFactory()));
-            nestForm(new Viewers.MapViewer.MapViewerForm());
-            //simpleEditorToolStripMenuItem_Click(simpleEditorToolStripMenuItem, EventArgs.Empty);
         }
 
         private void nestForm(Form embeddedForm)
@@ -116,6 +113,12 @@ namespace DispelTools
         {
             selectMenuButton(sender);
             nestForm(new GifCreator.GifCreatorForm());
+        }
+
+        private void mapViewerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            selectMenuButton(sender);
+            nestForm(new Viewers.MapViewer.MapViewerForm());
         }
     }
 }

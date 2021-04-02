@@ -46,6 +46,7 @@ namespace DispelTools
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.contentPanel = new System.Windows.Forms.Panel();
+            this.mapViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,6 +66,7 @@ namespace DispelTools
             this.analyzersToolStripMenuItem,
             this.extractorsToolStripMenuItem,
             this.editorsToolStripMenuItem,
+            this.mapViewerToolStripMenuItem,
             this.gifCreatorToolStripMenuItem,
             this.exitToolStripMenuItem,
             this.exitToolStripMenuItem1});
@@ -197,6 +199,14 @@ namespace DispelTools
             this.contentPanel.TabIndex = 1;
             this.contentPanel.Resize += new System.EventHandler(this.contentPanel_Resize);
             // 
+            // mapViewerToolStripMenuItem
+            // 
+            this.mapViewerToolStripMenuItem.CheckOnClick = true;
+            this.mapViewerToolStripMenuItem.Name = "mapViewerToolStripMenuItem";
+            this.mapViewerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mapViewerToolStripMenuItem.Text = "MapViewer";
+            this.mapViewerToolStripMenuItem.Click += new System.EventHandler(this.mapViewerToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -236,6 +246,7 @@ namespace DispelTools
         private System.Windows.Forms.ToolStripMenuItem simpleEditorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rgbConverterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gifCreatorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mapViewerToolStripMenuItem;
     }
 }
 

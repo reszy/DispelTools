@@ -1,4 +1,5 @@
 ﻿using DispelTools.Components.CustomPropertyGridControl;
+using DispelTools.DataEditor.Mappers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -46,6 +47,34 @@ namespace DispelTools.DataEditor
             if (filenameWithExtension.ToUpper().StartsWith("NPC") && filenameWithExtension.ToUpper().EndsWith("REF"))
             {
                 return new NpcRefMapper();
+            }
+            if (filenameWithExtension.ToUpper().StartsWith("MON") && filenameWithExtension.ToUpper().EndsWith("REF"))
+            {
+                return new MonRefMapper();
+            }
+            if (filenameWithExtension.ToUpper().Equals("EDITITEM.DB"))
+            {
+                return new EditItemDbMapper();
+            }
+            if (filenameWithExtension.ToUpper().Equals("HEALITEM.DB"))
+            {
+                return new HealItemDbMapper();
+            }
+            if (filenameWithExtension.ToUpper().Equals("EVENTITEM.DB"))
+            {
+                return new EventItemDbMapper();
+            }
+            if (filenameWithExtension.ToUpper().Equals("MISCITEM.DB"))
+            {
+                return new MiscItemDbMapper();
+            }
+            if (filenameWithExtension.ToUpper().Equals("WEAPONITEM.DB"))
+            {
+                return new WeaponItemDbMapper();
+            }
+            if (filenameWithExtension.ToUpper().Equals("STORE.DB"))
+            {
+                return new StoreDbMapper();
             }
 
             throw new ArgumentException($"No mapper found for {filenameWithExtension}");

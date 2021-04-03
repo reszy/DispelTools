@@ -8,13 +8,12 @@ namespace DispelTools.Components.CustomPropertyGridControl
     public partial class CustomPropertyGrid : UserControl
     {
         private PropertyItem selectedItem;
-
+        private readonly List<Row> rows = new List<Row>();
 
         public CustomPropertyGrid()
         {
             InitializeComponent();
         }
-
 
         public PropertyItem SelectedItem { get => selectedItem; set => SelectItem(value); }
 
@@ -29,7 +28,7 @@ namespace DispelTools.Components.CustomPropertyGridControl
             {
                 for (int i = 0; i< propertyItem.Count; i++) {
                     var row = new Row(ref selectedItem, i, this);
-                    Controls.Add(row);
+                    rows.Add(row);
                 }
             }
             EndControlUpdate();
@@ -39,10 +38,11 @@ namespace DispelTools.Components.CustomPropertyGridControl
 
         private void ClearFields()
         {
-            for (int i = 0; i < Controls.Count; i++)
+            for (int i = 0; i < rows.Count; i++)
             {
-                (Controls[i] as Row).DisposeAll();
+                rows[i].DisposeAll();
             }
+            rows.Clear();
             Controls.Clear();
         }
 

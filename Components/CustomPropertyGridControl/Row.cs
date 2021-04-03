@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 
 namespace DispelTools.Components.CustomPropertyGridControl
 {
-    public partial class Row : UserControl
+    public class Row
     {
-        private readonly PropertyItem all;
+        private PropertyItem all;
+        private CustomPropertyGrid parent;
+
         private int number;
         private readonly Field field;
         private readonly int fieldHeight;
@@ -15,32 +18,32 @@ namespace DispelTools.Components.CustomPropertyGridControl
         private readonly Button resetButton;
         private readonly NumericUpDown numericControl;
         private readonly TextBox textControl;
-        private readonly ToolTip toolTip;
 
         private Field FieldRef => all[number];
-        public Row(ref PropertyItem item, int number, UserControl parent)
+
+        public Point Location { get; set; }
+        public Size Size{ get; set; }
+        public Font Font { get; set; }
+        public Row(ref PropertyItem item, int number, CustomPropertyGrid parent)
         {
             all = item;
+            this.parent = parent;
             this.number = number;
             field = item[number];
+            Font = parent.Font;
             bolden = new Font(Font, FontStyle.Bold);
             fieldHeight = Font.Height + 6;
-            toolTip = new ToolTip();
 
-            InitializeComponent();
             Location = new Point(parent.AutoScrollPosition.X, fieldHeight * number + parent.AutoScrollPosition.Y);
-            Size = new Size(parent.Size.Width - 4, fieldHeight);
-            Anchor = AnchorStyles.Top | AnchorStyles.Left;
-
-            SuspendLayout();
+            Size = new Size(parent.Size.Width - 4 - parent.AutoScrollMinSize.Width, fieldHeight);
 
             {
                 var controlSize = new Size(Size.Width / 2, fieldHeight);
                 var resetButtonSize = new Size(Font.Height + 3, fieldHeight - 2);
-                var labelPosition = new Point(0, 0);
+                var labelPosition = Location;
                 var labelSize = new Size(controlSize.Width - (field.ReadOnly ? 0 : resetButtonSize.Width), fieldHeight);
-                var resetButtonPosition = new Point(labelSize.Width, 0);
-                var controlPosition = new Point(controlSize.Width, 0);
+                var resetButtonPosition = new Point(Location.X + labelSize.Width, Location.Y);
+                var controlPosition = new Point(Location.X + controlSize.Width, Location.Y);
 
                 label = new Label()
                 {
@@ -53,8 +56,8 @@ namespace DispelTools.Components.CustomPropertyGridControl
                     Anchor = AnchorStyles.Top | AnchorStyles.Left,
                     AutoEllipsis = true
                 };
-                toolTip.SetToolTip(label, field.Name);
-                Controls.Add(label);
+                parent.toolTip.SetToolTip(label, field.Name);
+                parent.Controls.Add(label);
 
                 if (!field.ReadOnly)
                 {
@@ -70,8 +73,8 @@ namespace DispelTools.Components.CustomPropertyGridControl
                         Anchor = AnchorStyles.Top | AnchorStyles.Left
                     };
                     resetButton.Click += ResetValue;
-                    Controls.Add(resetButton);
-                    toolTip.SetToolTip(resetButton, "Reset value");
+                    parent.Controls.Add(resetButton);
+                    parent.toolTip.SetToolTip(resetButton, "Reset value");
                 }
 
                 if (field.Type != Field.FieldType.ASCII)
@@ -80,9 +83,9 @@ namespace DispelTools.Components.CustomPropertyGridControl
                     numericControl = new NumericUpDown()
                     {
                         Name = field.Name,
-                        Maximum = int.MaxValue,
-                        Minimum = int.MinValue,
-                        Value = new decimal((int)field.Value),
+                        Maximum =  field.MaxValue,
+                        Minimum = field.MinValue,
+                        Value = field.DecimalValue,
                         Location = controlPosition,
                         Size = controlSize,
                         Enabled = !field.ReadOnly,
@@ -90,7 +93,7 @@ namespace DispelTools.Components.CustomPropertyGridControl
                         Anchor = AnchorStyles.Top | AnchorStyles.Left
                     };
                     numericControl.ValueChanged += NumberValueChanged;
-                    Controls.Add(numericControl);
+                    parent.Controls.Add(numericControl);
                 }
                 else
                 {
@@ -98,18 +101,16 @@ namespace DispelTools.Components.CustomPropertyGridControl
                     textControl = new TextBox()
                     {
                         Name = field.Name,
-                        Text = field.Value.ToString(),
+                        Text =  field.Value.ToString(),
                         Location = controlPosition,
                         Size = controlSize,
                         Enabled = !field.ReadOnly,
                         Anchor = AnchorStyles.Top | AnchorStyles.Left
                     };
                     textControl.TextChanged += TextValueChanged;
-                    Controls.Add(textControl);
+                    parent.Controls.Add(textControl);
                 }
-
             }
-            ResumeLayout(false);
         }
 
         private string GetResetButtonText() => !Equals(FieldRef.Value, FieldRef.DefaultValue) ? "●" : "○";
@@ -130,7 +131,7 @@ namespace DispelTools.Components.CustomPropertyGridControl
 
         private void NumberValueChanged(object sender, EventArgs e)
         {
-            if (numericControl.Value == new decimal((int)field.DefaultValue))
+            if (numericControl.Value == field.DecimalDefaultValue)
             {
                 numericControl.Font = Font;
             }
@@ -138,7 +139,7 @@ namespace DispelTools.Components.CustomPropertyGridControl
             {
                 numericControl.Font = bolden;
             }
-            FieldRef.Value = (int)numericControl.Value;
+            FieldRef.Value = numericControl.Value;
             resetButton.Text = GetResetButtonText();
         }
 
@@ -148,7 +149,7 @@ namespace DispelTools.Components.CustomPropertyGridControl
             {
                 if (numericControl != null)
                 {
-                    numericControl.Value = new decimal((int)field.DefaultValue);
+                    numericControl.Value = field.DecimalDefaultValue;
                     NumberValueChanged(sender, EventArgs.Empty);
                 }
                 if (textControl != null)
@@ -161,12 +162,18 @@ namespace DispelTools.Components.CustomPropertyGridControl
 
         public void DisposeAll()
         {
+            parent.toolTip.SetToolTip(label,null);
+            if (resetButton != null)
+            {
+                parent.toolTip.SetToolTip(resetButton, null);
+            }
             label.Dispose();
             resetButton?.Dispose();
             textControl?.Dispose();
             numericControl?.Dispose();
-            toolTip?.Dispose();
             bolden.Dispose();
+            parent = null;
+            all = null;
         }
     }
 

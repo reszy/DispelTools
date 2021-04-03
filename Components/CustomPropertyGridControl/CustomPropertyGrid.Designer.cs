@@ -18,6 +18,7 @@ namespace DispelTools.Components.CustomPropertyGridControl
             {
                 components.Dispose();
             }
+            ClearFields();
             base.Dispose(disposing);
         }
 
@@ -65,21 +66,23 @@ namespace DispelTools.Components.CustomPropertyGridControl
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // CustomPropertyGrid
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.AutoScrollMinSize = new System.Drawing.Size(20, 20);
             this.BackColor = System.Drawing.SystemColors.Window;
             this.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.Name = "CustomPropertyGrid";
             this.Size = new System.Drawing.Size(217, 257);
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        internal System.Windows.Forms.ToolTip toolTip;
     }
 }

@@ -75,12 +75,7 @@
     </Compile>
     <Compile Include="Components\CustomPropertyGridControl\Field.cs" />
     <Compile Include="Components\CustomPropertyGridControl\PropertyItem.cs" />
-    <Compile Include="Components\CustomPropertyGridControl\Row.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Components\CustomPropertyGridControl\Row.Designer.cs">
-      <DependentUpon>Row.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Components\CustomPropertyGridControl\Row.cs" />
     <Compile Include="Components\DetailsComponent.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -99,8 +94,16 @@
     <Compile Include="Components\ProgressBarWithText.Designer.cs">
       <DependentUpon>ProgressBarWithText.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataEditor\ItemFieldDescriptor.cs" />
+    <Compile Include="DataEditor\Mappers\StoreDbMapper.cs" />
+    <Compile Include="DataEditor\Mappers\MiscItemDbMapper.cs" />
+    <Compile Include="DataEditor\Mappers\WeaponItemDbMapper.cs" />
+    <Compile Include="DataEditor\Mappers\EventItemDbMapper.cs" />
+    <Compile Include="DataEditor\Mappers\HealItemDbMapper.cs" />
+    <Compile Include="DataEditor\Mappers\EditItemDbMapper.cs" />
     <Compile Include="DataEditor\Mapper.cs" />
-    <Compile Include="DataEditor\NpcRefMapper.cs" />
+    <Compile Include="DataEditor\Mappers\MonRefMapper.cs" />
+    <Compile Include="DataEditor\Mappers\NpcRefMapper.cs" />
     <Compile Include="DataEditor\SimpleEditor.cs" />
     <Compile Include="DataEditor\SimpleEditorForm.cs">
       <SubType>Form</SubType>
@@ -191,9 +194,6 @@
     <Compile Include="Viewers\MapViewer\TileSet.cs" />
     <EmbeddedResource Include="Components\CustomPropertyGridControl\CustomPropertyGrid.resx">
       <DependentUpon>CustomPropertyGrid.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Components\CustomPropertyGridControl\Row.resx">
-      <DependentUpon>Row.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Components\DetailsComponent.resx">
       <DependentUpon>DetailsComponent.cs</DependentUpon>

@@ -19,7 +19,7 @@ namespace DispelTools.DataEditor
         {
             var openDialog = new OpenFileDialog()
             {
-                Filter = "REF files|*.ref",
+                Filter = "All handled|*.ref;*.REF;*.db;*.DB|Reference files|*.ref;*.REF|Database file|*.db;*.DB",
                 Multiselect = false
             };
             openDialog.ShowDialog();

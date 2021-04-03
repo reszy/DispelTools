@@ -40,7 +40,6 @@ namespace DispelTools.Components.CustomPropertyGridControl
                 {
                     Name = $"exField{i + 1}",
                     Value = 1,
-                    DefaultValue = 1,
                     ReadOnly = false
                 });
             }

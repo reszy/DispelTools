@@ -24,9 +24,22 @@ namespace DispelTools.DataEditor.Mappers
                 createDescriptor(ItemFieldDescriptor.AsInt32()),
                 createDescriptor(ItemFieldDescriptor.AsInt32()),
                 createDescriptor(ItemFieldDescriptor.AsInt32()),
-                createDescriptor(ItemFieldDescriptor.AsInt32()),
-                createDescriptor(ItemFieldDescriptor.AsInt32()),
-                createDescriptor(ItemFieldDescriptor.AsInt32()),
+
+                createDescriptor("LootSlot1 itemId",ItemFieldDescriptor.AsByte()),
+                createDescriptor("LootSlot1 itemType",ItemFieldDescriptor.AsByte()),
+                createDescriptor(ItemFieldDescriptor.AsByte()),
+                createDescriptor(ItemFieldDescriptor.AsByte()),
+
+                createDescriptor("LootSlot2 itemId",ItemFieldDescriptor.AsByte()),
+                createDescriptor("LootSlot2 itemType",ItemFieldDescriptor.AsByte()),
+                createDescriptor(ItemFieldDescriptor.AsByte()),
+                createDescriptor(ItemFieldDescriptor.AsByte()),
+
+                createDescriptor("LootSlot3 itemId",ItemFieldDescriptor.AsByte()),
+                createDescriptor("LootSlot3 itemType",ItemFieldDescriptor.AsByte()),
+                createDescriptor(ItemFieldDescriptor.AsByte()),
+                createDescriptor(ItemFieldDescriptor.AsByte()),
+
                 createDescriptor(ItemFieldDescriptor.AsInt32()),
                 createDescriptor(ItemFieldDescriptor.AsInt32())
             };

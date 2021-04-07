@@ -1,6 +1,6 @@
 ﻿using DispelTools.Components.CustomPropertyGridControl;
+using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace DispelTools.DataEditor
 {
@@ -21,18 +21,19 @@ namespace DispelTools.DataEditor
         public static FieldType AsByte() => new ByteField();
         public static FieldType AsInt32() => new Int32Field();
         public static FieldType AsInt16() => new Int16Field();
-        public static FieldType AsFixedString(int stringMaxLength, byte filler) => new FixedStringField(stringMaxLength, filler);
+        public static FieldType AsFixedString(int stringMaxLength, byte filler) => AsFixedString(stringMaxLength, filler, Field.DisplayType.TEXT_PL);
+        public static FieldType AsFixedString(int stringMaxLength, byte filler, Field.DisplayType encoding) => new FixedStringField(stringMaxLength, filler, encoding);
         public static FieldType AsByteArray(int length) => new ByteArrayField(length);
         public interface FieldType
         {
-            Field.FieldType VisualFieldType { get; }
+            Field.DisplayType VisualFieldType { get; }
             object Read(BinaryReader reader);
 
             void Write(BinaryWriter writer, object value);
         }
         private class ByteField : FieldType
         {
-            public Field.FieldType VisualFieldType => Field.FieldType.HEX;
+            public Field.DisplayType VisualFieldType => Field.DisplayType.HEX;
 
             public object Read(BinaryReader reader) => reader.ReadByte();
             public void Write(BinaryWriter writer, object value) => writer.Write((byte)value);
@@ -46,29 +47,21 @@ namespace DispelTools.DataEditor
                 this.length = length;
             }
 
-            public Field.FieldType VisualFieldType => Field.FieldType.ASCII;
+            public Field.DisplayType VisualFieldType => Field.DisplayType.ASCII;
 
-            public object Read(BinaryReader reader)
-            {
-                var buffer = reader.ReadBytes(length);
-                return Encoding.UTF8.GetString(buffer, 0, buffer.Length);
-            }
-            public void Write(BinaryWriter writer, object value)
-            {
-                var converted = Encoding.UTF8.GetBytes((string)value);
-                writer.Write(converted);
-            }
+            public object Read(BinaryReader reader) => reader.ReadBytes(length);
+            public void Write(BinaryWriter writer, object value) => writer.Write((byte[])value);
         }
         private class Int32Field : FieldType
         {
-            public Field.FieldType VisualFieldType => Field.FieldType.DEC;
+            public Field.DisplayType VisualFieldType => Field.DisplayType.DEC;
 
             public object Read(BinaryReader reader) => reader.ReadInt32();
             public void Write(BinaryWriter writer, object value) => writer.Write((int)value);
         }
         private class Int16Field : FieldType
         {
-            public Field.FieldType VisualFieldType => Field.FieldType.DEC;
+            public Field.DisplayType VisualFieldType => Field.DisplayType.DEC;
 
             public object Read(BinaryReader reader) => reader.ReadInt16();
             public void Write(BinaryWriter writer, object value) => writer.Write((short)value);
@@ -77,48 +70,47 @@ namespace DispelTools.DataEditor
         {
             private readonly int stringMaxLength;
             private readonly byte filler;
+            private readonly Field.DisplayType encoding;
 
-            public FixedStringField(int stringMaxLength, byte filler)
+            public FixedStringField(int stringMaxLength, byte filler, Field.DisplayType encoding)
             {
                 this.stringMaxLength = stringMaxLength;
                 this.filler = filler;
+                if (encoding == Field.DisplayType.ASCII || encoding == Field.DisplayType.TEXT_KOR || encoding == Field.DisplayType.TEXT_PL)
+                {
+                    this.encoding = encoding;
+                }
+                else
+                {
+                    throw new System.ArgumentException($"Argument {encoding} is not encoding");
+                }
             }
 
-            public Field.FieldType VisualFieldType => Field.FieldType.ASCII;
+            public Field.DisplayType VisualFieldType => encoding;
 
             public object Read(BinaryReader reader)
             {
-                var sb = new StringBuilder();
-                byte[] chars = reader.ReadBytes(stringMaxLength);
+                var bList = new List<byte>();
+                byte[] bytes = reader.ReadBytes(stringMaxLength);
                 for (int i = 0; i < stringMaxLength; i++)
                 {
-                    byte character = chars[i];
-                    if (character == 0)
+                    if (bytes[i] == 0)
                     {
                         break;
                     }
-                    sb.Append((char)character);
+                    bList.Add(bytes[i]);
                 }
-                return sb.ToString();
+                return bList.ToArray();
             }
 
             public void Write(BinaryWriter writer, object value)
             {
-                var str = (string)value;
+                byte[] bytes = (byte[])value;
+                int countermax = System.Math.Min(stringMaxLength, bytes.Length);
                 for (int i = 0; i < stringMaxLength; i++)
                 {
-                    if (str.Length > i)
-                    {
-                        writer.Write((byte)str[i]);
-                    }
-                    else if (str.Length == i)
-                    {
-                        writer.Write((byte)0);
-                    }
-                    else
-                    {
-                        writer.Write(filler);
-                    }
+                    byte byteToWrite = countermax > i ? bytes[i] : filler;
+                    writer.Write(byteToWrite);
                 }
             }
         }

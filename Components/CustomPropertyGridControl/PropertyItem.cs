@@ -17,32 +17,14 @@ namespace DispelTools.Components.CustomPropertyGridControl
         public static PropertyItem Sample()
         {
             var item = new PropertyItem();
-            item.AddField(new Field("exField1", 1));
-            item.AddField(new Field("exField2readOnly", 2, true));
-            item.AddField(new Field("exField3", 3));
-            item.AddField(new Field("exField4Int", 254));
-            item.AddField(new Field("exField5Hex", 321)//0x141
-            {
-                Type = Field.FieldType.HEX
-            });
-            item.AddField(new Field("exField6Str", "abcde"));
-            item.AddField(new Field("exField6LongLabel", "abcde"));
-            item.AddField(new Field("exField7LongLabelReadOnly", "abcde", true));
-            return item;
-        }
-
-        public static PropertyItem Sample(int number)
-        {
-            var item = new PropertyItem();
-            for (int i = 0; i < number; i++)
-            {
-                item.AddField(new Field()
-                {
-                    Name = $"exField{i + 1}",
-                    Value = 1,
-                    ReadOnly = false
-                });
-            }
+            item.AddField(new Field("exField1", 1, Field.DisplayType.DEC));
+            item.AddField(new Field("exField2readOnly", 2, Field.DisplayType.DEC, true));
+            item.AddField(new Field("exField3", 3, Field.DisplayType.DEC));
+            item.AddField(new Field("exField4Int", 254, Field.DisplayType.DEC));
+            item.AddField(new Field("exField5Hex", 321, Field.DisplayType.HEX));//0x141
+            item.AddField(new Field("exField6Str", "abcde", Field.DisplayType.ASCII));
+            item.AddField(new Field("exField6LongLabel", "abcde", Field.DisplayType.ASCII));
+            item.AddField(new Field("exField7LongLabelReadOnly", "abcde", Field.DisplayType.ASCII, true));
             return item;
         }
     }

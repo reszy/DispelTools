@@ -77,31 +77,13 @@ namespace DispelTools.Components.CustomPropertyGridControl
                     parent.toolTip.SetToolTip(resetButton, "Reset value");
                 }
 
-                if (field.Type != Field.FieldType.ASCII)
-                {
-                    textControl = null;
-                    numericControl = new NumericUpDown()
-                    {
-                        Name = field.Name,
-                        Maximum =  field.MaxValue,
-                        Minimum = field.MinValue,
-                        Value = field.DecimalValue,
-                        Location = controlPosition,
-                        Size = controlSize,
-                        Enabled = !field.ReadOnly,
-                        Hexadecimal = field.Type == Field.FieldType.HEX,
-                        Anchor = AnchorStyles.Top | AnchorStyles.Left
-                    };
-                    numericControl.ValueChanged += NumberValueChanged;
-                    parent.Controls.Add(numericControl);
-                }
-                else
+                if (field.IsText)
                 {
                     numericControl = null;
                     textControl = new TextBox()
                     {
                         Name = field.Name,
-                        Text =  field.Value.ToString(),
+                        Text = field.EncodedText,
                         Location = controlPosition,
                         Size = controlSize,
                         Enabled = !field.ReadOnly,
@@ -110,36 +92,40 @@ namespace DispelTools.Components.CustomPropertyGridControl
                     textControl.TextChanged += TextValueChanged;
                     parent.Controls.Add(textControl);
                 }
+                else
+                {
+                    textControl = null;
+                    numericControl = new NumericUpDown()
+                    {
+                        Name = field.Name,
+                        Maximum = field.MaxValue,
+                        Minimum = field.MinValue,
+                        Value = field.DecimalValue,
+                        Location = controlPosition,
+                        Size = controlSize,
+                        Enabled = !field.ReadOnly,
+                        Hexadecimal = field.Type == Field.DisplayType.HEX,
+                        Anchor = AnchorStyles.Top | AnchorStyles.Left
+                    };
+                    numericControl.ValueChanged += NumberValueChanged;
+                    parent.Controls.Add(numericControl);
+                }
             }
         }
 
-        private string GetResetButtonText() => !Equals(FieldRef.Value, FieldRef.DefaultValue) ? "●" : "○";
+        private string GetResetButtonText() => FieldRef.HasChanged ? "●" : "○";
 
         private void TextValueChanged(object sender, EventArgs e)
         {
-            if (textControl.Text == field.DefaultValue.ToString())
-            {
-                textControl.Font = Font;
-            }
-            else
-            {
-                textControl.Font = bolden;
-            }
-            FieldRef.Value = textControl.Text;
+            FieldRef.SetValue(textControl.Text);
+            textControl.Font = FieldRef.HasChanged ? bolden : Font;
             resetButton.Text = GetResetButtonText();
         }
 
         private void NumberValueChanged(object sender, EventArgs e)
         {
-            if (numericControl.Value == field.DecimalDefaultValue)
-            {
-                numericControl.Font = Font;
-            }
-            else
-            {
-                numericControl.Font = bolden;
-            }
-            FieldRef.Value = numericControl.Value;
+            FieldRef.SetValue(numericControl.Value);
+            numericControl.Font = FieldRef.HasChanged ? bolden : Font;
             resetButton.Text = GetResetButtonText();
         }
 
@@ -147,16 +133,18 @@ namespace DispelTools.Components.CustomPropertyGridControl
         {
             if (!field.ReadOnly)
             {
+                field.RevertValue();
                 if (numericControl != null)
                 {
-                    numericControl.Value = field.DecimalDefaultValue;
-                    NumberValueChanged(sender, EventArgs.Empty);
+                    numericControl.Value = field.DecimalValue;
+                    numericControl.Font = field.HasChanged ? bolden : Font;
                 }
                 if (textControl != null)
                 {
-                    textControl.Text = field.DefaultValue.ToString();
-                    TextValueChanged(sender, EventArgs.Empty);
+                    textControl.Text = field.EncodedText;
+                    textControl.Font = field.HasChanged ? bolden : Font;
                 }
+                resetButton.Text = GetResetButtonText();
             }
         }
 

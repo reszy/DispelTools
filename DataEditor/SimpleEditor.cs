@@ -2,12 +2,13 @@
 using DispelTools.DataEditor.Mappers;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.IO.Abstractions;
 
 namespace DispelTools.DataEditor
 {
     public class SimpleEditor
     {
+        private IFileSystem fs;
         private string filename;
         private bool validated;
         private Mapper mapper;
@@ -15,13 +16,17 @@ namespace DispelTools.DataEditor
 
         public string ValidationMessage { get; private set; }
 
-        public SimpleEditor(string filename)
+        public SimpleEditor(string filename, IFileSystem fs)
         {
             this.filename = filename;
             mapper = null;
             validated = false;
             values = null;
             ValidationMessage = "Not validated";
+            this.fs = fs;
+        }
+        public SimpleEditor(string filename) : this(filename, new FileSystem())
+        {
         }
 
         public bool CanOpen()
@@ -41,9 +46,16 @@ namespace DispelTools.DataEditor
             }
             return mapper != null;
         }
+
+        public void SetMapper(Mapper mapper)
+        {
+            this.mapper = mapper;
+            ValidationMessage = "Mapper was added manually";
+            validated = true;
+        }
         private Mapper FindMapper()
         {
-            string filenameWithExtension = Path.GetFileName(filename);
+            string filenameWithExtension = fs.Path.GetFileName(filename);
             if (filenameWithExtension.ToUpper().StartsWith("NPC") && filenameWithExtension.ToUpper().EndsWith("REF"))
             {
                 return new NpcRefMapper();
@@ -76,6 +88,10 @@ namespace DispelTools.DataEditor
             {
                 return new StoreDbMapper();
             }
+            if (filenameWithExtension.ToUpper().Equals("MONSTER.DB"))
+            {
+                return new MonsterDbMapper();
+            }
 
             throw new ArgumentException($"No mapper found for {filenameWithExtension}");
         }
@@ -94,12 +110,18 @@ namespace DispelTools.DataEditor
         }
 
         public int GetElementCount() => values?.Count - 1 ?? 0;
-        internal void Save(PropertyItem element, int elementNumber) {
+        public void Save(PropertyItem element, int elementNumber)
+        {
             if (mapper == null)
             {
                 throw new ArgumentNullException("Mapper not found");
             }
-            mapper.SaveElement(element , elementNumber, filename);
+            string orginalBackup = filename + ".orginalbackup.bak";
+            if (!fs.File.Exists(orginalBackup))
+            {
+                fs.File.Copy(filename, orginalBackup);
+            }
+            mapper.SaveElement(element, elementNumber, filename);
         }
     }
 }

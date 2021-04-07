@@ -68,12 +68,6 @@ namespace DispelTools.DataEditor
             //}
         }
 
-        private void saveButton_Click(object sender, EventArgs e)
-        {
-            if (editor != null)
-            {
-                editor.Save(customPropertyGrid1.SelectedItem, (int)inElementNumber.Value);
-            }
-        }
+        private void saveButton_Click(object sender, EventArgs e) => editor?.Save(customPropertyGrid1.SelectedItem, (int)inElementNumber.Value);
     }
 }

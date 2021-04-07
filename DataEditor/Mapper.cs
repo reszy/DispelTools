@@ -1,23 +1,41 @@
-﻿using DispelTools.Common;
-using DispelTools.Components.CustomPropertyGridControl;
+﻿using DispelTools.Components.CustomPropertyGridControl;
 using System;
-using System.Windows.Forms;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
+using System.Windows.Forms;
 
 namespace DispelTools.DataEditor
 {
     public abstract partial class Mapper
     {
+        private readonly IFileSystem fs;
+
+        protected Mapper(IFileSystem fs)
+        {
+            this.fs = fs;
+        }
+        protected Mapper() : this(new FileSystem())
+        {
+        }
+
         public List<PropertyItem> ReadFile(string filename)
         {
             int elementStep = PropertyItemSize;
             var list = new List<PropertyItem>();
-            using (var reader = new BinaryReader(new FileStream(filename, FileMode.Open, FileAccess.Read)))
+            using (var reader = new BinaryReader(fs.FileStream.Create(filename, FileMode.Open, FileAccess.Read)))
             {
-                var expectedElements = reader.ReadInt32();
-                int spaceForElements = (int)Math.Floor((decimal)((reader.BaseStream.Length - 4) / elementStep));
-                if(expectedElements != spaceForElements)
+                int expectedElements = 0;
+                int spaceForElements = (int)Math.Floor((decimal)((reader.BaseStream.Length - GetSkipBytesCount()) / elementStep));
+                if (HaveCounterOnBeginning)
+                {
+                    expectedElements = reader.ReadInt32();
+                }
+                else
+                {
+                    expectedElements = spaceForElements;
+                }
+                if (expectedElements != spaceForElements)
                 {
                     MessageBox.Show($"In file count = {expectedElements}, counted {spaceForElements}");
                 }
@@ -30,15 +48,19 @@ namespace DispelTools.DataEditor
         }
         public void SaveElement(PropertyItem element, int elementNumber, string filename)
         {
-            using (var writer = new BinaryWriter(new FileStream(filename, FileMode.Open, FileAccess.Write)))
+            using (var writer = new BinaryWriter(fs.FileStream.Create(filename, FileMode.Open, FileAccess.Write)))
             {
-                writer.BaseStream.Position = elementNumber * PropertyItemSize;
+                writer.BaseStream.Position = elementNumber * PropertyItemSize + GetSkipBytesCount();
                 WriteElement(writer, element);
             }
         }
         protected abstract int PropertyItemSize { get; }
 
         protected abstract List<ItemFieldDescriptor> FileDescriptor { get; }
+
+        protected virtual bool HaveCounterOnBeginning { get; } = true;
+
+        private int GetSkipBytesCount() => HaveCounterOnBeginning ? 4 : 0;
 
         private PropertyItem ReadElement(BinaryReader reader)
         {
@@ -51,13 +73,7 @@ namespace DispelTools.DataEditor
                     fieldDescriptor.Name = GetHexRelativePosition(reader);
                 }
                 object value = fieldDescriptor.ItemFieldDescriptorType.Read(reader);
-                var field = new Field()
-                {
-                    Name = fieldDescriptor.Name,
-                    Value = value,
-                    ReadOnly = fieldDescriptor.ReadOnly,
-                    Type = fieldDescriptor.ItemFieldDescriptorType.VisualFieldType
-                };
+                var field = new Field(fieldDescriptor.Name, value, fieldDescriptor.ItemFieldDescriptorType.VisualFieldType, fieldDescriptor.ReadOnly);
                 propertyItem.AddField(field);
             }
             return propertyItem;
@@ -74,7 +90,7 @@ namespace DispelTools.DataEditor
             {
                 var descriptor = FileDescriptor[i];
                 var field = propertyitem[i];
-                descriptor.ItemFieldDescriptorType.Write(writer, field.Value);
+                descriptor.ItemFieldDescriptorType.Write(writer, field.IsText ? field.ByteArrayValue : field.Value);
             }
         }
 

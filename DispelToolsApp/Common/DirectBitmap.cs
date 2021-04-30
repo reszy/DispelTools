@@ -30,7 +30,7 @@ namespace DispelTools.Common
             Height = height;
             Bits = new int[width * height];
             BitsHandle = GCHandle.Alloc(Bits, GCHandleType.Pinned);
-            Bitmap = new Bitmap(width, height, width * 4, PixelFormat.Format32bppArgb, BitsHandle.AddrOfPinnedObject());
+            Bitmap = new Bitmap(width, height, width * 4, PixelFormat.Format32bppPArgb, BitsHandle.AddrOfPinnedObject());
         }
 
         public void SetPixel(int x, int y, Color colour)

@@ -34,7 +34,7 @@ namespace DispelTools.DataExtractor.ImageExtractor
 
         private string ReadImage(ExtractionFileProcess process, BinaryReader file, int width, int height, int pixelCount, string filePrefix)
         {
-            var image = ImageProcessing.ImageProcessor.Process((uint)width, (uint)height, file.ReadBytes(pixelCount * 2));
+            var image = ImageProcessing.ImageLoader.Load((uint)width, (uint)height, file.ReadBytes(pixelCount * 2));
             string finalName = $"{process.OutputDirectory}\\{filePrefix}.png";
             image.Save(finalName, ImageFormat.Png);
             return finalName;

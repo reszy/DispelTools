@@ -2,11 +2,11 @@
 
 namespace DispelTools.ImageProcessing
 {
-    internal class ImageProcessor
+    internal class ImageLoader
     {
         private uint currentPosition = 0;
 
-        public static Bitmap Process(uint width, uint height, byte[] data) => new ImageProcessor().InternalProcess(width, height, data);
+        public static Bitmap Load(uint width, uint height, byte[] data) => new ImageLoader().InternalProcess(width, height, data);
 
         private Bitmap InternalProcess(uint width, uint height, byte[] data)
         {

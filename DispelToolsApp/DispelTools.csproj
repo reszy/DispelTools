@@ -160,7 +160,7 @@
     <Compile Include="ImageProcessing\ColorManagement.cs" />
     <Compile Include="ImageProcessing\Filters\IPerPixelFilter.cs" />
     <Compile Include="ImageProcessing\Filters\ValueFilter.cs" />
-    <Compile Include="ImageProcessing\ImageProcessor.cs" />
+    <Compile Include="ImageProcessing\ImageLoader.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

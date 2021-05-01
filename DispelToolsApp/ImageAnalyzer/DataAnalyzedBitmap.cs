@@ -11,54 +11,21 @@
 
         public class DataPixel
         {
-            private readonly byte b1;
-            private readonly byte b2;
-            private readonly byte b3;
-            private readonly byte b4;
+            private readonly byte[] bytes = new byte[4] {0,0,0,0};
+            private byte intPart1 => bytes[0];
+            private int intPart2 => (bytes[1] << 8);
+            private int intPart3 => (bytes[2] << 16);
+            private int intPart4 => (bytes[3] << 24);
 
             public DataPixel(byte[] bytes)
             {
-                if (bytes.Length > 3)
-                {
-                    b1 = bytes[0];
-                    b2 = bytes[1];
-                    b3 = bytes[2];
-                    b4 = bytes[3];
-                }
-                else if (bytes.Length > 2)
-                {
-                    b1 = bytes[0];
-                    b2 = bytes[1];
-                    b3 = bytes[2];
-                    b4 = 0;
-                }
-                else if (bytes.Length > 1)
-                {
-                    b1 = bytes[0];
-                    b2 = bytes[1];
-                    b3 = 0;
-                    b4 = 0;
-                }
-                else if(bytes.Length == 1)
-                {
-                    b1 = bytes[0];
-                    b2 = 0;
-                    b3 = 0;
-                    b4 = 0;
-                }
-                else
-                {
-                    b1 = 0;
-                    b2 = 0;
-                    b3 = 0;
-                    b4 = 0;
-                }
+                bytes.CopyTo(this.bytes, 0);
             }
 
-            public byte Byte => b1;
-            public int Word => b1 + (b2 << 8);
-            public int DWord => b1 + (b2 << 8) + (b3 << 16);
-            public int QWord => b1 + (b2 << 8) + (b3 << 16) + (b4 << 24);
+            public byte Byte => intPart1;
+            public int Word => intPart1 + intPart2;
+            public int DWord => intPart1 + intPart2 + intPart3;
+            public int QWord => intPart1 + intPart2 + intPart3 + intPart4;
         }
 
         public void SetPixel(int x, int y, byte[] bytes) => data[x, y] = new DataPixel(bytes);

@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\DispelTools.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -259,6 +262,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\colorPicker.png" />
+    <Content Include="Resources\DispelTools.ico" />
     <Content Include="Resources\pencil.png" />
     <Content Include="Resources\pointer.png" />
     <Content Include="Resources\select.png" />

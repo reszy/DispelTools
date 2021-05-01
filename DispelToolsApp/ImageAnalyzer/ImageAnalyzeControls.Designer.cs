@@ -156,6 +156,7 @@
             this.valueHighlightChannelComboBox.Name = "valueHighlightChannelComboBox";
             this.valueHighlightChannelComboBox.Size = new System.Drawing.Size(68, 21);
             this.valueHighlightChannelComboBox.TabIndex = 29;
+            this.valueHighlightChannelComboBox.SelectedIndexChanged += new System.EventHandler(this.valueFilterChanged);
             // 
             // label1
             // 
@@ -186,6 +187,7 @@
             this.inValueHighlightValue.Name = "inValueHighlightValue";
             this.inValueHighlightValue.Size = new System.Drawing.Size(77, 20);
             this.inValueHighlightValue.TabIndex = 32;
+            this.inValueHighlightValue.ValueChanged += new System.EventHandler(this.valueFilterChanged);
             // 
             // channelViewRadioButton
             // 

@@ -1,5 +1,6 @@
 ﻿using DispelTools.Common;
 using DispelTools.ImageProcessing;
+using DispelTools.ImageProcessing.Filters;
 using System;
 using System.Drawing;
 using System.IO;
@@ -116,19 +117,23 @@ namespace DispelTools.ImageAnalyzer
                 }
             }
         }
-        internal void ApplyFilter(Func<Color, Color> function)
+        internal void ApplyFilter(IPerPixelFilter filter)
         {
             if (FilteredImage == null)
             {
                 FilteredImage = new DirectBitmap(RawImage.Width, RawImage.Height);
                 CreatedNewLayerEvent?.Invoke(this, EventArgs.Empty);
             }
+            if(filter == null)
+            {
+                return;
+            }
             var sourceImage = EditedImage ?? RawImage;
             for (int y = 0; y < sourceImage.Height; y++)
             {
                 for (int x = 0; x < sourceImage.Width; x++)
                 {
-                    FilteredImage.SetPixel(x, y, function.Invoke(sourceImage.GetPixel(x, y)));
+                    FilteredImage.SetPixel(x, y, filter.Apply(sourceImage.GetPixel(x, y)));
                 }
             }
         }

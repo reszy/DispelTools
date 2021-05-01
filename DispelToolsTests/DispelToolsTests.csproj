@@ -51,6 +51,8 @@
     <Compile Include="DataEditor\SimpleEditorTests.cs" />
     <Compile Include="DataExtractor\Extractors\AllExtractor\AllFilesExtractorTests.cs" />
     <Compile Include="ImageProcessing\ColorManagementTests.cs" />
+    <Compile Include="ImageProcessing\Filters\ChannelFilterTests.cs" />
+    <Compile Include="ImageProcessing\Filters\ValueFilterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

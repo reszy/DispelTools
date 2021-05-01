@@ -66,7 +66,7 @@ namespace DispelTools.ImageAnalyzer
             {
                 if (imageAnalyzeControls.CurrentAnalyzer != ImageAnalyzeControls.Analyzer.NONE)
                 {
-                    imageAnalyzerCore.ApplyFilter(imageAnalyzeControls.AnalyzePixel);
+                    imageAnalyzerCore.ApplyFilter(imageAnalyzeControls.ActiveFilter);
                     pictureDisplayer.SetImage(imageAnalyzerCore.FilteredImage.Bitmap, false, imageAnalyzerCore.RawImageAnalyzed);
                 }
                 else if (imageAnalyzerCore.EditedImage != null)
@@ -141,7 +141,11 @@ namespace DispelTools.ImageAnalyzer
 
         private void overwriteButton_Click(object sender, EventArgs e)
         {
-            if (imageAnalyzerCore.EditedImage == null) return;
+            if (imageAnalyzerCore.EditedImage == null)
+            {
+                return;
+            }
+
             string orginalBackup = filename + "orginalbackup.bak";
             try
             {

@@ -155,8 +155,11 @@
     <Compile Include="ImageAnalyzer\ImageEditControls.Designer.cs">
       <DependentUpon>ImageEditControls.cs</DependentUpon>
     </Compile>
-    <Compile Include="ImageProcessing\ColorLevelFilter.cs" />
+    <Compile Include="ImageProcessing\Filters\ChannelFilter.cs" />
+    <Compile Include="ImageProcessing\Filters\ColorLevelFilter.cs" />
     <Compile Include="ImageProcessing\ColorManagement.cs" />
+    <Compile Include="ImageProcessing\Filters\IPerPixelFilter.cs" />
+    <Compile Include="ImageProcessing\Filters\ValueFilter.cs" />
     <Compile Include="ImageProcessing\ImageProcessor.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

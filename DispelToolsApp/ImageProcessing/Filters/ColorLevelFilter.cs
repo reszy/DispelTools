@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Drawing;
 
-namespace DispelTools.ImageProcessing
+namespace DispelTools.ImageProcessing.Filters
 {
-    public class ColorLevelFilter
+    public class ColorLevelFilter : IPerPixelFilter
     {
-        private byte low;
-        private byte high;
+        private readonly byte low;
+        private readonly byte high;
         public ColorLevelFilter(byte low, byte high)
         {
             this.low = low;

@@ -48,6 +48,8 @@ namespace DispelTools
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.contentPanel = new System.Windows.Forms.Panel();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -69,6 +71,8 @@ namespace DispelTools
             this.editorsToolStripMenuItem,
             this.mapViewerToolStripMenuItem,
             this.gifCreatorToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.settingsToolStripMenuItem,
             this.exitToolStripMenuItem,
             this.exitToolStripMenuItem1});
             this.programToolStripMenuItem.Name = "programToolStripMenuItem";
@@ -171,7 +175,7 @@ namespace DispelTools
             // 
             this.mapViewerToolStripMenuItem.CheckOnClick = true;
             this.mapViewerToolStripMenuItem.Name = "mapViewerToolStripMenuItem";
-            this.mapViewerToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.mapViewerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.mapViewerToolStripMenuItem.Text = "MapViewer";
             this.mapViewerToolStripMenuItem.Click += new System.EventHandler(this.mapViewerToolStripMenuItem_Click);
             // 
@@ -207,6 +211,18 @@ namespace DispelTools
             this.contentPanel.Size = new System.Drawing.Size(484, 137);
             this.contentPanel.TabIndex = 1;
             this.contentPanel.Resize += new System.EventHandler(this.contentPanel_Resize);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -249,6 +265,8 @@ namespace DispelTools
         private System.Windows.Forms.ToolStripMenuItem rgbConverterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gifCreatorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mapViewerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
     }
 }
 

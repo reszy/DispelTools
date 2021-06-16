@@ -11,6 +11,7 @@ namespace DispelTools
         {
             InitializeComponent();
             Text = title;
+            nestForm(new SettingsForm());
         }
 
         private void nestForm(Form embeddedForm)
@@ -119,6 +120,12 @@ namespace DispelTools
         {
             selectMenuButton(sender);
             nestForm(new Viewers.MapViewer.MapViewerForm());
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            selectMenuButton(sender);
+            nestForm(new SettingsForm());
         }
     }
 }

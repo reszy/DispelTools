@@ -119,8 +119,9 @@ namespace DispelTools.ImageAnalyzer
         }
         internal void ApplyFilter(IPerPixelFilter filter)
         {
-            if (FilteredImage == null)
+            if (FilteredImage == null || (FilteredImage.Width != RawImage.Width || FilteredImage.Height != RawImage.Height))
             {
+                FilteredImage?.Dispose();
                 FilteredImage = new DirectBitmap(RawImage.Width, RawImage.Height);
                 CreatedNewLayerEvent?.Invoke(this, EventArgs.Empty);
             }

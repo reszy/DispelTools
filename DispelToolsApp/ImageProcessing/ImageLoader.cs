@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using DispelTools.Common;
+using System.Drawing;
 
 namespace DispelTools.ImageProcessing
 {
@@ -6,13 +7,13 @@ namespace DispelTools.ImageProcessing
     {
         private uint currentPosition = 0;
 
-        public static Bitmap Load(uint width, uint height, byte[] data) => new ImageLoader().InternalProcess(width, height, data);
+        public static DirectBitmap Load(uint width, uint height, byte[] data) => new ImageLoader().InternalProcess(width, height, data);
 
-        private Bitmap InternalProcess(uint width, uint height, byte[] data)
+        private DirectBitmap InternalProcess(uint width, uint height, byte[] data)
         {
             var colorManager = ColorManagement.From(ColorManagement.ColorMode.RGB16_565);
 
-            var bitmap = new Bitmap((int)width, (int)height);
+            var bitmap = new DirectBitmap((int)width, (int)height);
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)

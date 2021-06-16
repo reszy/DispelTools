@@ -164,6 +164,9 @@
     <Compile Include="ImageProcessing\Filters\IPerPixelFilter.cs" />
     <Compile Include="ImageProcessing\Filters\ValueFilter.cs" />
     <Compile Include="ImageProcessing\ImageLoader.cs" />
+    <Compile Include="ImageProcessing\Sprite\SpriteFrame.cs" />
+    <Compile Include="ImageProcessing\Sprite\SpriteLoader.cs" />
+    <Compile Include="ImageProcessing\Sprite\SpriteSequence.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

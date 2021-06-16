@@ -10,7 +10,7 @@ namespace DispelTools.Common
     public class DirectBitmap : IDisposable
     {
         public Bitmap Bitmap { get; private set; }
-        public int[] Bits { get; private set; }
+        public byte[] Data { get; private set; }
         public bool Disposed { get; private set; }
         public int Height { get; private set; }
         public int Width { get; private set; }
@@ -20,7 +20,7 @@ namespace DispelTools.Common
         public static DirectBitmap From(DirectBitmap bitmap)
         {
             var newBitmap = new DirectBitmap(bitmap.Width, bitmap.Height);
-            Array.Copy(bitmap.Bits, newBitmap.Bits, bitmap.Bits.Length);
+            Array.Copy(bitmap.Data, newBitmap.Data, bitmap.Data.Length);
             return newBitmap;
         }
 
@@ -28,26 +28,26 @@ namespace DispelTools.Common
         {
             Width = width;
             Height = height;
-            Bits = new int[width * height];
-            BitsHandle = GCHandle.Alloc(Bits, GCHandleType.Pinned);
+            Data = new byte[width * height * 4];
+            BitsHandle = GCHandle.Alloc(Data, GCHandleType.Pinned);
             Bitmap = new Bitmap(width, height, width * 4, PixelFormat.Format32bppPArgb, BitsHandle.AddrOfPinnedObject());
         }
 
-        public void SetPixel(int x, int y, Color colour)
+        public void SetPixel(int x, int y, Color color)
         {
             int index = x + (y * Width);
-            int col = colour.ToArgb();
-
-            Bits[index] = col;
+            var i = index * 4;
+            Data[i+0] = color.A;
+            Data[i+1] = color.R;
+            Data[i+2] = color.G;
+            Data[i+3] = color.B;
         }
 
         public Color GetPixel(int x, int y)
         {
             int index = x + (y * Width);
-            int col = Bits[index];
-            var result = Color.FromArgb(col);
-
-            return result;
+            var i = index * 4;
+            return Color.FromArgb(Data[i + 0], Data[i + 1], Data[i + 2], Data[i + 3]);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -60,7 +60,7 @@ namespace DispelTools.Common
             Disposed = true;
             Bitmap.Dispose();
             BitsHandle.Free();
-            Bits = null;
+            Data = null;
         }
 
         public void Dispose()

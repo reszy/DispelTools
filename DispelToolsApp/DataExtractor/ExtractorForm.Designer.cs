@@ -39,6 +39,8 @@
             this.openOutputDirectoryButton = new System.Windows.Forms.Button();
             this.details = new DispelTools.Components.DetailsComponent();
             this.progressBar = new DispelTools.Components.ProgressBarWithText();
+            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // openButton
@@ -127,12 +129,15 @@
             // 
             // progressBar
             // 
-            this.progressBar.BarColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.progressBar.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.progressBar.Location = new System.Drawing.Point(13, 84);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(586, 45);
             this.progressBar.TabIndex = 10;
+            // 
+            // folderBrowserDialog
+            // 
+            this.folderBrowserDialog.RootFolder = System.Environment.SpecialFolder.MyComputer;
             // 
             // ExtractorForm
             // 
@@ -171,5 +176,7 @@
         private System.Windows.Forms.Button openOutputDirectoryButton;
         private Components.DetailsComponent details;
         private Components.ProgressBarWithText progressBar;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
     }
 }

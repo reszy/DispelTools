@@ -42,6 +42,18 @@ namespace DispelTools.Common
             return filename.Replace(GameRootDir, OutRootDir);
         }
 
+        internal static string GetInitialInputDirectory(string initialDirectory)
+        {
+            if (gameRootDir == null || initialDirectory.StartsWith(gameRootDir))
+            {
+                return initialDirectory;
+            }
+            else
+            {
+                return gameRootDir;
+            }
+        }
+
         private static void SetGameDir(string gameDir)
         {
             if (!FS.Path.IsPathRooted(gameDir))
@@ -69,7 +81,6 @@ namespace DispelTools.Common
                 RootsValid = true;
             }
         }
-
 
         private static string GetSettingsFilePath()
         {

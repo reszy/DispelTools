@@ -1,7 +1,7 @@
-﻿using System;
+﻿using DispelTools.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
@@ -28,33 +28,44 @@ namespace DispelTools.DataExtractor
 
         private void openButton_Click(object sender, EventArgs e)
         {
+            string outDirectory = null;
             if (extractorFactory.type == ExtractionManager.ExtractorType.MULTI_FILE)
             {
-                var dialog = new OpenFileDialog()
-                {
-                    Multiselect = true,
-                    Filter = extractorFactory.FileFilter
-                };
-                dialog.ShowDialog();
-                filenames = new List<string>(dialog.FileNames);
+                openFileDialog.Multiselect = true;
+                openFileDialog.Filter = extractorFactory.FileFilter;
+                openFileDialog.InitialDirectory = Settings.GetInitialInputDirectory(openFileDialog.InitialDirectory);
+                openFileDialog.ShowDialog();
+                filenames = new List<string>(openFileDialog.FileNames);
                 if (filenames.Count != 0)
                 {
-                    setOutputDirectory(Path.GetDirectoryName(filenames[0]));
+                    var openedDirectory = Path.GetDirectoryName(filenames[0]);
+                    outDirectory = openedDirectory;
+                    openFileDialog.InitialDirectory = openedDirectory;
                     selectedLabel.Text = $" {filenames.Count}";
                 }
             }
             else if (extractorFactory.type == ExtractionManager.ExtractorType.DIRECTORY)
             {
-                var dialog = new FolderBrowserDialog()
-                {
-                    ShowNewFolderButton = true
-                };
-                dialog.ShowDialog();
+                folderBrowserDialog.ShowNewFolderButton = false;
+                folderBrowserDialog.SelectedPath = Settings.GameRootDir;
+                folderBrowserDialog.ShowDialog();
                 filenames = new List<string>
                 {
-                    dialog.SelectedPath
+                    folderBrowserDialog.SelectedPath
                 };
-                selectedLabel.Text = $" {dialog.SelectedPath}";
+                outDirectory = Path.GetDirectoryName(filenames[0]);
+                selectedLabel.Text = $" {folderBrowserDialog.SelectedPath}";
+            }
+            if (outDirectory != null)
+            {
+                if (Settings.RootsValid)
+                {
+                    setOutputDirectory(Settings.TranslateToOutDir(outDirectory));
+                }
+                else
+                {
+                    setOutputDirectory(Path.GetDirectoryName(filenames[0]));
+                }
             }
             setIfReady();
         }
@@ -116,13 +127,13 @@ namespace DispelTools.DataExtractor
 
         private void outputDirectoryButton_Click(object sender, EventArgs e)
         {
-            var openDialog = new FolderBrowserDialog();
+            folderBrowserDialog.ShowNewFolderButton = true;
             if (outputDirectory != null)
             {
-                openDialog.SelectedPath = outputDirectory;
+                folderBrowserDialog.SelectedPath = outputDirectory;
             }
-            openDialog.ShowDialog();
-            setOutputDirectory(openDialog.SelectedPath);
+            folderBrowserDialog.ShowDialog();
+            setOutputDirectory(folderBrowserDialog.SelectedPath);
             setIfReady();
         }
 

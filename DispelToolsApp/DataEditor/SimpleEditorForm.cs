@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DispelTools.Common;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -17,29 +18,28 @@ namespace DispelTools.DataEditor
 
         private void openButton_Click(object sender, EventArgs e)
         {
-            var openDialog = new OpenFileDialog()
+            if (string.IsNullOrEmpty(openFileDialog.InitialDirectory))
             {
-                Filter = "All handled|*.ref;*.REF;*.db;*.DB|Reference files|*.ref;*.REF|Database file|*.db;*.DB",
-                Multiselect = false
-            };
-            openDialog.ShowDialog();
-            if (openDialog.FileName != null && openDialog.FileName.Length > 0)
+                openFileDialog.InitialDirectory = Settings.GameRootDir;
+            }
+            openFileDialog.ShowDialog();
+            if (!string.IsNullOrEmpty(openFileDialog.FileName))
             {
-                editor = new SimpleEditor(openDialog.FileName);
+                openFileDialog.InitialDirectory = openFileDialog.FileName;
+                editor = new SimpleEditor(openFileDialog.FileName);
                 if (editor.CanOpen())
                 {
                     inElementNumber.Value = 0;
                     customPropertyGrid1.SelectedItem = editor.ReadValue(0);
 
                     SetMaxElementsLabel(inElementNumber.Maximum = editor.GetElementCount());
-                    openedFileLabel.Text = openDialog.FileName;
+                    openedFileLabel.Text = openFileDialog.FileName;
                 }
                 else
                 {
                     MessageBox.Show(editor.ValidationMessage, "File unsupported", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            openDialog.Dispose();
         }
 
         private void elementNumber_ValueChanged(object sender, EventArgs e)

@@ -36,6 +36,7 @@ namespace DispelTools.DataEditor
             this.button1 = new System.Windows.Forms.Button();
             this.saveButton = new System.Windows.Forms.Button();
             this.customPropertyGrid1 = new DispelTools.Components.CustomPropertyGridControl.CustomPropertyGrid();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.inElementNumber)).BeginInit();
             this.SuspendLayout();
             // 
@@ -97,6 +98,7 @@ namespace DispelTools.DataEditor
             // customPropertyGrid1
             // 
             this.customPropertyGrid1.AutoScroll = true;
+            this.customPropertyGrid1.AutoScrollMinSize = new System.Drawing.Size(20, 20);
             this.customPropertyGrid1.BackColor = System.Drawing.SystemColors.Window;
             this.customPropertyGrid1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.customPropertyGrid1.Location = new System.Drawing.Point(12, 69);
@@ -104,6 +106,10 @@ namespace DispelTools.DataEditor
             this.customPropertyGrid1.SelectedItem = null;
             this.customPropertyGrid1.Size = new System.Drawing.Size(377, 368);
             this.customPropertyGrid1.TabIndex = 7;
+            // 
+            // openFileDialog
+            // 
+            this.openFileDialog.Filter = "All handled|*.ref;*.REF;*.db;*.DB|Reference files|*.ref;*.REF|Database file|*.db;*.DB";
             // 
             // SimpleEditorForm
             // 
@@ -133,5 +139,6 @@ namespace DispelTools.DataEditor
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button saveButton;
         private Components.CustomPropertyGridControl.CustomPropertyGrid customPropertyGrid1;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
     }
 }

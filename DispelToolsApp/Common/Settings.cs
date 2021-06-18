@@ -6,8 +6,8 @@ namespace DispelTools.Common
 {
     public static class Settings
     {
-        private static string gameRootDir;
-        private static string outRootDir;
+        private static string gameRootDir = "";
+        private static string outRootDir = "";
         private static IFileSystem fs;
 
         public static string GameRootDir { get { LoadSettings(); return gameRootDir; } set => SetGameDir(value); }
@@ -44,7 +44,7 @@ namespace DispelTools.Common
 
         internal static string GetInitialInputDirectory(string initialDirectory)
         {
-            if (gameRootDir == null || initialDirectory.StartsWith(gameRootDir))
+            if (string.IsNullOrEmpty(gameRootDir) || initialDirectory.StartsWith(gameRootDir))
             {
                 return initialDirectory;
             }

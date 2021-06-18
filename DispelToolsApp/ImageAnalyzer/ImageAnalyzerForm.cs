@@ -1,4 +1,5 @@
-﻿using DispelTools.Components;
+﻿using DispelTools.Common;
+using DispelTools.Components;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -30,17 +31,14 @@ namespace DispelTools.ImageAnalyzer
 
         private void openButton_Click(object sender, EventArgs e)
         {
-            var openDialog = new OpenFileDialog()
+            openFileDialog.ShowDialog(() =>
             {
-                Multiselect = false
-            };
-            if (openDialog.ShowDialog() == DialogResult.OK)
-            {
-                filename = openDialog.FileName;
+                openFileDialog.InitialDirectory = openFileDialog.FileName;
+                filename = openFileDialog.FileName;
                 ready = true;
                 filenameLabel.Text = Path.GetFileNameWithoutExtension(filename);
                 imageAnalyzerCore.ClearAll();
-            }
+            });
         }
 
         private void previewButton_Click(object sender, EventArgs e)

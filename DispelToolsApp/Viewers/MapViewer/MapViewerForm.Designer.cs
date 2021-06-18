@@ -55,6 +55,7 @@
             this.progressBar = new DispelTools.Components.ProgressBarWithText();
             this.pictureBox1 = new DispelTools.Components.PictureDiplayer();
             this.generateButton = new System.Windows.Forms.Button();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.tileShowNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tileDiplayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -186,6 +187,10 @@
             this.generateButton.UseVisualStyleBackColor = true;
             this.generateButton.Click += new System.EventHandler(this.generateButton_Click);
             // 
+            // openFileDialog
+            // 
+            this.openFileDialog.Filter = "Dispel map|*.map";
+            // 
             // MapViewerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -225,5 +230,6 @@
         private System.Windows.Forms.CheckBox bldgCheckBox;
         private System.Windows.Forms.CheckBox gtlCheckBox;
         private System.Windows.Forms.Button generateButton;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
     }
 }

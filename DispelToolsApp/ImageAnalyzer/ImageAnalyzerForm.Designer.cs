@@ -42,6 +42,7 @@
             this.overwriteButton = new System.Windows.Forms.Button();
             this.pictureDisplayer = new DispelTools.Components.PictureDiplayer();
             this.reloadButton = new System.Windows.Forms.Button();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -232,6 +233,7 @@
         private ImageAnalyzeControls imageAnalyzeControls;
         private ImageEditControls imageEditControls;
         private System.Windows.Forms.Button reloadButton;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
     }
 }
 

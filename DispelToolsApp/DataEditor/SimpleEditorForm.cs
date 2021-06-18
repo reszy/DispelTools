@@ -18,12 +18,7 @@ namespace DispelTools.DataEditor
 
         private void openButton_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(openFileDialog.InitialDirectory))
-            {
-                openFileDialog.InitialDirectory = Settings.GameRootDir;
-            }
-            openFileDialog.ShowDialog();
-            if (!string.IsNullOrEmpty(openFileDialog.FileName))
+            openFileDialog.ShowDialog(() =>
             {
                 openFileDialog.InitialDirectory = openFileDialog.FileName;
                 editor = new SimpleEditor(openFileDialog.FileName);
@@ -39,7 +34,7 @@ namespace DispelTools.DataEditor
                 {
                     MessageBox.Show(editor.ValidationMessage, "File unsupported", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-            }
+            });
         }
 
         private void elementNumber_ValueChanged(object sender, EventArgs e)

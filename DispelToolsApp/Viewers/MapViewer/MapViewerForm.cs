@@ -76,19 +76,14 @@ namespace DispelTools.Viewers.MapViewer
 
         private void openButton_Click(object sender, EventArgs e)
         {
-            var dialog = new OpenFileDialog()
+            openFileDialog.ShowDialog(() =>
             {
-                Filter = "Dispel map|*.map"
-            };
-            dialog.ShowDialog();
-            string filename = dialog.FileName;
-            if (filename != null && filename.Length > 0)
-            {
+                string filename = openFileDialog.FileName;
                 if (knownMapCoords.TryGetValue(Path.GetFileNameWithoutExtension(filename), out var data))
                 {
                     mapReader = new MapReader(filename, data.offset, data.w, data.h, backgroundWorker);
                 }
-            }
+            });
         }
 
         private void tileShowNumber_ValueChanged(object sender, EventArgs e)

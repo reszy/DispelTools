@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Common\DirectBitmap.cs" />
     <Compile Include="Common\FileExtension.cs" />
+    <Compile Include="Common\OpenDialogExtension.cs" />
     <Compile Include="Common\Settings.cs" />
     <Compile Include="Components\CustomPropertyGridControl\CustomPropertyGrid.cs">
       <SubType>UserControl</SubType>

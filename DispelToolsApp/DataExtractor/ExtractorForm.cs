@@ -33,28 +33,27 @@ namespace DispelTools.DataExtractor
             {
                 openFileDialog.Multiselect = true;
                 openFileDialog.Filter = extractorFactory.FileFilter;
-                openFileDialog.InitialDirectory = Settings.GetInitialInputDirectory(openFileDialog.InitialDirectory);
-                openFileDialog.ShowDialog();
-                filenames = new List<string>(openFileDialog.FileNames);
-                if (filenames.Count != 0)
+                openFileDialog.ShowDialog(() =>
                 {
-                    var openedDirectory = Path.GetDirectoryName(filenames[0]);
+                    filenames = new List<string>(openFileDialog.FileNames);
+                    string openedDirectory = Path.GetDirectoryName(filenames[0]);
                     outDirectory = openedDirectory;
                     openFileDialog.InitialDirectory = openedDirectory;
                     selectedLabel.Text = $" {filenames.Count}";
-                }
+                });
             }
             else if (extractorFactory.type == ExtractionManager.ExtractorType.DIRECTORY)
             {
                 folderBrowserDialog.ShowNewFolderButton = false;
-                folderBrowserDialog.SelectedPath = Settings.GameRootDir;
-                folderBrowserDialog.ShowDialog();
-                filenames = new List<string>
+                folderBrowserDialog.ShowDialog(() =>
                 {
-                    folderBrowserDialog.SelectedPath
-                };
-                outDirectory = Path.GetDirectoryName(filenames[0]);
-                selectedLabel.Text = $" {folderBrowserDialog.SelectedPath}";
+                    filenames = new List<string>
+                    {
+                        folderBrowserDialog.SelectedPath
+                    };
+                    outDirectory = Path.GetDirectoryName(filenames[0]);
+                    selectedLabel.Text = $" {folderBrowserDialog.SelectedPath}";
+                });
             }
             if (outDirectory != null)
             {
@@ -120,10 +119,7 @@ namespace DispelTools.DataExtractor
             }
         }
 
-        private void ExtractionCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            extractButton.Enabled = true;
-        }
+        private void ExtractionCompleted(object sender, RunWorkerCompletedEventArgs e) => extractButton.Enabled = true;
 
         private void outputDirectoryButton_Click(object sender, EventArgs e)
         {

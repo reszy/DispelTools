@@ -42,18 +42,6 @@ namespace DispelTools.Common
             return filename.Replace(GameRootDir, OutRootDir);
         }
 
-        internal static string GetInitialInputDirectory(string initialDirectory)
-        {
-            if (string.IsNullOrEmpty(gameRootDir) || initialDirectory.StartsWith(gameRootDir))
-            {
-                return initialDirectory;
-            }
-            else
-            {
-                return gameRootDir;
-            }
-        }
-
         private static void SetGameDir(string gameDir)
         {
             if (!FS.Path.IsPathRooted(gameDir))

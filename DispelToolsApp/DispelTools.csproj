@@ -127,6 +127,12 @@
     <Compile Include="DataExtractor\Extractors\StringExtractor\StringExtractor.cs" />
     <Compile Include="DataExtractor\Extractors\StringExtractor\StringExtractorFactory.cs" />
     <Compile Include="DataExtractor\IExtractorFactory.cs" />
+    <Compile Include="DebugTools\Metrics\Dto\MetricDto.cs" />
+    <Compile Include="DebugTools\Metrics\Dto\SpriteGapMetricDto.cs" />
+    <Compile Include="DebugTools\Metrics\Dto\ToFileEndMetricDto.cs" />
+    <Compile Include="DebugTools\Metrics\FileMetrics.cs" />
+    <Compile Include="DebugTools\Metrics\Metric.cs" />
+    <Compile Include="DebugTools\Metrics\MetricType.cs" />
     <Compile Include="GifCreator\GifCreatorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -256,6 +262,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.1</Version>
+    </PackageReference>
     <PackageReference Include="SixLabors.ImageSharp">
       <Version>1.0.3</Version>
     </PackageReference>
@@ -283,5 +292,6 @@
     <Content Include="Resources\select.png" />
     <Content Include="Resources\transparentPattern.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

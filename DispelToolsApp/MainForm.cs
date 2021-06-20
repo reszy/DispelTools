@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DispelTools.DebugTools.Metrics;
+using System;
 using System.Windows.Forms;
 
 namespace DispelTools
@@ -12,6 +13,7 @@ namespace DispelTools
             InitializeComponent();
             Text = title;
             nestForm(new SettingsForm());
+            FormClosed += FileMetrics.DumpMetrics;
         }
 
         private void nestForm(Form embeddedForm)

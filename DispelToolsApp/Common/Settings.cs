@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DispelTools.DebugTools.Metrics;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 
@@ -73,9 +74,9 @@ namespace DispelTools.Common
         private static string GetSettingsFilePath()
         {
             string exeDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            return exeDirectory + "\\DispelTools.cofig";
+            return exeDirectory + "\\DispelTools.config";
         }
-        private static void LoadSettings()
+        public static void LoadSettings()
         {
             string settingsPath = GetSettingsFilePath();
             if (!Loaded && FS.File.Exists(settingsPath))
@@ -93,6 +94,7 @@ namespace DispelTools.Common
                             {
                                 case "gameRootDir": SetGameDir(value); break;
                                 case "outRootDir": SetOutDir(value); break;
+                                case "debugFileMetrics": FileMetrics.Enabled = bool.Parse(value); break;
                             }
                         }
                     }
@@ -112,6 +114,10 @@ namespace DispelTools.Common
                 { "gameRootDir", gameRootDir },
                 { "outRootDir", outRootDir }
             };
+            if(FileMetrics.Enabled)
+            {
+                settings["debugFileMetrics"] = FileMetrics.Enabled.ToString();
+            }
             try
             {
                 using (var writer = new StreamWriter(FS.File.Open(GetSettingsFilePath(), FileMode.Create, FileAccess.Write)))

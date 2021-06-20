@@ -29,18 +29,5 @@ namespace DispelTools.Common.Tests
 
             Assert.AreEqual(CheckedColor.ToArgb(), result, $"color was #${result:X}");
         }
-
-
-        [TestMethod()]
-        public void SetPixelDataCorrectOrderTest()
-        {
-            var bitmap = new DirectBitmap(1, 1);
-            bitmap.SetPixel(0, 0, CheckedColor);
-
-            Assert.AreEqual(CheckedColor.A, bitmap.Data[0]);
-            Assert.AreEqual(CheckedColor.R, bitmap.Data[1]);
-            Assert.AreEqual(CheckedColor.G, bitmap.Data[2]);
-            Assert.AreEqual(CheckedColor.B, bitmap.Data[3]);
-        }
     }
 }

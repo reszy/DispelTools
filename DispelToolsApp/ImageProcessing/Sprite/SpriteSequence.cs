@@ -1,11 +1,10 @@
-﻿using System.IO;
-using DispelTools.Common;
+﻿using DispelTools.Common;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Gif;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Processing.Processors.Quantization;
-using SixLabors.ImageSharp.Processing.Processors.Transforms;
+using System;
+using System.Drawing.Imaging;
+using System.IO;
 
 namespace DispelTools.ImageProcessing.Sprite
 {
@@ -22,9 +21,9 @@ namespace DispelTools.ImageProcessing.Sprite
 
         public void SaveAsImage(string path)
         {
-            var directory = Path.GetDirectoryName(path);
-            var filename = Path.GetFileNameWithoutExtension(path);
-            var extension = Path.GetExtension(path).ToUpper();
+            string directory = Path.GetDirectoryName(path);
+            string filename = Path.GetFileNameWithoutExtension(path);
+            string extension = Path.GetExtension(path).ToUpper();
             if (Animated && extension != "GIF")
             {
                 throw new System.ArgumentException("Sprite sequence is animated. Only supported type is GIF");
@@ -40,7 +39,7 @@ namespace DispelTools.ImageProcessing.Sprite
         {
             if (!Animated)
             {
-                frames[0].Bitmap.Bitmap.Save($"{directory}\\{filename}.png");
+                frames[0].Bitmap.Bitmap.Save($"{directory}\\{filename}.png", ImageFormat.Png);
             }
             else
             {
@@ -52,19 +51,20 @@ namespace DispelTools.ImageProcessing.Sprite
         public SpriteFrame GetFrame(int i) => frames[i];
         public void SetFrame(SpriteFrame frame, int i) => frames[i] = frame;
 
-        private Image<Argb32> CreateGif()
+        private Image<Rgba32> CreateGif()
         {
             var dimensions = CalculateDimensions();
             var size = new Size(dimensions.Width, dimensions.Height);
             var center = new Point(dimensions.X, dimensions.Y);
-            var gif = new Image<Argb32>(size.Width, size.Height);
+            var gif = new Image<Rgba32>(size.Width, size.Height);
 
             foreach (var frame in frames)
             {
                 var offset = CalculateFrameOffset(center, new Point(frame.OriginX, frame.OriginY));
                 using (var bitmap = BoxImage(frame.Bitmap, size, offset))
                 {
-                    Image<Argb32> img = Image.LoadPixelData<Argb32>(bitmap.Data, size.Width, size.Height);
+                    var data = ConvertToRgbaByteArray(bitmap);
+                    var img = Image.LoadPixelData<Rgba32>(data, bitmap.Width, bitmap.Height);
                     img.Mutate(x => x.BackgroundColor(Color.Black));
                     var gifFrame = img.Frames[0];
                     gifFrame.Metadata.GetGifMetadata().FrameDelay = 16;
@@ -81,22 +81,19 @@ namespace DispelTools.ImageProcessing.Sprite
             int maxDown = 1;
             foreach (var frame in frames)
             {
-                var left = frame.OriginX;
-                var right = frame.Bitmap.Width - frame.OriginX;
-                var up = frame.OriginY;
-                var down = frame.Bitmap.Bitmap.Height - frame.OriginY;
+                int left = frame.OriginX;
+                int right = frame.Bitmap.Width - frame.OriginX;
+                int up = frame.OriginY;
+                int down = frame.Bitmap.Bitmap.Height - frame.OriginY;
                 if (right > maxRight) { maxRight = right; }
                 if (left > maxLeft) { maxLeft = left; }
                 if (up > maxUp) { maxUp = up; }
                 if (down > maxDown) { maxDown = down; }
             }
-            return new Rectangle(maxLeft, maxUp ,maxLeft + maxRight, maxUp + maxDown);
+            return new Rectangle(maxLeft, maxUp, maxLeft + maxRight, maxUp + maxDown);
         }
 
-        private Point CalculateFrameOffset(Point boxCenter, Point frameCenter)
-        {
-            return new Point(boxCenter.X - frameCenter.X, boxCenter.Y - frameCenter.Y);
-        }
+        private Point CalculateFrameOffset(Point boxCenter, Point frameCenter) => new Point(boxCenter.X - frameCenter.X, boxCenter.Y - frameCenter.Y);
 
         private DirectBitmap BoxImage(DirectBitmap sourceImage, Size size, Point position)
         {
@@ -109,6 +106,21 @@ namespace DispelTools.ImageProcessing.Sprite
                 }
             }
             return image;
+        }
+
+        private byte[] ConvertToRgbaByteArray(DirectBitmap bitmap)
+        {
+            var array = new byte[bitmap.Bits.Length * 4];
+            for(int i = 0; i< bitmap.Bits.Length; i++)
+            {
+                var pixel = BitConverter.GetBytes(bitmap.Bits[i]);
+                var bytePixelNumber = (i * 4);
+                array[bytePixelNumber + 0] = pixel[2];
+                array[bytePixelNumber + 1] = pixel[1];
+                array[bytePixelNumber + 2] = pixel[0];
+                array[bytePixelNumber + 3] = pixel[3];
+            }
+            return array;
         }
     }
 }

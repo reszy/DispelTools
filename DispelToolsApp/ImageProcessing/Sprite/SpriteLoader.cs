@@ -1,28 +1,32 @@
-﻿using System;
-using System.Linq;
+﻿using DispelTools.Common;
+using DispelTools.DebugTools.Metrics;
+using DispelTools.DebugTools.Metrics.Dto;
 using System.IO;
-using DispelTools.Common;
+using System.Linq;
 
 namespace DispelTools.ImageProcessing.Sprite
 {
     public class SpriteLoader
     {
 
-        private BinaryReader reader;
-        public SpriteLoader(BinaryReader reader)
+        private readonly BinaryReader reader;
+        private readonly string filename;
+
+        public SpriteLoader(BinaryReader reader, string filename)
         {
             this.reader = reader;
+            this.filename = filename;
         }
 
         public void SkipSequence()
         {
-            var info = SequenceInfo.CreateAndReadInfo(reader);
+            var info = GetSequenceInfo();
             reader.BaseStream.Seek(info.SequenceEndPosition, SeekOrigin.Begin);
         }
 
         public SpriteSequence LoadSequence()
         {
-            var info = SequenceInfo.CreateAndReadInfo(reader);
+            var info = GetSequenceInfo();
             var sequence = new SpriteSequence(info.FrameInfos.Length);
             for (int i = 0; i < info.FrameInfos.Length; i++)
             {
@@ -52,66 +56,64 @@ namespace DispelTools.ImageProcessing.Sprite
             return bitmap;
         }
 
+        private SequenceInfo GetSequenceInfo()
+        {
+            var info = new SequenceInfo();
+
+            int stamp = reader.ReadInt32();
+            if (stamp == 8)
+            {
+                FileMetrics.AddMetric(new GeneralFileCounterDto("spriteFirstStamp8", filename));
+                stamp = reader.ReadInt32();
+            }
+            if (stamp == 0)
+            {
+                int framesCount = reader.ReadInt32();
+                int stamp0_2 = reader.ReadInt32();
+                info.FrameInfos = new ImageInfo[framesCount];
+
+                FileMetrics.AddMetric(new GeneralFileCounterDto("spriteFrameCount", filename));
+            }
+            info.SequenceStartPosition = reader.BaseStream.Position;
+            for (int i = 0; i < info.FrameInfos.Length; i++)
+            {
+                info.FrameInfos[i] = GetImageInfo();
+                reader.Skip(info.FrameInfos[i].SizeBytes);
+            }
+            info.SequenceEndPosition = reader.BaseStream.Position;
+            reader.BaseStream.Seek(info.SequenceStartPosition, SeekOrigin.Begin);
+
+            return info;
+        }
+
+        private ImageInfo GetImageInfo()
+        {
+            var info = new ImageInfo();
+            reader.Skip(6 * 4);//some data
+            info.OriginX = reader.ReadInt32();
+            info.OriginY = reader.ReadInt32();
+            info.Width = reader.ReadInt32();
+            info.Height = reader.ReadInt32();
+            info.SizeBytes = reader.ReadUInt32() * 2;
+            info.ImageStartPosition = reader.BaseStream.Position;
+            return info;
+        }
+
         private class SequenceInfo
         {
-            public ImageInfo[] FrameInfos { get; private set; }
-            public long SequenceStartPosition { get; private set; }
-            public long SequenceEndPosition { get; private set; }
-            public static SequenceInfo CreateAndReadInfo(BinaryReader reader)
-            {
-                var info = new SequenceInfo();
-                info.ReadInfo(reader);
-                return info;
-            }
-            private void ReadInfo(BinaryReader reader)
-            {
-                int stamp = reader.ReadInt32();
-                if(stamp == 8)
-                {
-                    stamp = reader.ReadInt32();
-                }
-                if(stamp == 0)
-                {
-                    int framesCount = reader.ReadInt32();
-                    int stamp0_2 = reader.ReadInt32();
-                    FrameInfos = new ImageInfo[framesCount];
-                }
-                SequenceStartPosition = reader.BaseStream.Position;
-                for (int i = 0; i < FrameInfos.Length; i++)
-                {
-                    FrameInfos[i] = ImageInfo.CreateAndReadInfo(reader);
-                    reader.Skip(FrameInfos[i].SizeBytes);
-                }
-                SequenceEndPosition = reader.BaseStream.Position;
-                reader.BaseStream.Seek(SequenceStartPosition, SeekOrigin.Begin);
-            }
+            public ImageInfo[] FrameInfos { get; set; }
+            public long SequenceStartPosition { get; set; }
+            public long SequenceEndPosition { get; set; }
         }
 
         private class ImageInfo
         {
-            public int OriginX { get; private set; }
-            public int OriginY { get; private set; }
-            public int Width { get; private set; }
-            public int Height { get; private set; }
-            public long SizeBytes { get; private set; }
-            public long ImageStartPosition { get; private set; }
-
-            public static ImageInfo CreateAndReadInfo(BinaryReader reader)
-            {
-                var info = new ImageInfo();
-                info.ReadInfo(reader);
-                return info;
-            }
-            private void ReadInfo(BinaryReader reader)
-            {
-                reader.Skip(6 * 4);//some data
-                OriginX = reader.ReadInt32();
-                OriginY = reader.ReadInt32();
-                Width = reader.ReadInt32();
-                Height = reader.ReadInt32();
-                SizeBytes = reader.ReadUInt32() * 2;
-                ImageStartPosition = reader.BaseStream.Position;
-            }
+            public int OriginX { get; set; }
+            public int OriginY { get; set; }
+            public int Width { get; set; }
+            public int Height { get; set; }
+            public long SizeBytes { get; set; }
+            public long ImageStartPosition { get; set; }
         }
     }
 }

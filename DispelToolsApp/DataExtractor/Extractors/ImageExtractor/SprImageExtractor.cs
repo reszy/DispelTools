@@ -1,4 +1,6 @@
 ﻿using DispelTools.Common;
+using DispelTools.DebugTools.Metrics;
+using DispelTools.DebugTools.Metrics.Dto;
 using DispelTools.ImageProcessing.Sprite;
 using System;
 
@@ -9,9 +11,10 @@ namespace DispelTools.DataExtractor.ImageExtractor
         public override void ExtractFile(ExtractionFileProcess process)
         {
             var file = process.File;
-            var loader = new SpriteLoader(process.File);
+            var loader = new SpriteLoader(process.File, process.Filename);
 
             int imageStamp = file.ReadInt32();
+            FileMetrics.AddMetric(new GeneralFileMetricDto("imageStamp", process.Filename, imageStamp));
             int imageOffset = imageStamp == 6 ? 1904 : (imageStamp == 9 ? 2996 : throw new NotImplementedException($"Unexpected imageStamp {imageStamp}"));
             file.Skip(264);
 
@@ -22,6 +25,7 @@ namespace DispelTools.DataExtractor.ImageExtractor
                 LoadAndSaveSequence(process, loader, sequenceCounter);
                 sequenceCounter++;
             }
+            FileMetrics.AddMetric(new ToFileEndMetricDto(process.Stream.Length - process.Stream.Position, "Sprite"));
         }
 
         private void LoadAndSaveSequence(ExtractionFileProcess process, SpriteLoader loader, int imageNumber)
@@ -34,21 +38,26 @@ namespace DispelTools.DataExtractor.ImageExtractor
 
         private void SeekNextSequence(ExtractionFileProcess process)
         {
-            var oldPosition = process.Stream.Position;
+            long oldPosition = process.Stream.Position;
             int value = 0;
             int skipSize = 0;
-            while(value == 0)
+            while (value == 0)
             {
                 value = process.File.ReadInt32();
-                if(value == 0) { skipSize++; }
+                process.File.Skip(8);
+                if (value == 0)
+                {
+                    skipSize += 3;
+                }
             }
 
-            if(skipSize == 1)
+            if (skipSize == 3)
             {
                 skipSize = 0;
             }
-
-            process.File.SetPosition(oldPosition + (skipSize*4));
+            FileMetrics.AddMetric(new SpriteGapMetricDto(skipSize * 4));
+            FileMetrics.AddMetric(new GeneralFileMetricDto("intSkipSize", process.Filename, skipSize));
+            process.File.SetPosition(oldPosition + (skipSize * 4));
         }
 
         /// OLD METHOD

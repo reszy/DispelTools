@@ -127,6 +127,9 @@
     <Compile Include="DataExtractor\Extractors\StringExtractor\StringExtractor.cs" />
     <Compile Include="DataExtractor\Extractors\StringExtractor\StringExtractorFactory.cs" />
     <Compile Include="DataExtractor\IExtractorFactory.cs" />
+    <Compile Include="DebugTools\Metrics\Dto\GeneralFileCounterDto.cs" />
+    <Compile Include="DebugTools\Metrics\Dto\GeneralFileStatusDto.cs" />
+    <Compile Include="DebugTools\Metrics\Dto\GeneralFileMetricDto.cs" />
     <Compile Include="DebugTools\Metrics\Dto\MetricDto.cs" />
     <Compile Include="DebugTools\Metrics\Dto\SpriteGapMetricDto.cs" />
     <Compile Include="DebugTools\Metrics\Dto\ToFileEndMetricDto.cs" />

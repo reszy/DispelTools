@@ -1,8 +1,7 @@
 ﻿using DispelTools.Common;
-using DispelTools.DebugTools.Metrics;
-using DispelTools.DebugTools.Metrics.Dto;
+using DispelTools.DebugTools.MetricTools;
 using DispelTools.ImageProcessing.Sprite;
-using System;
+using System.IO;
 
 namespace DispelTools.DataExtractor.ImageExtractor
 {
@@ -12,52 +11,69 @@ namespace DispelTools.DataExtractor.ImageExtractor
         {
             var file = process.File;
             var loader = new SpriteLoader(process.File, process.Filename);
-
-            int imageStamp = file.ReadInt32();
-            FileMetrics.AddMetric(new GeneralFileMetricDto("imageStamp", process.Filename, imageStamp));
-            int imageOffset = imageStamp == 6 ? 1904 : (imageStamp == 9 ? 2996 : throw new NotImplementedException($"Unexpected imageStamp {imageStamp}"));
-            file.Skip(264);
+            file.Skip(268);
 
             int sequenceCounter = 0;
-            while (process.Stream.Position + imageOffset + 264 < process.Stream.Length)
+            while (process.Stream.Position < process.Stream.Length)
             {
-                SeekNextSequence(process);
-                LoadAndSaveSequence(process, loader, sequenceCounter);
-                sequenceCounter++;
+                if (SeekNextSequence(process))
+                {
+                    LoadAndSaveSequence(process, loader, sequenceCounter);
+                    sequenceCounter++;
+                }
+                else
+                {
+                    return;
+                }
             }
-            FileMetrics.AddMetric(new ToFileEndMetricDto(process.Stream.Length - process.Stream.Position, "Sprite"));
+            Metrics.Count(MetricFile.SpriteFileMetric, "ToFileEnd", process.Stream.Length - process.Stream.Position);
         }
 
         private void LoadAndSaveSequence(ExtractionFileProcess process, SpriteLoader loader, int imageNumber)
         {
             var sequence = loader.LoadSequence();
             string createdFileName = $"{process.Filename}.{imageNumber}";
-            sequence.SaveAsImage(process.OutputDirectory, createdFileName);
-            process.Extractor.RaportFileCreatedDetail(process, createdFileName);
+
+            if (!Settings.ExtractorReadOnly)
+            {
+                sequence.SaveAsImage(process.OutputDirectory, createdFileName);
+                process.Extractor.RaportFileCreatedDetail(process, createdFileName);
+            }
+            sequence.Dispose();
         }
 
-        private void SeekNextSequence(ExtractionFileProcess process)
+        private bool SeekNextSequence(ExtractionFileProcess process)
         {
             long oldPosition = process.Stream.Position;
-            int value = 0;
-            int skipSize = 0;
-            while (value == 0)
+            bool validSpriteSequence = false;
+            int numberOfSkips = 0;
+            int dataChunkSize = 1;
+            int readIntSize = dataChunkSize + 14;
+            while (!validSpriteSequence)
             {
-                value = process.File.ReadInt32();
-                process.File.Skip(8);
-                if (value == 0)
+                if (process.Stream.Position + (readIntSize * 4) >= process.Stream.Length) { break; }
+                int[] ints = process.File.ReadInts(readIntSize);
+                process.Stream.Seek(-((readIntSize - dataChunkSize) * 4), SeekOrigin.Current);
+                if ((ints[0] == 0 && ints[1] > 0 && ints[1] < 255 && ints[2] == 0 && ints[11] > 0 && ints[12] > 0 && ints[11] * ints[12] == ints[13]) ||
+                    (ints[0] == 8 && ints[1] == 0 && ints[2] > 0 && ints[2] < 255 && ints[3] == 0 && ints[12] > 0 && ints[13] > 0 && ints[12] * ints[13] == ints[14]))
                 {
-                    skipSize += 3;
+                    validSpriteSequence = true;
+                }
+                else
+                {
+                    numberOfSkips++;
                 }
             }
 
-            if (skipSize == 3)
+            if (numberOfSkips == 1)
             {
-                skipSize = 0;
+                numberOfSkips = 0;
             }
-            FileMetrics.AddMetric(new SpriteGapMetricDto(skipSize * 4));
-            FileMetrics.AddMetric(new GeneralFileMetricDto("intSkipSize", process.Filename, skipSize));
-            process.File.SetPosition(oldPosition + (skipSize * 4));
+            int sikpByteSize = numberOfSkips * dataChunkSize * 4;
+            Metrics.Count(MetricFile.SpriteFileMetric, "SpriteGap", sikpByteSize.ToString());
+            Metrics.Count(MetricFile.SpriteFileMetric, process.Filename, "numberOfSkips", numberOfSkips);
+            process.File.SetPosition(oldPosition + sikpByteSize);
+            return validSpriteSequence;
         }
 
         /// OLD METHOD
@@ -74,6 +90,9 @@ namespace DispelTools.DataExtractor.ImageExtractor
         //        int calculatedArea = x * y;
         //        if (calculatedArea == area && area > 1 && x < 40000 && y < 40000 && x > 1 && y > 1 && file.BaseStream.Position + (area * 2) < file.BaseStream.Length)
         //        {
+        //            Metrics.Gauge(MetricFile.SpriteOffsetMetric, $"file.{process.Filename}", file.BaseStream.Position);
+        //            Metrics.AddMetric(MetricFile.SpriteFileMetric, new GeneralFileCounterDto("spriteFrameCount", process.Filename));
+        //            Metrics.Count(MetricFile.SpriteFileMetric, "allFrames");
         //            string createdFileName = ReadImage(process, file, x, y, area, $"{process.Filename}.{i++}");
         //            //file.BaseStream.Seek(nextCheckPosition, SeekOrigin.Begin); don't need that, condition is enough to find all
         //            process.Extractor.RaportFileCreatedDetail(process, createdFileName);
@@ -84,12 +103,13 @@ namespace DispelTools.DataExtractor.ImageExtractor
         //        }
         //    }
         //}
-        //
+
         //private string ReadImage(ExtractionFileProcess process, BinaryReader file, int width, int height, int pixelCount, string filePrefix)
         //{
-        //    var image = ImageProcessing.ImageLoader.Load((uint)width, (uint)height, file.ReadBytes(pixelCount * 2));
+        //    file.ReadBytes(pixelCount * 2);//for metrics only use
+        //    //var image = ImageProcessing.ImageLoader.Load((uint)width, (uint)height, file.ReadBytes(pixelCount * 2));
         //    string finalName = $"{process.OutputDirectory}\\{filePrefix}.png";
-        //    image.Save(finalName, ImageFormat.Png);
+        //    //image.Save(finalName, ImageFormat.Png);
         //    return finalName;
         //}
 

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using DispelTools.Common;
 using System.IO;
 
 namespace DispelTools.DataExtractor.SoundExtractor
@@ -21,7 +20,10 @@ namespace DispelTools.DataExtractor.SoundExtractor
                 file.ReadInt16();
                 short bitsPerSample = file.ReadInt16();
                 file.ReadInt16();
-                SaveToWaveFormat(process, file, datasize, sampleRate, bitsPerSample);
+                if (!Settings.ExtractorReadOnly)
+                {
+                    SaveToWaveFormat(process, file, datasize, sampleRate, bitsPerSample);
+                }
             }
             else
             {

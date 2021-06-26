@@ -1,7 +1,6 @@
 ﻿using DispelTools.DataExtractor.ExtractionStatus;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Windows.Forms;
@@ -32,7 +31,7 @@ namespace DispelTools.DataExtractor.AllExtractor
                 case ".map":
                 {
                     process.Extractor.ReportNewStatus(StatusNameChanged.NewStatusInProgress("Extracting map sprites"));
-                    new ImageExtractor.SprImageExtractor().ExtractFile(process);
+                    new MapExtractor.MapImageExtractor().ExtractFile(process);
                 }
                 break;
                 case ".snf":

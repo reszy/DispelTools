@@ -38,8 +38,13 @@ namespace DispelTools.DataExtractor.AllExtractor.Tests
             }
 
             var extractor = new AllFilesExtractor(mockFileSystem);
-            var manager = new ExtractionManager(mockFileSystem, extractor, new List<string>() { gameFolder }, outputDirectory, new System.ComponentModel.BackgroundWorker());
-            var results = extractor.Initialize(manager, new List<string>() { gameFolder }, outputDirectory);
+            var extractionParams = new ExtractionParams()
+            {
+                Filename = new List<string>() { gameFolder },
+                OutputDirectory = outputDirectory
+            };
+            var manager = new ExtractionManager(mockFileSystem, extractor, extractionParams, new System.ComponentModel.BackgroundWorker());
+            var results = extractor.Initialize(manager, extractionParams.Filename, extractionParams.OutputDirectory);
 
             foreach (var result in results)
             {

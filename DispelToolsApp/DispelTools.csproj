@@ -54,6 +54,7 @@
     <Compile Include="Common\FileExtension.cs" />
     <Compile Include="Common\OpenDialogExtension.cs" />
     <Compile Include="Common\Settings.cs" />
+    <Compile Include="Common\Settings.SettingsDto.cs" />
     <Compile Include="Components\CustomPropertyGridControl\CustomPropertyGrid.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -118,8 +119,8 @@
     <Compile Include="DataExtractor\Extractors\AllExtractor\AllFilesExtractorFactory.cs" />
     <Compile Include="DataExtractor\Extractors\ImageExtractor\SprImageExtractor.cs" />
     <Compile Include="DataExtractor\Extractors\ImageExtractor\SprImageExtractorFactory.cs" />
-    <Compile Include="DataExtractor\Extractors\MapImageExtractor\MapImageExtractor.cs" />
-    <Compile Include="DataExtractor\Extractors\MapImageExtractor\MapImageExtractorFactory.cs" />
+    <Compile Include="DataExtractor\Extractors\MapExtractor\MapImageExtractor.cs" />
+    <Compile Include="DataExtractor\Extractors\MapExtractor\MapImageExtractorFactory.cs" />
     <Compile Include="DataExtractor\Extractors\RgbConverter\Rgb24Converter.cs" />
     <Compile Include="DataExtractor\Extractors\RgbConverter\RgbConverterFactory.cs" />
     <Compile Include="DataExtractor\Extractors\SoundExtractor\SnfSoundExtractor.cs" />
@@ -127,15 +128,13 @@
     <Compile Include="DataExtractor\Extractors\StringExtractor\StringExtractor.cs" />
     <Compile Include="DataExtractor\Extractors\StringExtractor\StringExtractorFactory.cs" />
     <Compile Include="DataExtractor\IExtractorFactory.cs" />
-    <Compile Include="DebugTools\Metrics\Dto\GeneralFileCounterDto.cs" />
-    <Compile Include="DebugTools\Metrics\Dto\GeneralFileStatusDto.cs" />
-    <Compile Include="DebugTools\Metrics\Dto\GeneralFileMetricDto.cs" />
-    <Compile Include="DebugTools\Metrics\Dto\MetricDto.cs" />
-    <Compile Include="DebugTools\Metrics\Dto\SpriteGapMetricDto.cs" />
-    <Compile Include="DebugTools\Metrics\Dto\ToFileEndMetricDto.cs" />
-    <Compile Include="DebugTools\Metrics\FileMetrics.cs" />
-    <Compile Include="DebugTools\Metrics\Metric.cs" />
-    <Compile Include="DebugTools\Metrics\MetricType.cs" />
+    <Compile Include="DebugTools\MetricTools\MetricDto.cs" />
+    <Compile Include="DebugTools\MetricTools\MetricJsonConverter.cs" />
+    <Compile Include="DebugTools\MetricTools\MetricFile.cs" />
+    <Compile Include="DebugTools\MetricTools\Metrics.cs" />
+    <Compile Include="DebugTools\MetricTools\Metric.cs" />
+    <Compile Include="DebugTools\MetricTools\MetricsContainer.cs" />
+    <Compile Include="DebugTools\MetricTools\MetricType.cs" />
     <Compile Include="GifCreator\GifCreatorForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -8,7 +8,7 @@ using System.IO;
 
 namespace DispelTools.ImageProcessing.Sprite
 {
-    public class SpriteSequence
+    public class SpriteSequence : IDisposable
     {
         public bool Animated => frames.Length > 1;
 
@@ -26,11 +26,11 @@ namespace DispelTools.ImageProcessing.Sprite
             string extension = Path.GetExtension(path).ToUpper();
             if (Animated && extension != "GIF")
             {
-                throw new System.ArgumentException("Sprite sequence is animated. Only supported type is GIF");
+                throw new ArgumentException("Sprite sequence is animated. Only supported type is GIF");
             }
             if (!Animated && extension != "PNG")
             {
-                throw new System.ArgumentException("Sprite sequence is not animated. Only supported type is PNG");
+                throw new ArgumentException("Sprite sequence is not animated. Only supported type is PNG");
             }
             SaveAsImage(directory, filename);
         }
@@ -63,7 +63,7 @@ namespace DispelTools.ImageProcessing.Sprite
                 var offset = CalculateFrameOffset(center, new Point(frame.OriginX, frame.OriginY));
                 using (var bitmap = BoxImage(frame.Bitmap, size, offset))
                 {
-                    var data = ConvertToRgbaByteArray(bitmap);
+                    byte[] data = ConvertToRgbaByteArray(bitmap);
                     var img = Image.LoadPixelData<Rgba32>(data, bitmap.Width, bitmap.Height);
                     img.Mutate(x => x.BackgroundColor(Color.Black));
                     var gifFrame = img.Frames[0];
@@ -110,17 +110,25 @@ namespace DispelTools.ImageProcessing.Sprite
 
         private byte[] ConvertToRgbaByteArray(DirectBitmap bitmap)
         {
-            var array = new byte[bitmap.Bits.Length * 4];
-            for(int i = 0; i< bitmap.Bits.Length; i++)
+            byte[] array = new byte[bitmap.Bits.Length * 4];
+            for (int i = 0; i < bitmap.Bits.Length; i++)
             {
-                var pixel = BitConverter.GetBytes(bitmap.Bits[i]);
-                var bytePixelNumber = (i * 4);
+                byte[] pixel = BitConverter.GetBytes(bitmap.Bits[i]);
+                int bytePixelNumber = (i * 4);
                 array[bytePixelNumber + 0] = pixel[2];
                 array[bytePixelNumber + 1] = pixel[1];
                 array[bytePixelNumber + 2] = pixel[0];
                 array[bytePixelNumber + 3] = pixel[3];
             }
             return array;
+        }
+
+        public void Dispose()
+        {
+            foreach (var frame in frames)
+            {
+                frame.Bitmap.Dispose();
+            }
         }
     }
 }

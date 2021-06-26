@@ -1,6 +1,5 @@
 ﻿using DispelTools.DataExtractor.ExtractionStatus;
-using DispelTools.DebugTools.Metrics;
-using DispelTools.DebugTools.Metrics.Dto;
+using DispelTools.DebugTools.MetricTools;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -81,7 +80,7 @@ namespace DispelTools.DataExtractor
                     }
                     catch (Exception e)
                     {
-                        FileMetrics.AddMetric(new GeneralFileStatusDto($"ExtractorError.{extractor.GetType().Name}", fileProcess.Filename, $"{e.Message} p: {fileProcess.File.BaseStream.Position}"));
+                        Metrics.List(MetricFile.SpriteFileMetric, $"ExtractorError.{extractor.GetType().Name}.{fileProcess.Filename}", $"{e.Message} p: {fileProcess.File.BaseStream.Position}");
                         errorMessage = $"Error: {e.Message}";
                         errosOccured++;
                     }

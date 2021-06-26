@@ -1,4 +1,4 @@
-﻿using DispelTools.DebugTools.Metrics;
+﻿using DispelTools.DebugTools.MetricTools;
 using System;
 using System.Windows.Forms;
 
@@ -13,7 +13,7 @@ namespace DispelTools
             InitializeComponent();
             Text = title;
             nestForm(new SettingsForm());
-            FormClosed += FileMetrics.DumpMetrics;
+            FormClosed += Metrics.DumpMetrics;
         }
 
         private void nestForm(Form embeddedForm)
@@ -84,7 +84,7 @@ namespace DispelTools
         private void mapImageExtractorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             selectMenuButton(sender);
-            nestForm(new DataExtractor.ExtractorForm(new DataExtractor.MapImageExtractor.MapImageExtractorFactory()));
+            nestForm(new DataExtractor.ExtractorForm(new DataExtractor.MapExtractor.MapImageExtractorFactory()));
         }
 
         private void contentPanel_Resize(object sender, EventArgs e)

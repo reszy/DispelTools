@@ -1,6 +1,6 @@
 ﻿using DispelTools.Common;
-using DispelTools.DebugTools.Metrics;
-using DispelTools.DebugTools.Metrics.Dto;
+using DispelTools.DebugTools.MetricTools;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -63,7 +63,6 @@ namespace DispelTools.ImageProcessing.Sprite
             int stamp = reader.ReadInt32();
             if (stamp == 8)
             {
-                FileMetrics.AddMetric(new GeneralFileCounterDto("spriteFirstStamp8", filename));
                 stamp = reader.ReadInt32();
             }
             if (stamp == 0)
@@ -71,18 +70,38 @@ namespace DispelTools.ImageProcessing.Sprite
                 int framesCount = reader.ReadInt32();
                 int stamp0_2 = reader.ReadInt32();
                 info.FrameInfos = new ImageInfo[framesCount];
+            }
 
-                FileMetrics.AddMetric(new GeneralFileCounterDto("spriteFrameCount", filename));
+            if (info.FrameInfos.Length == 0)
+            {
+                Metrics.Count(MetricFile.SpriteFileMetric, filename, "zeroFrame");
+                Metrics.Count(MetricFile.SpriteFileMetric, "zeroFrames");
             }
             info.SequenceStartPosition = reader.BaseStream.Position;
             for (int i = 0; i < info.FrameInfos.Length; i++)
             {
-                info.FrameInfos[i] = GetImageInfo();
-                reader.Skip(info.FrameInfos[i].SizeBytes);
+                try
+                {
+                    info.FrameInfos[i] = GetImageInfo();
+                    reader.Skip(info.FrameInfos[i].SizeBytes);
+                    Metrics.Gauge(MetricFile.SpriteOffsetMetric, $"file.{filename}", info.FrameInfos[i].ImageStartPosition);
+                }
+                catch (FrameInfoException)
+                {
+                    var oldFrames = info.FrameInfos;
+                    info.FrameInfos = new ImageInfo[i];
+                    for (int j = 0; j < info.FrameInfos.Length; j++)
+                    {
+                        info.FrameInfos[j] = oldFrames[j];
+                    }
+                }
             }
             info.SequenceEndPosition = reader.BaseStream.Position;
             reader.BaseStream.Seek(info.SequenceStartPosition, SeekOrigin.Begin);
 
+
+            Metrics.Count(MetricFile.SpriteFileMetric, filename, "spriteFrameCount", info.FrameInfos.Length);
+            Metrics.Count(MetricFile.SpriteFileMetric, "allFrames", info.FrameInfos.Length);
             return info;
         }
 
@@ -96,7 +115,18 @@ namespace DispelTools.ImageProcessing.Sprite
             info.Height = reader.ReadInt32();
             info.SizeBytes = reader.ReadUInt32() * 2;
             info.ImageStartPosition = reader.BaseStream.Position;
+            if (info.Width < 1 || info.Height < 1)
+            {
+                throw new FrameInfoException();//fix for soulnet.spr missing one frame
+            }
             return info;
+        }
+
+        public class FrameInfoException : Exception
+        {
+            public FrameInfoException() : base("Loading some garbage instead of frame info")
+            {
+            }
         }
 
         private class SequenceInfo

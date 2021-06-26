@@ -37,10 +37,10 @@
             this.outputDirectoryInfo = new System.Windows.Forms.Label();
             this.selectedLabel = new System.Windows.Forms.Label();
             this.openOutputDirectoryButton = new System.Windows.Forms.Button();
-            this.details = new DispelTools.Components.DetailsComponent();
-            this.progressBar = new DispelTools.Components.ProgressBarWithText();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.progressBar = new DispelTools.Components.ProgressBarWithText();
+            this.details = new DispelTools.Components.DetailsComponent();
             this.SuspendLayout();
             // 
             // openButton
@@ -58,7 +58,7 @@
             this.extractButton.Enabled = false;
             this.extractButton.Location = new System.Drawing.Point(12, 41);
             this.extractButton.Name = "extractButton";
-            this.extractButton.Size = new System.Drawing.Size(75, 23);
+            this.extractButton.Size = new System.Drawing.Size(75, 37);
             this.extractButton.TabIndex = 1;
             this.extractButton.Text = "Extract";
             this.extractButton.UseVisualStyleBackColor = true;
@@ -67,7 +67,7 @@
             // label3
             // 
             this.label3.BackColor = System.Drawing.Color.Transparent;
-            this.label3.Location = new System.Drawing.Point(93, 50);
+            this.label3.Location = new System.Drawing.Point(90, 41);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(52, 13);
             this.label3.TabIndex = 3;
@@ -85,7 +85,7 @@
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(252, 50);
+            this.label1.Location = new System.Drawing.Point(90, 65);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(85, 13);
             this.label1.TabIndex = 5;
@@ -93,17 +93,19 @@
             // 
             // outputDirectoryInfo
             // 
-            this.outputDirectoryInfo.Location = new System.Drawing.Point(343, 51);
+            this.outputDirectoryInfo.AutoEllipsis = true;
+            this.outputDirectoryInfo.Location = new System.Drawing.Point(181, 65);
             this.outputDirectoryInfo.Name = "outputDirectoryInfo";
-            this.outputDirectoryInfo.Size = new System.Drawing.Size(250, 13);
+            this.outputDirectoryInfo.Size = new System.Drawing.Size(416, 13);
             this.outputDirectoryInfo.TabIndex = 6;
             // 
             // selectedLabel
             // 
+            this.selectedLabel.AutoEllipsis = true;
             this.selectedLabel.BackColor = System.Drawing.Color.Transparent;
-            this.selectedLabel.Location = new System.Drawing.Point(148, 50);
+            this.selectedLabel.Location = new System.Drawing.Point(148, 41);
             this.selectedLabel.Name = "selectedLabel";
-            this.selectedLabel.Size = new System.Drawing.Size(100, 13);
+            this.selectedLabel.Size = new System.Drawing.Size(449, 13);
             this.selectedLabel.TabIndex = 7;
             // 
             // openOutputDirectoryButton
@@ -117,15 +119,9 @@
             this.openOutputDirectoryButton.UseVisualStyleBackColor = true;
             this.openOutputDirectoryButton.Click += new System.EventHandler(this.openOutputDirectoryButton_Click);
             // 
-            // details
+            // folderBrowserDialog
             // 
-            this.details.Header = "Details";
-            this.details.Location = new System.Drawing.Point(13, 135);
-            this.details.MinimumSize = new System.Drawing.Size(100, 25);
-            this.details.Name = "details";
-            this.details.Size = new System.Drawing.Size(586, 25);
-            this.details.TabIndex = 9;
-            this.details.UnfoldSize = 240;
+            this.folderBrowserDialog.RootFolder = System.Environment.SpecialFolder.MyComputer;
             // 
             // progressBar
             // 
@@ -135,9 +131,15 @@
             this.progressBar.Size = new System.Drawing.Size(586, 45);
             this.progressBar.TabIndex = 10;
             // 
-            // folderBrowserDialog
+            // details
             // 
-            this.folderBrowserDialog.RootFolder = System.Environment.SpecialFolder.MyComputer;
+            this.details.Header = "Details";
+            this.details.Location = new System.Drawing.Point(13, 135);
+            this.details.MinimumSize = new System.Drawing.Size(100, 25);
+            this.details.Name = "details";
+            this.details.Size = new System.Drawing.Size(586, 25);
+            this.details.TabIndex = 9;
+            this.details.UnfoldSize = 240;
             // 
             // ExtractorForm
             // 

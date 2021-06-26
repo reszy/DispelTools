@@ -49,6 +49,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Common\DirectBitmapTests.cs" />
+    <Compile Include="Common\FileReaderWriterExtensionTests.cs" />
     <Compile Include="DataEditor\SimpleEditorTests.cs" />
     <Compile Include="DataExtractor\Extractors\AllExtractor\AllFilesExtractorTests.cs" />
     <Compile Include="ImageAnalyzer\DataPixelTests.cs" />

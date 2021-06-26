@@ -39,7 +39,7 @@ namespace DispelTools.DataExtractor
                     string openedDirectory = Path.GetDirectoryName(filenames[0]);
                     outDirectory = openedDirectory;
                     openFileDialog.InitialDirectory = openedDirectory;
-                    selectedLabel.Text = $" {filenames.Count}";
+                    selectedLabel.Text = filenames.Count == 1 ? $" {filenames.Count}   {filenames[0]}" : $" {filenames.Count}";
                 });
             }
             else if (extractorFactory.type == ExtractionManager.ExtractorType.DIRECTORY)
@@ -51,7 +51,7 @@ namespace DispelTools.DataExtractor
                     {
                         folderBrowserDialog.SelectedPath
                     };
-                    outDirectory = Path.GetDirectoryName(filenames[0]);
+                    outDirectory = filenames[0];
                     selectedLabel.Text = $" {folderBrowserDialog.SelectedPath}";
                 });
             }
@@ -63,7 +63,7 @@ namespace DispelTools.DataExtractor
                 }
                 else
                 {
-                    setOutputDirectory(Path.GetDirectoryName(filenames[0]));
+                    setOutputDirectory(outDirectory);
                 }
             }
             setIfReady();

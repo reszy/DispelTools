@@ -1,16 +1,17 @@
-﻿using DispelTools.DebugTools.Metrics;
-using System.Collections.Generic;
+﻿using DispelTools.DebugTools.MetricTools;
 using System.IO;
 using System.IO.Abstractions;
 
 namespace DispelTools.Common
 {
-    public static class Settings
+    public static partial class Settings
     {
+        private static bool debugReadOnlyExtractor = false;
         private static string gameRootDir = "";
         private static string outRootDir = "";
         private static IFileSystem fs;
 
+        public static bool ExtractorReadOnly => debugReadOnlyExtractor;
         public static string GameRootDir { get { LoadSettings(); return gameRootDir; } set => SetGameDir(value); }
         public static string OutRootDir { get { LoadSettings(); return outRootDir; } set => SetOutDir(value); }
 
@@ -42,45 +43,12 @@ namespace DispelTools.Common
             }
             return filename.Replace(GameRootDir, OutRootDir);
         }
-
-        private static void SetGameDir(string gameDir)
-        {
-            if (!FS.Path.IsPathRooted(gameDir))
-            {
-                throw new System.ArgumentException("Cannot operate on relative paths");
-            }
-            gameRootDir = gameDir;
-            SaveSettings();
-            if (!string.IsNullOrEmpty(outRootDir))
-            {
-                RootsValid = true;
-            }
-        }
-
-        private static void SetOutDir(string outDir)
-        {
-            if (!FS.Path.IsPathRooted(outDir))
-            {
-                throw new System.ArgumentException("Cannot operate on relative paths");
-            }
-            outRootDir = outDir;
-            SaveSettings();
-            if (!string.IsNullOrEmpty(gameRootDir))
-            {
-                RootsValid = true;
-            }
-        }
-
-        private static string GetSettingsFilePath()
-        {
-            string exeDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            return exeDirectory + "\\DispelTools.config";
-        }
         public static void LoadSettings()
         {
             string settingsPath = GetSettingsFilePath();
             if (!Loaded && FS.File.Exists(settingsPath))
             {
+                var settings = SettingsDto.Default();
                 try
                 {
                     using (var reader = new StreamReader(FS.File.Open(settingsPath, FileMode.Open, FileAccess.Read)))
@@ -90,12 +58,7 @@ namespace DispelTools.Common
                             string key = reader.ReadLine();
                             string value = reader.ReadLine();
 
-                            switch (key)
-                            {
-                                case "gameRootDir": SetGameDir(value); break;
-                                case "outRootDir": SetOutDir(value); break;
-                                case "debugFileMetrics": FileMetrics.Enabled = bool.Parse(value); break;
-                            }
+                            settings.ParseAndSet(key, value);
                         }
                     }
                 }
@@ -103,21 +66,21 @@ namespace DispelTools.Common
                 {
                     //Skip because settings are not required
                 }
+                SetAll(settings);
                 Loaded = true;
+                SaveSettings();
             }
-
         }
         private static void SaveSettings()
         {
-            var settings = new Dictionary<string, string>
+            var settings = new SettingsDto()
             {
-                { "gameRootDir", gameRootDir },
-                { "outRootDir", outRootDir }
-            };
-            if(FileMetrics.Enabled)
-            {
-                settings["debugFileMetrics"] = FileMetrics.Enabled.ToString();
-            }
+                GameRootDir = gameRootDir,
+                OutRootDir = outRootDir,
+                DebugFileMetrics = Metrics.Enabled,
+                DebugReadOnlyExtractor = debugReadOnlyExtractor,
+            }.SerializeToMap();
+
             try
             {
                 using (var writer = new StreamWriter(FS.File.Open(GetSettingsFilePath(), FileMode.Create, FileAccess.Write)))
@@ -133,6 +96,60 @@ namespace DispelTools.Common
             {
                 //Skip because settings are not required
             }
+        }
+
+        private static void SetGameDir(string gameDir)
+        {
+            if (!FS.Path.IsPathRooted(gameDir))
+            {
+                throw new System.ArgumentException("Cannot operate on relative paths");
+            }
+            if (gameRootDir != gameDir)
+            {
+                gameRootDir = gameDir;
+                if (Loaded)
+                {
+                    SaveSettings();
+                }
+                if (!string.IsNullOrEmpty(outRootDir))
+                {
+                    RootsValid = true;
+                }
+            }
+        }
+
+        private static void SetOutDir(string outDir)
+        {
+            if (!FS.Path.IsPathRooted(outDir))
+            {
+                throw new System.ArgumentException("Cannot operate on relative paths");
+            }
+            if (outRootDir != outDir)
+            {
+                outRootDir = outDir;
+                if (Loaded)
+                {
+                    SaveSettings();
+                }
+                if (!string.IsNullOrEmpty(gameRootDir))
+                {
+                    RootsValid = true;
+                }
+            }
+        }
+
+        private static string GetSettingsFilePath()
+        {
+            string exeDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            return exeDirectory + "\\DispelTools.config";
+        }
+
+        private static void SetAll(SettingsDto settings)
+        {
+            SetGameDir(settings.GameRootDir);
+            SetOutDir(settings.OutRootDir);
+            Metrics.Enabled = settings.DebugFileMetrics;
+            debugReadOnlyExtractor = settings.DebugReadOnlyExtractor;
         }
     }
 }

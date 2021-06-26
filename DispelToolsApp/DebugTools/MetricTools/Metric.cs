@@ -1,8 +1,8 @@
-﻿using DispelTools.DebugTools.Metrics.Dto;
+﻿using DispelTools.DebugTools.MetricTools.Dto;
 using System;
 using System.Collections.Generic;
 
-namespace DispelTools.DebugTools.Metrics
+namespace DispelTools.DebugTools.MetricTools
 {
     internal class Metric
     {
@@ -11,7 +11,7 @@ namespace DispelTools.DebugTools.Metrics
         internal Dictionary<string, long> CountValues { get; private set; } = new Dictionary<string, long>();
         internal MetricType MetricType { get; private set; }
 
-        internal Metric(IMetricDto metricDto)
+        internal Metric(MetricDto metricDto)
         {
             MetricType = metricDto.MetricType;
             AddMetric(metricDto);
@@ -31,7 +31,7 @@ namespace DispelTools.DebugTools.Metrics
             MetricType = MetricType.COUNT;
             CountValues = values;
         }
-        internal void AddMetric(IMetricDto metricDto)
+        internal void AddMetric(MetricDto metricDto)
         {
             switch (MetricType)
             {
@@ -42,9 +42,9 @@ namespace DispelTools.DebugTools.Metrics
                     StringValues.Add((string)metricDto.MetricValue);
                     break;
                 case MetricType.COUNT:
-                    var key = metricDto.MetricValue.ToString();
-                    var sum = 1L;
-                    if (CountValues.TryGetValue(key, out var counter))
+                    string key = metricDto.MetricSubName.ToString();
+                    long sum = (long)metricDto.MetricValue;
+                    if (CountValues.TryGetValue(key, out long counter))
                     {
                         sum += counter;
                     }
@@ -70,8 +70,8 @@ namespace DispelTools.DebugTools.Metrics
                 case MetricType.COUNT:
                     foreach (var newValue in otherMetric.CountValues)
                     {
-                        var sum = newValue.Value;
-                        if (CountValues.TryGetValue(newValue.Key, out var oldValue))
+                        long sum = newValue.Value;
+                        if (CountValues.TryGetValue(newValue.Key, out long oldValue))
                         {
                             sum += oldValue;
                         }

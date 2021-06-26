@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace DispelTools.DataExtractor.MapImageExtractor
+namespace DispelTools.DataExtractor.MapExtractor
 {
     public class MapImageExtractorFactory : IExtractorFactory
     {

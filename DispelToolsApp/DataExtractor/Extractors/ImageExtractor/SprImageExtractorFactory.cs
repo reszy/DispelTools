@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DispelTools.DataExtractor.ImageExtractor
+﻿namespace DispelTools.DataExtractor.ImageExtractor
 {
     public class SprImageExtractorFactory : IExtractorFactory
     {
@@ -13,8 +6,10 @@ namespace DispelTools.DataExtractor.ImageExtractor
 
         public string FileFilter => "sprite (*.SPR)|*.SPR;*.spr|All files (*.*)|*.*";
 
-        public ExtractionManager.ExtractorType type => ExtractionManager.ExtractorType.MULTI_FILE;
+        public ExtractionManager.ExtractorType Type => ExtractionManager.ExtractorType.MULTI_FILE;
 
-        public ExtractionManager CreateExtractorInstance(List<string> filenames, string outputDirectory, BackgroundWorker backgroundWorker) => new ExtractionManager(new SprImageExtractor(), filenames, outputDirectory, backgroundWorker);
+        public ExtractionParams.OptionNames AcceptedOptions => ExtractionParams.OptionNames.AnimatedGifs | ExtractionParams.OptionNames.ColorMode;
+
+        public Extractor CreateInstance() => new SprImageExtractor();
     }
 }

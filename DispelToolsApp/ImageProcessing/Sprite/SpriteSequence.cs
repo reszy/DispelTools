@@ -4,7 +4,6 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.Drawing.Imaging;
-using System.IO;
 
 namespace DispelTools.ImageProcessing.Sprite
 {
@@ -19,23 +18,7 @@ namespace DispelTools.ImageProcessing.Sprite
             this.frames = new SpriteFrame[frames];
         }
 
-        public void SaveAsImage(string path)
-        {
-            string directory = Path.GetDirectoryName(path);
-            string filename = Path.GetFileNameWithoutExtension(path);
-            string extension = Path.GetExtension(path).ToUpper();
-            if (Animated && extension != "GIF")
-            {
-                throw new ArgumentException("Sprite sequence is animated. Only supported type is GIF");
-            }
-            if (!Animated && extension != "PNG")
-            {
-                throw new ArgumentException("Sprite sequence is not animated. Only supported type is PNG");
-            }
-            SaveAsImage(directory, filename);
-        }
-
-        public void SaveAsImage(string directory, string filename)
+        public void SaveAsImage(string directory, string filename, bool createGifs = true)
         {
             if (!Animated)
             {
@@ -43,8 +26,18 @@ namespace DispelTools.ImageProcessing.Sprite
             }
             else
             {
-                var gif = CreateGif();
-                gif.Save($"{directory}\\{filename}.gif");
+                if (createGifs)
+                {
+                    var gif = CreateGif();
+                    gif.Save($"{directory}\\{filename}.gif");
+                }
+                else
+                {
+                    for (int i = 0; i < frames.Length; i++)
+                    {
+                        frames[i].Bitmap.Bitmap.Save($"{directory}\\{filename}_f{i}.png", ImageFormat.Png);
+                    }
+                }
             }
         }
 
@@ -67,7 +60,7 @@ namespace DispelTools.ImageProcessing.Sprite
                     var img = Image.LoadPixelData<Rgba32>(data, bitmap.Width, bitmap.Height);
                     img.Mutate(x => x.BackgroundColor(Color.Black));
                     var gifFrame = img.Frames[0];
-                    gifFrame.Metadata.GetGifMetadata().FrameDelay = 16;
+                    gifFrame.Metadata.GetGifMetadata().FrameDelay = 7;
                     gif.Frames.AddFrame(gifFrame);
                 }
             }

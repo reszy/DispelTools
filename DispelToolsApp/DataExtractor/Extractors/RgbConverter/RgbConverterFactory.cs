@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-
-namespace DispelTools.DataExtractor.RgbConverter
+﻿namespace DispelTools.DataExtractor.RgbConverter
 {
     internal class RgbConverterFactory : IExtractorFactory
     {
@@ -9,8 +6,10 @@ namespace DispelTools.DataExtractor.RgbConverter
 
         public string FileFilter => "PNG file|*.png";
 
-        public ExtractionManager.ExtractorType type => ExtractionManager.ExtractorType.MULTI_FILE;
+        public ExtractionManager.ExtractorType Type => ExtractionManager.ExtractorType.MULTI_FILE;
 
-        public ExtractionManager CreateExtractorInstance(List<string> filenames, string outputDirectory, BackgroundWorker backgroundWorker) => new ExtractionManager(new Rgb24Converter(), filenames, outputDirectory, backgroundWorker);
+        public ExtractionParams.OptionNames AcceptedOptions => ExtractionParams.NoOptions;
+
+        public Extractor CreateInstance() => new Rgb24Converter();
     }
 }

@@ -13,7 +13,7 @@ namespace DispelTools.DataExtractor.MapExtractor
             var file = process.File;
             int spritesCount = file.ReadInt32();
 
-            var spriteLoader = new SpriteLoader(file, process.Filename);
+            var spriteLoader = new SpriteLoader(file, process.Filename, process.Options.ColorMode);
             for (int i = 0; i < spritesCount; i++)
             {
                 int imageStamp = file.ReadInt32();
@@ -43,7 +43,7 @@ namespace DispelTools.DataExtractor.MapExtractor
 
             if (!Settings.ExtractorReadOnly)
             {
-                sequence.SaveAsImage(process.OutputDirectory, createdFileName);
+                sequence.SaveAsImage(process.OutputDirectory, createdFileName, process.Options.CreateAnimatedGifs);
                 process.Extractor.RaportFileCreatedDetail(process, createdFileName);
             }
             sequence.Dispose();

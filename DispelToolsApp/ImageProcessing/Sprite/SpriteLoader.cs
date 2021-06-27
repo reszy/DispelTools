@@ -11,11 +11,13 @@ namespace DispelTools.ImageProcessing.Sprite
 
         private readonly BinaryReader reader;
         private readonly string filename;
+        private readonly ColorManagement.ColorMode colorMode;
 
-        public SpriteLoader(BinaryReader reader, string filename)
+        public SpriteLoader(BinaryReader reader, string filename, ColorManagement.ColorMode colorMode = ColorManagement.ColorMode.RGB16_565)
         {
             this.reader = reader;
             this.filename = filename;
+            this.colorMode = colorMode;
         }
 
         public void SkipSequence()
@@ -41,7 +43,7 @@ namespace DispelTools.ImageProcessing.Sprite
 
         private DirectBitmap LoadImageFromFile(int width, int height)
         {
-            var colorManager = ColorManagement.From(ColorManagement.ColorMode.RGB16_565);
+            var colorManager = ColorManagement.From(colorMode);
 
             var bitmap = new DirectBitmap(width, height);
             for (int y = 0; y < height; y++)

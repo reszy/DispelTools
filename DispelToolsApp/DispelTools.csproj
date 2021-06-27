@@ -114,9 +114,16 @@
     <Compile Include="DataExtractor\ExtractorForm.Designer.cs">
       <DependentUpon>ExtractorForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataExtractor\ExtractorOptionsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DataExtractor\ExtractorOptionsForm.Designer.cs">
+      <DependentUpon>ExtractorOptionsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataExtractor\ExtractorResultDetails.cs" />
     <Compile Include="DataExtractor\Extractors\AllExtractor\AllFilesExtractor.cs" />
     <Compile Include="DataExtractor\Extractors\AllExtractor\AllFilesExtractorFactory.cs" />
+    <Compile Include="DataExtractor\ExtractionParams.cs" />
     <Compile Include="DataExtractor\Extractors\ImageExtractor\SprImageExtractor.cs" />
     <Compile Include="DataExtractor\Extractors\ImageExtractor\SprImageExtractorFactory.cs" />
     <Compile Include="DataExtractor\Extractors\MapExtractor\MapImageExtractor.cs" />
@@ -214,6 +221,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataExtractor\ExtractorForm.resx">
       <DependentUpon>ExtractorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataExtractor\ExtractorOptionsForm.resx">
+      <DependentUpon>ExtractorOptionsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GifCreator\GifCreatorForm.resx">
       <DependentUpon>GifCreatorForm.cs</DependentUpon>

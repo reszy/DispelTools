@@ -6,8 +6,8 @@ namespace DispelTools.DataExtractor
     public class ExtractionFileProcess : IDisposable
     {
         private readonly BinaryReader file;
-        private readonly string outputDirectory;
         private readonly string filename;
+        private readonly string outputDirectory;
         private readonly ExtractionManager extractor;
 
         public string ErrorMessage { get; set; } = null;
@@ -19,6 +19,7 @@ namespace DispelTools.DataExtractor
         public int FilesCreated { get; set; } = 0;
 
         public ExtractionManager Extractor => extractor;
+        public ExtractionParams Options => extractor.ExtractionParams;
 
         public ExtractionFileProcess(ExtractionManager extractor, string file, string outputDirectory)
         {

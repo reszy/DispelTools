@@ -41,6 +41,7 @@
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.progressBar = new DispelTools.Components.ProgressBarWithText();
             this.details = new DispelTools.Components.DetailsComponent();
+            this.optionsButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // openButton
@@ -78,7 +79,7 @@
             this.directorySelectButton.Location = new System.Drawing.Point(93, 12);
             this.directorySelectButton.Name = "directorySelectButton";
             this.directorySelectButton.Size = new System.Drawing.Size(141, 23);
-            this.directorySelectButton.TabIndex = 4;
+            this.directorySelectButton.TabIndex = 2;
             this.directorySelectButton.Text = "Select output directory";
             this.directorySelectButton.UseVisualStyleBackColor = true;
             this.directorySelectButton.Click += new System.EventHandler(this.outputDirectoryButton_Click);
@@ -114,7 +115,7 @@
             this.openOutputDirectoryButton.Location = new System.Drawing.Point(447, 12);
             this.openOutputDirectoryButton.Name = "openOutputDirectoryButton";
             this.openOutputDirectoryButton.Size = new System.Drawing.Size(152, 23);
-            this.openOutputDirectoryButton.TabIndex = 8;
+            this.openOutputDirectoryButton.TabIndex = 4;
             this.openOutputDirectoryButton.Text = "Open output directory";
             this.openOutputDirectoryButton.UseVisualStyleBackColor = true;
             this.openOutputDirectoryButton.Click += new System.EventHandler(this.openOutputDirectoryButton_Click);
@@ -138,8 +139,19 @@
             this.details.MinimumSize = new System.Drawing.Size(100, 25);
             this.details.Name = "details";
             this.details.Size = new System.Drawing.Size(586, 25);
-            this.details.TabIndex = 9;
+            this.details.TabIndex = 5;
             this.details.UnfoldSize = 240;
+            // 
+            // optionsButton
+            // 
+            this.optionsButton.Enabled = false;
+            this.optionsButton.Location = new System.Drawing.Point(295, 12);
+            this.optionsButton.Name = "optionsButton";
+            this.optionsButton.Size = new System.Drawing.Size(84, 22);
+            this.optionsButton.TabIndex = 3;
+            this.optionsButton.Text = "Options";
+            this.optionsButton.UseVisualStyleBackColor = true;
+            this.optionsButton.Click += new System.EventHandler(this.optionsButton_Click);
             // 
             // ExtractorForm
             // 
@@ -148,6 +160,7 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(612, 172);
+            this.Controls.Add(this.optionsButton);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.details);
             this.Controls.Add(this.openOutputDirectoryButton);
@@ -180,5 +193,6 @@
         private Components.ProgressBarWithText progressBar;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.Button optionsButton;
     }
 }

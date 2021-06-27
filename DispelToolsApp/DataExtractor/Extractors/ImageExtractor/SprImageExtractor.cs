@@ -10,7 +10,7 @@ namespace DispelTools.DataExtractor.ImageExtractor
         public override void ExtractFile(ExtractionFileProcess process)
         {
             var file = process.File;
-            var loader = new SpriteLoader(process.File, process.Filename);
+            var loader = new SpriteLoader(process.File, process.Filename, process.Options.ColorMode);
             file.Skip(268);
 
             int sequenceCounter = 0;
@@ -36,7 +36,7 @@ namespace DispelTools.DataExtractor.ImageExtractor
 
             if (!Settings.ExtractorReadOnly)
             {
-                sequence.SaveAsImage(process.OutputDirectory, createdFileName);
+                sequence.SaveAsImage(process.OutputDirectory, createdFileName, process.Options.CreateAnimatedGifs);
                 process.Extractor.RaportFileCreatedDetail(process, createdFileName);
             }
             sequence.Dispose();

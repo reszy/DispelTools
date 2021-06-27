@@ -19,9 +19,11 @@ namespace DispelTools.DataExtractor
         private bool statusUsed = false;
         private readonly Extractor extractor;
 
+        public ExtractionParams ExtractionParams { get; private set; }
+
         public enum ExtractorType { MULTI_FILE, DIRECTORY }
 
-        public ExtractionManager(IFileSystem fs, Extractor extractor, List<string> filenames, string outputDirectory, BackgroundWorker backgroundWorker)
+        public ExtractionManager(IFileSystem fs, Extractor extractor, ExtractionParams extractionParams, BackgroundWorker backgroundWorker)
         {
             this.fs = fs;
             this.backgroundWorker = backgroundWorker;
@@ -29,13 +31,14 @@ namespace DispelTools.DataExtractor
             {
                 backgroundWorker.WorkerReportsProgress = true;
             }
-            this.filenames = filenames;
-            this.outputDirectory = outputDirectory;
+            this.filenames = extractionParams.Filename;
+            this.outputDirectory = extractionParams.OutputDirectory;
             this.extractor = extractor;
+            ExtractionParams = extractionParams;
         }
 
-        public ExtractionManager(Extractor extractor, List<string> filenames, string outputDirectory, BackgroundWorker backgroundWorker)
-            : this(new FileSystem(), extractor, filenames, outputDirectory, backgroundWorker)
+        public ExtractionManager(Extractor extractor, ExtractionParams extractionParams, BackgroundWorker backgroundWorker)
+            : this(new FileSystem(), extractor, extractionParams, backgroundWorker)
         {
         }
 

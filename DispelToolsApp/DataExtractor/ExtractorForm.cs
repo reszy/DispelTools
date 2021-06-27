@@ -12,6 +12,7 @@ namespace DispelTools.DataExtractor
         private IExtractorFactory extractorFactory;
         private List<string> filenames;
         private string outputDirectory;
+        private ExtractionParams extractionParams = new ExtractionParams();
         private BackgroundWorker backgroundWorker;
 
         public ExtractorForm(IExtractorFactory extractorFactory)
@@ -19,6 +20,7 @@ namespace DispelTools.DataExtractor
             InitializeComponent();
             Text = extractorFactory.ExtractorName;
             this.extractorFactory = extractorFactory;
+            optionsButton.Enabled = extractorFactory.AcceptedOptions != ExtractionParams.NoOptions;
             backgroundWorker = new BackgroundWorker();
 
             backgroundWorker.DoWork += ExtractAllFiles;
@@ -29,7 +31,7 @@ namespace DispelTools.DataExtractor
         private void openButton_Click(object sender, EventArgs e)
         {
             string outDirectory = null;
-            if (extractorFactory.type == ExtractionManager.ExtractorType.MULTI_FILE)
+            if (extractorFactory.Type == ExtractionManager.ExtractorType.MULTI_FILE)
             {
                 openFileDialog.Multiselect = true;
                 openFileDialog.Filter = extractorFactory.FileFilter;
@@ -42,7 +44,7 @@ namespace DispelTools.DataExtractor
                     selectedLabel.Text = filenames.Count == 1 ? $" {filenames.Count}   {filenames[0]}" : $" {filenames.Count}";
                 });
             }
-            else if (extractorFactory.type == ExtractionManager.ExtractorType.DIRECTORY)
+            else if (extractorFactory.Type == ExtractionManager.ExtractorType.DIRECTORY)
             {
                 folderBrowserDialog.ShowNewFolderButton = false;
                 folderBrowserDialog.ShowDialog(() =>
@@ -84,7 +86,9 @@ namespace DispelTools.DataExtractor
             if (!e.Cancel)
             {
                 var worker = sender as BackgroundWorker;
-                var extractor = extractorFactory.CreateExtractorInstance(filenames, outputDirectory, worker);
+                extractionParams.Filename = filenames;
+                extractionParams.OutputDirectory = outputDirectory;
+                var extractor = new ExtractionManager(extractorFactory.CreateInstance(), extractionParams, worker);
                 extractor.Start();
             }
         }
@@ -159,6 +163,13 @@ namespace DispelTools.DataExtractor
                 UseShellExecute = true,
                 Verb = "open"
             });
+        }
+
+        private void optionsButton_Click(object sender, EventArgs e)
+        {
+            var optionsForm = new ExtractorOptionsForm(extractorFactory.AcceptedOptions, extractionParams);
+            optionsForm.ShowDialog();
+            extractionParams = optionsForm.Options;
         }
     }
 }

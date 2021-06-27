@@ -9,8 +9,10 @@ namespace DispelTools.DataExtractor.MapExtractor
 
         public string FileFilter => "sprite (*.map,*.btl,*.gtl)|*.map;*.btl;*.gtl";
 
-        public ExtractionManager.ExtractorType type => ExtractionManager.ExtractorType.MULTI_FILE;
+        public ExtractionManager.ExtractorType Type => ExtractionManager.ExtractorType.MULTI_FILE;
 
-        public ExtractionManager CreateExtractorInstance(List<string> filenames, string outputDirectory, BackgroundWorker backgroundWorker) => new ExtractionManager(new MapImageExtractor(), filenames, outputDirectory, backgroundWorker);
+        public ExtractionParams.OptionNames AcceptedOptions => ExtractionParams.OptionNames.AnimatedGifs;
+
+        public Extractor CreateInstance() => new MapImageExtractor();
     }
 }

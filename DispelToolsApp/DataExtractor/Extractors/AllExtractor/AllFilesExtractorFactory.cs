@@ -9,8 +9,10 @@ namespace DispelTools.DataExtractor.AllExtractor
 
         public string FileFilter => "";
 
-        public ExtractionManager.ExtractorType type => ExtractionManager.ExtractorType.DIRECTORY;
+        public ExtractionManager.ExtractorType Type => ExtractionManager.ExtractorType.DIRECTORY;
 
-        public ExtractionManager CreateExtractorInstance(List<string> filenames, string outputDirectory, BackgroundWorker backgroundWorker) => new ExtractionManager(new AllFilesExtractor(), filenames, outputDirectory, backgroundWorker);
+        public ExtractionParams.OptionNames AcceptedOptions => ExtractionParams.OptionNames.AnimatedGifs;
+
+        public Extractor CreateInstance() => new AllFilesExtractor();
     }
 }

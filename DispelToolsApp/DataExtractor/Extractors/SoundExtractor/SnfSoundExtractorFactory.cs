@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-
-namespace DispelTools.DataExtractor.SoundExtractor
+﻿namespace DispelTools.DataExtractor.SoundExtractor
 {
     public class SnfSoundExtractorFactory : IExtractorFactory
     {
@@ -9,8 +6,10 @@ namespace DispelTools.DataExtractor.SoundExtractor
 
         public string FileFilter => "sound (*.snf)|*.SNF;*.snf";
 
-        public ExtractionManager.ExtractorType type => ExtractionManager.ExtractorType.MULTI_FILE;
+        public ExtractionManager.ExtractorType Type => ExtractionManager.ExtractorType.MULTI_FILE;
 
-        public ExtractionManager CreateExtractorInstance(List<string> filenames, string outputDirectory, BackgroundWorker backgroundWorker) => new ExtractionManager(new SnfSoundExtractor(), filenames, outputDirectory, backgroundWorker);
+        public ExtractionParams.OptionNames AcceptedOptions => ExtractionParams.NoOptions;
+
+        public Extractor CreateInstance() => new SnfSoundExtractor();
     }
 }

@@ -13,27 +13,13 @@ namespace DispelTools.Viewers.MapViewer
         private MapReader mapReader;
         private DirectBitmap image;
 
-        private static readonly Dictionary<string, MapDataCoords> knownMapCoords = new Dictionary<string, MapDataCoords>()
+        private static readonly Dictionary<string, int> knownMapCoords = new Dictionary<string, int>()
         {
-            { "map1", new MapDataCoords(5996704, 499, 499) },
-            { "map2", new MapDataCoords(6162088, 499, 499) },
-            { "map3", new MapDataCoords(5733690, 499, 499) },
-            { "cat1", new MapDataCoords(408914, 124, 132) }
+            { "map1", 5996704 },//11835
+            { "map2", 6162088 },//16848
+            { "map3", 5733690 },//13121
+            { "cat1", 408914 }//3614//3783
         };
-
-        private class MapDataCoords
-        {
-            public int offset;
-            public int w;
-            public int h;
-
-            public MapDataCoords(int offset, int w, int h)
-            {
-                this.offset = offset;
-                this.w = w;
-                this.h = h;
-            }
-        }
 
         public MapViewerForm()
         {
@@ -48,7 +34,10 @@ namespace DispelTools.Viewers.MapViewer
         private void LoadingCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             tileSetCombo_SelectedIndexChanged(null, EventArgs.Empty);
-            pictureBox1.SetImage(image.Bitmap, true);
+            if (image != null)
+            {
+                pictureBox1.SetImage(image.Bitmap, true);
+            }
         }
 
         private void ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -79,9 +68,13 @@ namespace DispelTools.Viewers.MapViewer
             openFileDialog.ShowDialog(() =>
             {
                 string filename = openFileDialog.FileName;
-                if (knownMapCoords.TryGetValue(Path.GetFileNameWithoutExtension(filename), out var data))
+                if (knownMapCoords.TryGetValue(Path.GetFileNameWithoutExtension(filename), out var offset))
                 {
-                    mapReader = new MapReader(filename, data.offset, data.w, data.h, backgroundWorker);
+                    mapReader = new MapReader(filename, offset, backgroundWorker);
+                }
+                else
+                {
+                    mapReader = new MapReader(filename);
                 }
             });
         }
@@ -140,6 +133,14 @@ namespace DispelTools.Viewers.MapViewer
             if (mapReader != null)
             {
                 backgroundWorker.RunWorkerAsync();
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (mapReader != null)
+            {
+                    mapReader.SeekMapTiles();
             }
         }
     }

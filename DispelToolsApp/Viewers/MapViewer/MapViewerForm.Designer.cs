@@ -56,6 +56,7 @@
             this.pictureBox1 = new DispelTools.Components.PictureDiplayer();
             this.generateButton = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.tileShowNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tileDiplayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -191,11 +192,22 @@
             // 
             this.openFileDialog.Filter = "Dispel map|*.map";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(486, 3);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(82, 23);
+            this.button1.TabIndex = 12;
+            this.button1.Text = "debugButton";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // MapViewerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1173, 754);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.generateButton);
             this.Controls.Add(this.gtlCheckBox);
             this.Controls.Add(this.bldgCheckBox);
@@ -231,5 +243,6 @@
         private System.Windows.Forms.CheckBox gtlCheckBox;
         private System.Windows.Forms.Button generateButton;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.Button button1;
     }
 }

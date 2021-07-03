@@ -1,4 +1,5 @@
 ﻿using DispelTools.Common;
+using DispelTools.ImageProcessing.Sprite;
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -11,14 +12,16 @@ namespace DispelTools.Viewers.MapViewer
     {
         private readonly string filename;
         private readonly int fileOffset;
-        private readonly int width;
-        private readonly int height;
+        private int width;
+        private int height;
         private readonly WorkReporter workReporter = new WorkReporter();
         private readonly BackgroundWorker backgroundWorker;
-        private readonly MapModel map;
+        private MapModel map;
         private TileSet btl;
         private TileSet gtl;
         private int progressTrack = 0;
+
+        private bool knownOffset;
 
         private bool mapLoaded = false;
         private bool tilesLoaded = false;
@@ -32,16 +35,21 @@ namespace DispelTools.Viewers.MapViewer
         public TileSet Btl => btl;
         public TileSet Gtl => gtl;
 
-        public MapReader(string filename, int fileOffset, int width, int height, BackgroundWorker backgroundWorker)
+        public MapReader(string filename, int fileOffset, BackgroundWorker backgroundWorker)
         {
             this.filename = filename;
             this.fileOffset = fileOffset;
-            this.width = width;
-            this.height = height;
             this.backgroundWorker = backgroundWorker;
+            map = null;
             backgroundWorker.WorkerReportsProgress = true;
-            map = new MapModel(width, height);
             workReporter.ReportWork += ProgressChanged;
+            knownOffset = true;
+        }
+        public MapReader(string filename)
+        {
+            this.filename = filename;
+            knownOffset = false;
+            map = null;
         }
 
         private void ProgressChanged(object sender, ProgressReportArgs e) => backgroundWorker.ReportProgress(progressTrack + (int)((double)e.Progress / e.Max * 1000));
@@ -75,16 +83,8 @@ namespace DispelTools.Viewers.MapViewer
             tilesLoaded = true;
         }
 
-        public DirectBitmap GenerateMap()
+        private DirectBitmap CreateImageOfMap()
         {
-            if (!mapLoaded)
-            {
-                ReadMap();
-            }
-            if (!tilesLoaded)
-            {
-                LoadTiles();
-            }
             progressTrack = 2000;
             int imageWidth = (height + width) * (TileSet.TILE_WIDTH / 2) + TileSet.TILE_WIDTH;
             int imageHeight = (height + width) * (TileSet.TILE_HEIGHT / 2) + (TileSet.TILE_HEIGHT / 2);
@@ -110,6 +110,33 @@ namespace DispelTools.Viewers.MapViewer
                     workReporter.ReportProgress(x + y * width, total);
                 }
             }
+            return mapImage;
+        }
+
+        public DirectBitmap GenerateMap()
+        {
+            if (!knownOffset)
+            {
+                return null;
+            }
+            if (map == null)
+            {
+                using (var file = new BinaryReader(new FileStream(filename, FileMode.Open, FileAccess.Read)))
+                {
+                    width = file.ReadInt32() * 25 - 1;
+                    height = file.ReadInt32() * 25 - 1;
+                    map = new MapModel(width, height);
+                }
+            }
+            if (!mapLoaded)
+            {
+                ReadMap();
+            }
+            if (!tilesLoaded)
+            {
+                LoadTiles();
+            }
+            var mapImage = CreateImageOfMap();
             backgroundWorker.ReportProgress(3000, "Complete");
             return mapImage;
         }
@@ -147,6 +174,34 @@ namespace DispelTools.Viewers.MapViewer
         {
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
+        }
+
+        public void SeekMapTiles()
+        {
+            using (var reader = new BinaryReader(new FileStream(filename, FileMode.Open, FileAccess.Read)))
+            {
+                reader.BaseStream.Seek(8, SeekOrigin.Begin);//Set position after map dimensions
+                int multiplier = reader.ReadInt32();
+                int size = reader.ReadInt32();
+                reader.BaseStream.Seek(8, SeekOrigin.Begin);
+                reader.Skip(multiplier * size * 4);//skip unknown data
+
+                size = reader.ReadInt32();
+                reader.Skip(size * 2);
+
+                int spritesCount = reader.ReadInt32();
+
+                var spriteLoader = new SpriteLoader(reader, filename);
+                for (int i = 0; i < spritesCount; i++)
+                {
+                    int imageStamp = reader.ReadInt32();
+                    int imageOffset = imageStamp == 6 ? 1904 : (imageStamp == 9 ? 2996 : throw new NotImplementedException($"Unexpected imageStamp {imageStamp}"));
+                    reader.Skip(264);
+                    spriteLoader.SkipSequence();
+                    reader.Skip(imageOffset);
+                }
+
+            }
         }
     }
 }

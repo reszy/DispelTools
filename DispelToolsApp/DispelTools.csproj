@@ -82,6 +82,7 @@
     <Compile Include="Components\ProgressBarWithText.Designer.cs">
       <DependentUpon>ProgressBarWithText.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataEditor\FileDescriptorBuilder.cs" />
     <Compile Include="DataEditor\ItemFieldDescriptor.cs" />
     <Compile Include="DataEditor\Mappers\ExtRefMapper.cs" />
     <Compile Include="DataEditor\Mappers\MonsterDbMapper.cs" />

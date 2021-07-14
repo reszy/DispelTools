@@ -13,7 +13,6 @@ namespace DispelTools.DataEditor.Tests
         private class TestMapper : Mapper
         {
             private const int PROPERTY_ITEM_SIZE = 50;
-            private static List<ItemFieldDescriptor> fieldDescriptors;
             private static byte[] testData;
             private static byte[] testDataSwitched;
 
@@ -35,16 +34,16 @@ namespace DispelTools.DataEditor.Tests
 
             protected override int PropertyItemSize => PROPERTY_ITEM_SIZE;
 
-            protected override List<ItemFieldDescriptor> FileDescriptor { get { if (fieldDescriptors == null) { CreateDescriptors(); } return fieldDescriptors; } }
-
-            private void CreateDescriptors() => fieldDescriptors = new List<ItemFieldDescriptor>()
+            protected override List<ItemFieldDescriptor> CreateDescriptors()
             {
-                createDescriptor("name", ItemFieldDescriptor.AsFixedString(30, 0x0)),
-                createDescriptor("i32", ItemFieldDescriptor.AsInt32()),
-                createDescriptor("i16", ItemFieldDescriptor.AsInt16()),
-                createDescriptor("byte", ItemFieldDescriptor.AsByte()),
-                createDescriptor("bytes", ItemFieldDescriptor.AsByteArray(13)),
-            };
+                var builder = new FileDescriptorBuilder();
+                builder.Add("name", ItemFieldDescriptor.AsFixedString(30, 0x0));
+                builder.Add("i32", ItemFieldDescriptor.AsInt32());
+                builder.Add("i16", ItemFieldDescriptor.AsInt16());
+                builder.Add("byte", ItemFieldDescriptor.AsByte());
+                builder.Add("bytes", ItemFieldDescriptor.AsByteArray(13));
+                return builder.Build();
+            }
 
             public byte[] TestData { get { if (testData == null) { CreateTestData(); } return testData; } }
             public byte[] TestDataSwitched { get { if (testDataSwitched == null) { CreateTestDataSwitched(); } return testDataSwitched; } }

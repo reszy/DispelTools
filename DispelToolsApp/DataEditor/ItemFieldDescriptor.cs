@@ -27,6 +27,8 @@ namespace DispelTools.DataEditor
         public interface FieldType
         {
             Field.DisplayType VisualFieldType { get; }
+
+            int ByteSize { get; }
             object Read(BinaryReader reader);
 
             void Write(BinaryWriter writer, object value);
@@ -34,6 +36,7 @@ namespace DispelTools.DataEditor
         private class ByteField : FieldType
         {
             public Field.DisplayType VisualFieldType => Field.DisplayType.HEX;
+            public int ByteSize => 1;
 
             public object Read(BinaryReader reader) => reader.ReadByte();
             public void Write(BinaryWriter writer, object value) => writer.Write((byte)value);
@@ -48,6 +51,7 @@ namespace DispelTools.DataEditor
             }
 
             public Field.DisplayType VisualFieldType => Field.DisplayType.ASCII;
+            public int ByteSize => length;
 
             public object Read(BinaryReader reader) => reader.ReadBytes(length);
             public void Write(BinaryWriter writer, object value) => writer.Write((byte[])value);
@@ -55,6 +59,7 @@ namespace DispelTools.DataEditor
         private class Int32Field : FieldType
         {
             public Field.DisplayType VisualFieldType => Field.DisplayType.DEC;
+            public int ByteSize => 4;
 
             public object Read(BinaryReader reader) => reader.ReadInt32();
             public void Write(BinaryWriter writer, object value) => writer.Write((int)value);
@@ -62,6 +67,7 @@ namespace DispelTools.DataEditor
         private class Int16Field : FieldType
         {
             public Field.DisplayType VisualFieldType => Field.DisplayType.DEC;
+            public int ByteSize => 2;
 
             public object Read(BinaryReader reader) => reader.ReadInt16();
             public void Write(BinaryWriter writer, object value) => writer.Write((short)value);
@@ -87,6 +93,7 @@ namespace DispelTools.DataEditor
             }
 
             public Field.DisplayType VisualFieldType => encoding;
+            public int ByteSize => stringMaxLength;
 
             public object Read(BinaryReader reader)
             {

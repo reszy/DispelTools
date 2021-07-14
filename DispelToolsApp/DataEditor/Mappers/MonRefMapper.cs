@@ -4,47 +4,41 @@ namespace DispelTools.DataEditor.Mappers
 {
     internal class MonRefMapper : Mapper
     {
-        private static List<ItemFieldDescriptor> descriptorList;
-
         protected override int PropertyItemSize => 14 * 4;
 
-        protected override List<ItemFieldDescriptor> FileDescriptor { get { if (descriptorList == null) { descriptorList = CreateMap(); } return descriptorList; } }
-
-        private List<ItemFieldDescriptor> CreateMap()
+        protected override List<ItemFieldDescriptor> CreateDescriptors()
         {
 
-            var list = new List<ItemFieldDescriptor>
-            {
-                createDescriptor("fileId", ItemFieldDescriptor.AsInt32()),
-                createDescriptor("monId", ItemFieldDescriptor.AsInt32()),
-                createDescriptor("posX", ItemFieldDescriptor.AsInt32()),
-                createDescriptor("posY", ItemFieldDescriptor.AsInt32()),
-                createDescriptor(ItemFieldDescriptor.AsInt32()),
-                createDescriptor(ItemFieldDescriptor.AsInt32()),
-                createDescriptor(ItemFieldDescriptor.AsInt32()),
-                createDescriptor(ItemFieldDescriptor.AsInt32()),
-                createDescriptor(ItemFieldDescriptor.AsInt32()),
+            var builder = new FileDescriptorBuilder();
+            builder.Add("fileId", ItemFieldDescriptor.AsInt32());
+            builder.Add("monId", ItemFieldDescriptor.AsInt32());
+            builder.Add("posX", ItemFieldDescriptor.AsInt32());
+            builder.Add("posY", ItemFieldDescriptor.AsInt32());
+            builder.Add(ItemFieldDescriptor.AsInt32());
+            builder.Add(ItemFieldDescriptor.AsInt32());
+            builder.Add(ItemFieldDescriptor.AsInt32());
+            builder.Add(ItemFieldDescriptor.AsInt32());
+            builder.Add(ItemFieldDescriptor.AsInt32());
 
-                createDescriptor("LootSlot1 itemId",ItemFieldDescriptor.AsByte()),
-                createDescriptor("LootSlot1 itemType",ItemFieldDescriptor.AsByte()),
-                createDescriptor(ItemFieldDescriptor.AsByte()),
-                createDescriptor(ItemFieldDescriptor.AsByte()),
+            builder.Add("LootSlot1 itemId", ItemFieldDescriptor.AsByte());
+            builder.Add("LootSlot1 itemType", ItemFieldDescriptor.AsByte());
+            builder.Add(ItemFieldDescriptor.AsByte());
+            builder.Add(ItemFieldDescriptor.AsByte());
 
-                createDescriptor("LootSlot2 itemId",ItemFieldDescriptor.AsByte()),
-                createDescriptor("LootSlot2 itemType",ItemFieldDescriptor.AsByte()),
-                createDescriptor(ItemFieldDescriptor.AsByte()),
-                createDescriptor(ItemFieldDescriptor.AsByte()),
+            builder.Add("LootSlot2 itemId", ItemFieldDescriptor.AsByte());
+            builder.Add("LootSlot2 itemType", ItemFieldDescriptor.AsByte());
+            builder.Add(ItemFieldDescriptor.AsByte());
+            builder.Add(ItemFieldDescriptor.AsByte());
 
-                createDescriptor("LootSlot3 itemId",ItemFieldDescriptor.AsByte()),
-                createDescriptor("LootSlot3 itemType",ItemFieldDescriptor.AsByte()),
-                createDescriptor(ItemFieldDescriptor.AsByte()),
-                createDescriptor(ItemFieldDescriptor.AsByte()),
+            builder.Add("LootSlot3 itemId", ItemFieldDescriptor.AsByte());
+            builder.Add("LootSlot3 itemType", ItemFieldDescriptor.AsByte());
+            builder.Add(ItemFieldDescriptor.AsByte());
+            builder.Add(ItemFieldDescriptor.AsByte());
 
-                createDescriptor(ItemFieldDescriptor.AsInt32()),
-                createDescriptor(ItemFieldDescriptor.AsInt32())
-            };
+            builder.Add(ItemFieldDescriptor.AsInt32());
+            builder.Add(ItemFieldDescriptor.AsInt32());
 
-            return list;
+            return builder.Build();
         }
     }
 }

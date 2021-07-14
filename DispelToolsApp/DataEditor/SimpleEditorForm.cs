@@ -39,10 +39,7 @@ namespace DispelTools.DataEditor
 
         private void elementNumber_ValueChanged(object sender, EventArgs e)
         {
-            if (editor != null)
-            {
-                customPropertyGrid1.SelectedItem = editor.ReadValue((int)inElementNumber.Value);
-            }
+            Read();
         }
         private void SetMaxElementsLabel(decimal number) => maxElementsLabel.Text = "/ " + number;
 
@@ -64,5 +61,19 @@ namespace DispelTools.DataEditor
         }
 
         private void saveButton_Click(object sender, EventArgs e) => editor?.Save(customPropertyGrid1.SelectedItem, (int)inElementNumber.Value);
+
+        private void Read()
+        {
+            if (editor != null)
+            {
+                customPropertyGrid1.SelectedItem = editor.ReadValue((int)inElementNumber.Value);
+            }
+        }
+
+        private void hideUnnamedCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            customPropertyGrid1.HideUnnamedFields = hideUnnamedCheckBox.Checked;
+            Read();
+        }
     }
 }

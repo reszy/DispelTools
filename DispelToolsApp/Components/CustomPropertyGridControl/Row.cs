@@ -24,7 +24,7 @@ namespace DispelTools.Components.CustomPropertyGridControl
         public Point Location { get; set; }
         public Size Size{ get; set; }
         public Font Font { get; set; }
-        public Row(ref PropertyItem item, int number, CustomPropertyGrid parent)
+        public Row(ref PropertyItem item, int number, int locationNumber, CustomPropertyGrid parent)
         {
             all = item;
             this.parent = parent;
@@ -34,7 +34,7 @@ namespace DispelTools.Components.CustomPropertyGridControl
             bolden = new Font(Font, FontStyle.Bold);
             fieldHeight = Font.Height + 6;
 
-            Location = new Point(parent.AutoScrollPosition.X, fieldHeight * number + parent.AutoScrollPosition.Y);
+            Location = new Point(parent.AutoScrollPosition.X, fieldHeight * locationNumber + parent.AutoScrollPosition.Y);
             Size = new Size(parent.Size.Width - 4 - parent.AutoScrollMinSize.Width, fieldHeight);
 
             {

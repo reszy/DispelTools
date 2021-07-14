@@ -16,6 +16,7 @@ namespace DispelTools.Components.CustomPropertyGridControl
         }
 
         public PropertyItem SelectedItem { get => selectedItem; set => SelectItem(value); }
+        public bool HideUnnamedFields { get; internal set; }
 
         private void SelectItem(PropertyItem propertyItem)
         {
@@ -26,9 +27,12 @@ namespace DispelTools.Components.CustomPropertyGridControl
             selectedItem = propertyItem;
             if (propertyItem != null)
             {
-                for (int i = 0; i< propertyItem.Count; i++) {
-                    var row = new Row(ref selectedItem, i, this);
-                    rows.Add(row);
+                for (int i = 0, shownFieldCounter = 0; i< propertyItem.Count; i++) {
+                    if (!HideUnnamedFields || !selectedItem[i].Name.StartsWith("?")) {
+                        var row = new Row(ref selectedItem, i, shownFieldCounter, this);
+                        rows.Add(row);
+                        shownFieldCounter++;
+                    }
                 }
             }
             EndControlUpdate();

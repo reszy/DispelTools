@@ -1,77 +1,240 @@
 ﻿using DispelTools.Common;
+using DispelTools.DebugTools.MetricTools;
 using DispelTools.ImageProcessing.Sprite;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Text;
 using static DispelTools.Viewers.MapViewer.MapReader.WorkReporter;
 
 namespace DispelTools.Viewers.MapViewer
 {
     public class MapReader : IDisposable
     {
+        private const uint WHITE_COLOR = 0xFF000000;
         private readonly string filename;
-        private readonly int fileOffset;
         private int width;
         private int height;
         private readonly WorkReporter workReporter = new WorkReporter();
         private readonly BackgroundWorker backgroundWorker;
         private MapModel map;
+        private List<SpriteSequence> sprites = new List<SpriteSequence>();
         private TileSet btl;
         private TileSet gtl;
         private int progressTrack = 0;
 
-        private bool knownOffset;
-
-        private bool mapLoaded = false;
         private bool tilesLoaded = false;
         private bool disposedValue;
-
-        public bool GTL { get; set; } = true;
-        public bool Collisions { get; set; } = false;
-        public bool BTL { get; set; } = false;
-        public bool BLDG { get; set; } = false;
+        public class GeneratorOptions
+        {
+            public bool GTL { get; set; } = true;
+            public bool Sprites { get; set; } = false;
+            public bool Collisions { get; set; } = false;
+            public bool BTL { get; set; } = false;
+            public bool BLDG { get; set; } = false;
+        }
 
         public TileSet Btl => btl;
         public TileSet Gtl => gtl;
-
-        public MapReader(string filename, int fileOffset, BackgroundWorker backgroundWorker)
+        public List<SpriteSequence> Sprites => sprites;
+        public MapReader(string filename, BackgroundWorker backgroundWorker)
         {
             this.filename = filename;
-            this.fileOffset = fileOffset;
             this.backgroundWorker = backgroundWorker;
             map = null;
             backgroundWorker.WorkerReportsProgress = true;
             workReporter.ReportWork += ProgressChanged;
-            knownOffset = true;
-        }
-        public MapReader(string filename)
-        {
-            this.filename = filename;
-            knownOffset = false;
-            map = null;
         }
 
         private void ProgressChanged(object sender, ProgressReportArgs e) => backgroundWorker.ReportProgress(progressTrack + (int)((double)e.Progress / e.Max * 1000));
 
-        private void ReadMap()
+        public void ReadMap()
         {
             using (var file = new BinaryReader(new FileStream(filename, FileMode.Open, FileAccess.Read)))
             {
-                file.BaseStream.Seek(fileOffset, SeekOrigin.Begin);
-                for (int y = 0; y < height; y++)
+                width = file.ReadInt32() * 25 - 1;
+                height = file.ReadInt32() * 25 - 1;
+                map = new MapModel(width, height);
+
+                ReadFirstBlock(file);
+                ReadSecondBlock(file);
+                ReadSpritesBlock(file);
+                ReadFourthBlock(file);
+                ReadEventAndBtlgBlock(file);
+                ReadTilesAndAccessBlock(file);
+            }
+        }
+
+        public Point TranslateImageToMapPosition(Point position)
+        {
+            int sx = position.X;
+            int sy = position.Y;
+
+            int mx = (sx / TileSet.TILE_WIDTH_HALF - (sy - ((height + width) / 2 * TileSet.TILE_HEIGHT_HALF)) / TileSet.TILE_HEIGHT_HALF) / 2;
+            int my = (sy - ((height + width) / 2 * TileSet.TILE_HEIGHT_HALF)) / TileSet.TILE_HEIGHT_HALF + mx;
+
+            return new Point(mx, my);
+        }
+
+        private void ReadFirstBlock(BinaryReader file)
+        {
+            int multiplier = file.ReadInt32();
+            int size = file.ReadInt32();
+            file.BaseStream.Seek(8, SeekOrigin.Begin);
+            file.Skip(multiplier * size * 4);//skip unknown data
+        }
+
+        private void ReadSecondBlock(BinaryReader file)
+        {
+            int size = file.ReadInt32();
+            file.Skip(size * 2);
+        }
+
+        private void ReadSpritesBlock(BinaryReader file)
+        {
+            int spritesCount = file.ReadInt32();
+            var spriteLoader = new SpriteLoader(file, filename);
+            for (int i = 0; i < spritesCount; i++)
+            {
+                int imageStamp = file.ReadInt32();
+                int imageOffset = imageStamp == 6 ? 1904 : (imageStamp == 9 ? 2996 : throw new NotImplementedException($"Unexpected imageStamp {imageStamp}"));
+                file.Skip(264);
+                sprites.Add(spriteLoader.LoadSequence());
+                file.Skip(imageOffset);
+            }
+        }
+
+        private void ReadFourthBlock(BinaryReader file)
+        {
+            int zeros = 0;
+            int data = 0;
+            long dataStart = file.BaseStream.Position;
+            long zerosStart = 0;
+
+            int[] sequence = new[] { 8, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 };
+            int sequenceLength = 12;
+            int sequencePointer = 0;
+            long sequenceStart = dataStart;
+
+            int count = file.ReadInt32();
+
+            for (int i = 0; i < count; i++)
+            {
+                int sprId = file.ReadInt32();
+                file.ReadInt32();
+                file.ReadInt32();
+                file.ReadInt32();
+                file.ReadInt32();
+                int sprX = file.ReadInt32();
+                int sprY = file.ReadInt32();
+                map.SetSprite(sprId, sprX, sprY);
+            }
+
+            int bundlesCount = 0;
+            bool stop = false;
+            while (!stop)
+            {
+                int v1 = file.ReadInt32();
+                long position = file.BaseStream.Position;
+                file.ReadInt32();
+                int v3 = file.ReadInt32();
+                file.SetPosition(position);
+                if (v3 == 0)
                 {
-                    for (int x = 0; x < width; x++)
+                    bundlesCount = v1;
+                    file.Skip(4);
+                    stop = true;
+                }
+            }
+
+            while (zeros < 300)
+            {
+                byte value = file.ReadByte();
+
+                if (sequencePointer != sequenceLength)
+                {
+                    if (value == sequence[sequencePointer])
                     {
-                        int bytes = file.ReadInt32();
-                        int gtlBytes = bytes >> 10;
-                        map.SetIds(x, y, gtlBytes, 0);
-                        map.SetCollision(x, y, (bytes & 0x1) == 1);
+                        sequencePointer++;
+                        if (sequenceStart == 0)
+                        {
+                            sequenceStart = file.BaseStream.Position;
+                        }
+                        if (sequencePointer == sequenceLength)
+                        {
+                            Metrics.Count(MetricFile.MapReadMetric, $"{Path.GetFileName(filename)}.sequenceFound");
+                        }
+                    }
+                    else
+                    {
+                        sequencePointer = 0;
+                        if (value == sequence[sequencePointer])
+                        {
+                            sequencePointer++;
+                            sequenceStart = file.BaseStream.Position;
+                        }
+                    }
+                }
+
+                if (value != 0)
+                {
+                    zerosStart = 0;
+                    if (dataStart == 0)
+                    {
+                        dataStart = file.BaseStream.Position;
+                    }
+                    if (zeros > 100)
+                    {
+                        Metrics.Count(MetricFile.MapReadMetric, $"{Path.GetFileName(filename)}.zeros", zeros.ToString());
+                        Metrics.Count(MetricFile.MapReadMetric, "zeros", zeros.ToString());
+                    }
+                    data++;
+                    zeros = 0;
+                }
+                else
+                {
+                    zeros++;
+                    if (value == 0 && zerosStart == 0)
+                    {
+                        zerosStart = file.BaseStream.Position;
+                    }
+                    if (zeros < 4)
+                    {
+                        data++;
+                    }
+                    if (sequencePointer == sequenceLength && zeros > 100)
+                    {
+                        long diff = zerosStart - sequenceStart + 3;
+                        Metrics.Count(MetricFile.MapReadMetric, "sequenceLength", diff.ToString());
+                        Metrics.Count(MetricFile.MapReadMetric, $"{Path.GetFileName(filename)}.sequenceLength", diff.ToString());
+                        data = 0;
+                        dataStart = 0;
+                        sequenceStart = 0;
+                        sequencePointer = 0;
                     }
                 }
             }
-            mapLoaded = true;
+            file.SetPosition(zerosStart + 2);
         }
+
+        private void ReadEventAndBtlgBlock(BinaryReader file) => file.Skip(width * height * 4);//TODO event layer
+
+        private void ReadTilesAndAccessBlock(BinaryReader file)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int bytes = file.ReadInt32();
+                    int gtlBytes = bytes >> 10;
+                    map.SetIds(x, y, gtlBytes, 0);
+                    map.SetCollision(x, y, (bytes & 0x1) == 1);
+                }
+            }
+        }
+
         private void LoadTiles()
         {
             progressTrack = 0;
@@ -83,11 +246,11 @@ namespace DispelTools.Viewers.MapViewer
             tilesLoaded = true;
         }
 
-        private DirectBitmap CreateImageOfMap()
+        private DirectBitmap CreateImageOfMap(GeneratorOptions generatorOptions)
         {
             progressTrack = 2000;
-            int imageWidth = (height + width) * (TileSet.TILE_WIDTH / 2) + TileSet.TILE_WIDTH;
-            int imageHeight = (height + width) * (TileSet.TILE_HEIGHT / 2) + (TileSet.TILE_HEIGHT / 2);
+            int imageWidth = (height + width) * TileSet.TILE_WIDTH_HALF + TileSet.TILE_WIDTH;
+            int imageHeight = (height + width) * TileSet.TILE_HEIGHT_HALF + TileSet.TILE_HEIGHT_HALF;
             var mapImage = new DirectBitmap(imageWidth, imageHeight);
             int total = height * width;
             backgroundWorker.ReportProgress(progressTrack, "Generating map...");
@@ -97,7 +260,7 @@ namespace DispelTools.Viewers.MapViewer
                 for (int x = 0; x < width; x++)
                 {
                     var tile = gtl[map.GetGtlId(x, y)];
-                    if (Collisions && map.GetCollision(x, y))
+                    if (generatorOptions.Collisions && map.GetCollision(x, y))
                     {
                         tile = tile.MixColor(Color.Red, 128);
                     }
@@ -110,25 +273,23 @@ namespace DispelTools.Viewers.MapViewer
                     workReporter.ReportProgress(x + y * width, total);
                 }
             }
+            if (generatorOptions.Sprites)
+            {
+                foreach (var spriteData in map.GetSprites())
+                {
+                    if (sprites.Count > spriteData.Id)
+                    {
+                        var sprite = sprites[spriteData.Id];
+                        PlotSpriteOnBitmap(ref mapImage, sprite.GetFrame(0).Bitmap, spriteData.Position.X, spriteData.Position.Y);
+                    }
+                }
+            }
             return mapImage;
         }
 
-        public DirectBitmap GenerateMap()
+        public DirectBitmap GenerateMap(GeneratorOptions generatorOptions)
         {
-            if (!knownOffset)
-            {
-                return null;
-            }
             if (map == null)
-            {
-                using (var file = new BinaryReader(new FileStream(filename, FileMode.Open, FileAccess.Read)))
-                {
-                    width = file.ReadInt32() * 25 - 1;
-                    height = file.ReadInt32() * 25 - 1;
-                    map = new MapModel(width, height);
-                }
-            }
-            if (!mapLoaded)
             {
                 ReadMap();
             }
@@ -136,12 +297,34 @@ namespace DispelTools.Viewers.MapViewer
             {
                 LoadTiles();
             }
-            var mapImage = CreateImageOfMap();
+            var mapImage = CreateImageOfMap(generatorOptions);
             backgroundWorker.ReportProgress(3000, "Complete");
             return mapImage;
         }
 
-        private Point ConvertCoordsToMap(int x, int y) => new Point((x + y) * (TileSet.TILE_WIDTH / 2), (-x + y) * (TileSet.TILE_HEIGHT / 2) + ((height + width) / 2 * (TileSet.TILE_HEIGHT / 2)));
+        private static void PlotSpriteOnBitmap(ref DirectBitmap parent, DirectBitmap sprite, int destX, int destY)
+        {
+            destX += 2276;
+            destY += 784;
+            if (destX + sprite.Width <= parent.Width && destX >= 0 && destY >= 0 && destY + sprite.Height <= parent.Height)
+            {
+                for (int y = 0; y < sprite.Height; y++)
+                {
+                    for (int x = 0; x < sprite.Width; x++)
+                    {
+                        var color = sprite.GetPixel(x, y);
+                        if ((uint)color.ToArgb() != WHITE_COLOR)
+                        {
+                            int finalX = destX + x;
+                            int finalY = destY + y;
+                            parent.SetPixel(finalX, finalY, color);
+                        }
+                    }
+                }
+            }
+        }
+
+        private Point ConvertCoordsToMap(int x, int y) => new Point((x + y) * TileSet.TILE_WIDTH_HALF, (-x + y) * TileSet.TILE_HEIGHT_HALF + ((height + width) / 2 * TileSet.TILE_HEIGHT_HALF));
 
         public class WorkReporter
         {
@@ -153,6 +336,24 @@ namespace DispelTools.Viewers.MapViewer
             public void ReportProgress(int progress, int max) => ReportWork?.Invoke(this, new ProgressReportArgs() { Progress = progress, Max = max });
             public delegate void ReportWorkHandler(object sender, ProgressReportArgs e);
             public event ReportWorkHandler ReportWork;
+        }
+
+        public string GetStats()
+        {
+            StringBuilder sb = new StringBuilder();
+            if(map != null)
+            {
+                sb.Append("Height: ");
+                sb.Append(map.Height);
+                sb.AppendLine();
+                sb.Append("Width: ");
+                sb.Append(map.Width);
+                sb.AppendLine();
+                sb.Append("Sprites: ");
+                sb.Append(map.GetSprites().Count);
+                sb.AppendLine();
+            }
+            return sb.ToString();
         }
 
         protected virtual void Dispose(bool disposing)
@@ -174,34 +375,6 @@ namespace DispelTools.Viewers.MapViewer
         {
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
-        }
-
-        public void SeekMapTiles()
-        {
-            using (var reader = new BinaryReader(new FileStream(filename, FileMode.Open, FileAccess.Read)))
-            {
-                reader.BaseStream.Seek(8, SeekOrigin.Begin);//Set position after map dimensions
-                int multiplier = reader.ReadInt32();
-                int size = reader.ReadInt32();
-                reader.BaseStream.Seek(8, SeekOrigin.Begin);
-                reader.Skip(multiplier * size * 4);//skip unknown data
-
-                size = reader.ReadInt32();
-                reader.Skip(size * 2);
-
-                int spritesCount = reader.ReadInt32();
-
-                var spriteLoader = new SpriteLoader(reader, filename);
-                for (int i = 0; i < spritesCount; i++)
-                {
-                    int imageStamp = reader.ReadInt32();
-                    int imageOffset = imageStamp == 6 ? 1904 : (imageStamp == 9 ? 2996 : throw new NotImplementedException($"Unexpected imageStamp {imageStamp}"));
-                    reader.Skip(264);
-                    spriteLoader.SkipSequence();
-                    reader.Skip(imageOffset);
-                }
-
-            }
         }
     }
 }

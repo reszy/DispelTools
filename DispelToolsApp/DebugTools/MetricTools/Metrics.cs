@@ -87,6 +87,7 @@ namespace DispelTools.DebugTools.MetricTools
             var dictionary = new Dictionary<MetricFile, MetricsContainer>();
             CreateEntry(MetricFile.SpriteFileMetric, true);
             CreateEntry(MetricFile.SpriteOffsetMetric, true);
+            CreateEntry(MetricFile.MapReadMetric, true);
             return dictionary;
 
             MetricsContainer CreateEntry(MetricFile name, bool overwrite)

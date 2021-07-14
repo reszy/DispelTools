@@ -40,7 +40,7 @@ namespace DispelTools.Components
 
         public event PixelSelectedHandler PixelSelectedEvent;
 
-        public enum MouseMode { Pointer, RectSelector, RowSelector };
+        public enum MouseMode { Pointer, RectSelector, RowSelector, TileSelector };
 
         public MouseMode CurrentMouseMode { get; set; }
 

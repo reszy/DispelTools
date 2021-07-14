@@ -1,9 +1,11 @@
 ﻿using DispelTools.Common;
+using DispelTools.Components;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
+using static DispelTools.Viewers.MapViewer.MapReader;
 
 namespace DispelTools.Viewers.MapViewer
 {
@@ -12,18 +14,13 @@ namespace DispelTools.Viewers.MapViewer
         private readonly BackgroundWorker backgroundWorker;
         private MapReader mapReader;
         private DirectBitmap image;
-
-        private static readonly Dictionary<string, int> knownMapCoords = new Dictionary<string, int>()
-        {
-            { "map1", 5996704 },//11835
-            { "map2", 6162088 },//16848
-            { "map3", 5733690 },//13121
-            { "cat1", 408914 }//3614//3783
-        };
+        private DirectBitmap tileImage;
 
         public MapViewerForm()
         {
             InitializeComponent();
+
+            pictureBox1.PixelSelectedEvent += TileClicked;
 
             backgroundWorker = new BackgroundWorker();
             backgroundWorker.DoWork += LoadMap;
@@ -31,13 +28,27 @@ namespace DispelTools.Viewers.MapViewer
             backgroundWorker.RunWorkerCompleted += LoadingCompleted;
         }
 
+        private void TileClicked(object sender, PictureDiplayer.PixelSelectedArgs point)
+        {
+            var mapPosition = mapReader.TranslateImageToMapPosition(point.Position);
+            Clipboard.SetText($"TELEPORT({mapPosition.X},{mapPosition.Y})");
+        }
+
         private void LoadingCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             tileSetCombo_SelectedIndexChanged(null, EventArgs.Empty);
+            var sb = new StringBuilder();
+            sb.AppendLine("--Map Model--");
+            sb.Append(mapReader.GetStats());
             if (image != null)
             {
                 pictureBox1.SetImage(image.Bitmap, true);
+                sb.AppendLine();
+                sb.AppendLine("--Image--");
+                sb.AppendLine($"Image size: {image.Width}x{image.Height}");
+                sb.Append($"Memory size: {BytesFormatter.GetBytesReadable(image.Bits.Length * 4)}");
             }
+            statsTextBox.Text = sb.ToString();
         }
 
         private void ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -60,7 +71,15 @@ namespace DispelTools.Viewers.MapViewer
             image?.Dispose();
             pictureBox1.Image?.Dispose();
             pictureBox1.Image = null;
-            image = mapReader.GenerateMap();
+            image = mapReader.GenerateMap(
+                new GeneratorOptions()
+                {
+                    GTL = gtlCheckBox.Checked,
+                    Collisions = collisionsCheckBox.Checked,
+                    BTL = btlCheckBox.Checked,
+                    BLDG = bldgCheckBox.Checked,
+                    Sprites = spritesCheckBox.Checked
+                });
         }
 
         private void openButton_Click(object sender, EventArgs e)
@@ -68,14 +87,7 @@ namespace DispelTools.Viewers.MapViewer
             openFileDialog.ShowDialog(() =>
             {
                 string filename = openFileDialog.FileName;
-                if (knownMapCoords.TryGetValue(Path.GetFileNameWithoutExtension(filename), out var offset))
-                {
-                    mapReader = new MapReader(filename, offset, backgroundWorker);
-                }
-                else
-                {
-                    mapReader = new MapReader(filename);
-                }
+                mapReader = new MapReader(filename, backgroundWorker);
             });
         }
 
@@ -92,15 +104,22 @@ namespace DispelTools.Viewers.MapViewer
                 {
                     ShowTile(mapReader.Btl[(int)tileShowNumber.Value]);
                 }
+
+                if (tileSetCombo.SelectedIndex == 2)
+                {
+                    tileImage?.Dispose();
+                    var bmp = mapReader.Sprites[(int)tileShowNumber.Value].GetFrame(0).Bitmap;
+                    tileDiplayer.SetImage(bmp.Bitmap, true);
+                }
             }
         }
 
         private void ShowTile(TileSet.Tile tile)
         {
-            var bmp = new DirectBitmap(TileSet.TILE_WIDTH, TileSet.TILE_HEIGHT);
-            tile.PlotTileOnBitmap(ref bmp, 0, 0);
-            tileDiplayer.Image?.Dispose();
-            tileDiplayer.SetImage(bmp.Bitmap, true);
+            tileImage?.Dispose();
+            tileImage = new DirectBitmap(TileSet.TILE_WIDTH, TileSet.TILE_HEIGHT);
+            tile.PlotTileOnBitmap(ref tileImage, 0, 0);
+            tileDiplayer.SetImage(tileImage.Bitmap, true);
         }
 
         private void tileSetCombo_SelectedIndexChanged(object sender, EventArgs e)
@@ -115,32 +134,33 @@ namespace DispelTools.Viewers.MapViewer
                 {
                     tileShowNumber.Maximum = mapReader.Btl.Count - 1;
                 }
+                if (tileSetCombo.SelectedIndex == 2)
+                {
+                    tileShowNumber.Maximum = mapReader.Sprites.Count - 1;
+                }
                 tileShowNumber.Value = Math.Min(tileShowNumber.Value, tileShowNumber.Maximum);
                 tileShowNumber_ValueChanged(null, EventArgs.Empty);
             }
         }
 
-        private void gtlCheckBox_CheckedChanged(object sender, EventArgs e) => mapReader.GTL = gtlCheckBox.Checked;
-
-        private void collisionsCheckBox_CheckedChanged(object sender, EventArgs e) => mapReader.Collisions = collisionsCheckBox.Checked;
-
-        private void btlCheckBox_CheckedChanged(object sender, EventArgs e) => mapReader.BTL = btlCheckBox.Checked;
-
-        private void bldgCheckBox_CheckedChanged(object sender, EventArgs e) => mapReader.BLDG = bldgCheckBox.Checked;
-
         private void generateButton_Click(object sender, EventArgs e)
         {
-            if (mapReader != null)
+            if (mapReader != null && !backgroundWorker.IsBusy)
             {
                 backgroundWorker.RunWorkerAsync();
             }
         }
 
+        // Debug function
         private void button1_Click(object sender, EventArgs e)
         {
-            if (mapReader != null)
+            string[] files = Directory.GetFiles(Settings.GameRootDir + @"\Map", "*.map");
+            foreach (string file in files)
             {
-                    mapReader.SeekMapTiles();
+                using (var mr = new MapReader(file, new BackgroundWorker()))
+                {
+                    mr.ReadMap();
+                }
             }
         }
     }

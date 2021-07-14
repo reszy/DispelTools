@@ -51,12 +51,14 @@
             this.btlCheckBox = new System.Windows.Forms.CheckBox();
             this.bldgCheckBox = new System.Windows.Forms.CheckBox();
             this.gtlCheckBox = new System.Windows.Forms.CheckBox();
-            this.tileDiplayer = new DispelTools.Components.PictureDiplayer();
-            this.progressBar = new DispelTools.Components.ProgressBarWithText();
-            this.pictureBox1 = new DispelTools.Components.PictureDiplayer();
             this.generateButton = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.button1 = new System.Windows.Forms.Button();
+            this.spritesCheckBox = new System.Windows.Forms.CheckBox();
+            this.statsTextBox = new System.Windows.Forms.RichTextBox();
+            this.tileDiplayer = new DispelTools.Components.PictureDiplayer();
+            this.progressBar = new DispelTools.Components.ProgressBarWithText();
+            this.pictureBox1 = new DispelTools.Components.PictureDiplayer();
             ((System.ComponentModel.ISupportInitialize)(this.tileShowNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tileDiplayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -74,7 +76,7 @@
             // 
             // tileShowNumber
             // 
-            this.tileShowNumber.Location = new System.Drawing.Point(1037, 98);
+            this.tileShowNumber.Location = new System.Drawing.Point(1038, 59);
             this.tileShowNumber.Name = "tileShowNumber";
             this.tileShowNumber.Size = new System.Drawing.Size(124, 20);
             this.tileShowNumber.TabIndex = 3;
@@ -82,11 +84,13 @@
             // 
             // tileSetCombo
             // 
+            this.tileSetCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.tileSetCombo.FormattingEnabled = true;
             this.tileSetCombo.Items.AddRange(new object[] {
             "GTL",
-            "BTL"});
-            this.tileSetCombo.Location = new System.Drawing.Point(1037, 71);
+            "BTL",
+            "Sprite"});
+            this.tileSetCombo.Location = new System.Drawing.Point(1038, 32);
             this.tileSetCombo.Name = "tileSetCombo";
             this.tileSetCombo.Size = new System.Drawing.Size(124, 21);
             this.tileSetCombo.TabIndex = 6;
@@ -95,50 +99,89 @@
             // collisionsCheckBox
             // 
             this.collisionsCheckBox.AutoSize = true;
-            this.collisionsCheckBox.Location = new System.Drawing.Point(1038, 364);
+            this.collisionsCheckBox.Location = new System.Drawing.Point(1039, 224);
             this.collisionsCheckBox.Name = "collisionsCheckBox";
             this.collisionsCheckBox.Size = new System.Drawing.Size(69, 17);
             this.collisionsCheckBox.TabIndex = 7;
             this.collisionsCheckBox.Text = "Collisions";
             this.collisionsCheckBox.UseVisualStyleBackColor = true;
-            this.collisionsCheckBox.CheckedChanged += new System.EventHandler(this.collisionsCheckBox_CheckedChanged);
             // 
             // btlCheckBox
             // 
             this.btlCheckBox.AutoSize = true;
             this.btlCheckBox.Enabled = false;
-            this.btlCheckBox.Location = new System.Drawing.Point(1038, 388);
+            this.btlCheckBox.Location = new System.Drawing.Point(1039, 248);
             this.btlCheckBox.Name = "btlCheckBox";
             this.btlCheckBox.Size = new System.Drawing.Size(46, 17);
             this.btlCheckBox.TabIndex = 8;
             this.btlCheckBox.Text = "BTL";
             this.btlCheckBox.UseVisualStyleBackColor = true;
-            this.btlCheckBox.CheckedChanged += new System.EventHandler(this.btlCheckBox_CheckedChanged);
             // 
             // bldgCheckBox
             // 
             this.bldgCheckBox.AutoSize = true;
             this.bldgCheckBox.Enabled = false;
-            this.bldgCheckBox.Location = new System.Drawing.Point(1038, 412);
+            this.bldgCheckBox.Location = new System.Drawing.Point(1039, 272);
             this.bldgCheckBox.Name = "bldgCheckBox";
             this.bldgCheckBox.Size = new System.Drawing.Size(55, 17);
             this.bldgCheckBox.TabIndex = 9;
             this.bldgCheckBox.Text = "BLDG";
             this.bldgCheckBox.UseVisualStyleBackColor = true;
-            this.bldgCheckBox.CheckedChanged += new System.EventHandler(this.bldgCheckBox_CheckedChanged);
             // 
             // gtlCheckBox
             // 
             this.gtlCheckBox.AutoSize = true;
             this.gtlCheckBox.Checked = true;
             this.gtlCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.gtlCheckBox.Location = new System.Drawing.Point(1037, 341);
+            this.gtlCheckBox.Location = new System.Drawing.Point(1038, 201);
             this.gtlCheckBox.Name = "gtlCheckBox";
             this.gtlCheckBox.Size = new System.Drawing.Size(47, 17);
             this.gtlCheckBox.TabIndex = 10;
             this.gtlCheckBox.Text = "GTL";
             this.gtlCheckBox.UseVisualStyleBackColor = true;
-            this.gtlCheckBox.CheckedChanged += new System.EventHandler(this.gtlCheckBox_CheckedChanged);
+            // 
+            // generateButton
+            // 
+            this.generateButton.Location = new System.Drawing.Point(12, 703);
+            this.generateButton.Name = "generateButton";
+            this.generateButton.Size = new System.Drawing.Size(131, 39);
+            this.generateButton.TabIndex = 11;
+            this.generateButton.Text = "GENERATE";
+            this.generateButton.UseVisualStyleBackColor = true;
+            this.generateButton.Click += new System.EventHandler(this.generateButton_Click);
+            // 
+            // openFileDialog
+            // 
+            this.openFileDialog.Filter = "Dispel map|*.map";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(465, 3);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(82, 23);
+            this.button1.TabIndex = 12;
+            this.button1.Text = "debugButton";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // spritesCheckBox
+            // 
+            this.spritesCheckBox.AutoSize = true;
+            this.spritesCheckBox.Location = new System.Drawing.Point(1039, 295);
+            this.spritesCheckBox.Name = "spritesCheckBox";
+            this.spritesCheckBox.Size = new System.Drawing.Size(94, 17);
+            this.spritesCheckBox.TabIndex = 13;
+            this.spritesCheckBox.Text = "Internal sprites";
+            this.spritesCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // statsTextBox
+            // 
+            this.statsTextBox.Location = new System.Drawing.Point(1038, 318);
+            this.statsTextBox.Name = "statsTextBox";
+            this.statsTextBox.ReadOnly = true;
+            this.statsTextBox.Size = new System.Drawing.Size(131, 378);
+            this.statsTextBox.TabIndex = 14;
+            this.statsTextBox.Text = "";
             // 
             // tileDiplayer
             // 
@@ -147,7 +190,7 @@
             this.tileDiplayer.Font = new System.Drawing.Font("Courier New", 10F);
             this.tileDiplayer.Image = null;
             this.tileDiplayer.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-            this.tileDiplayer.Location = new System.Drawing.Point(1037, 124);
+            this.tileDiplayer.Location = new System.Drawing.Point(1038, 85);
             this.tileDiplayer.Name = "tileDiplayer";
             this.tileDiplayer.Size = new System.Drawing.Size(124, 110);
             this.tileDiplayer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -167,7 +210,7 @@
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.pictureBox1.CurrentMouseMode = DispelTools.Components.PictureDiplayer.MouseMode.Pointer;
+            this.pictureBox1.CurrentMouseMode = DispelTools.Components.PictureDiplayer.MouseMode.TileSelector;
             this.pictureBox1.Font = new System.Drawing.Font("Courier New", 10F);
             this.pictureBox1.Image = null;
             this.pictureBox1.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
@@ -178,35 +221,13 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // generateButton
-            // 
-            this.generateButton.Location = new System.Drawing.Point(12, 703);
-            this.generateButton.Name = "generateButton";
-            this.generateButton.Size = new System.Drawing.Size(131, 39);
-            this.generateButton.TabIndex = 11;
-            this.generateButton.Text = "GENERATE";
-            this.generateButton.UseVisualStyleBackColor = true;
-            this.generateButton.Click += new System.EventHandler(this.generateButton_Click);
-            // 
-            // openFileDialog
-            // 
-            this.openFileDialog.Filter = "Dispel map|*.map";
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(486, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(82, 23);
-            this.button1.TabIndex = 12;
-            this.button1.Text = "debugButton";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // MapViewerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1173, 754);
+            this.Controls.Add(this.statsTextBox);
+            this.Controls.Add(this.spritesCheckBox);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.generateButton);
             this.Controls.Add(this.gtlCheckBox);
@@ -244,5 +265,7 @@
         private System.Windows.Forms.Button generateButton;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.CheckBox spritesCheckBox;
+        private System.Windows.Forms.RichTextBox statsTextBox;
     }
 }

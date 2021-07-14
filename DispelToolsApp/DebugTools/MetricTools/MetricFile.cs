@@ -3,6 +3,7 @@
     public enum MetricFile
     {
         SpriteFileMetric,
-        SpriteOffsetMetric
+        SpriteOffsetMetric,
+        MapReadMetric
     }
 }

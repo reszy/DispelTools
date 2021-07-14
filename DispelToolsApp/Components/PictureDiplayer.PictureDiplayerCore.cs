@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using static DispelTools.Viewers.MapViewer.TileSet;
 
 namespace DispelTools.Components
 {
@@ -146,6 +147,7 @@ namespace DispelTools.Components
                             }
                             break;
                             case MouseMode.Pointer:
+                            case MouseMode.TileSelector:
                             default:
                             {
                                 selectedPixel = Image.GetPixel(highlight.X, highlight.Y);
@@ -244,18 +246,77 @@ namespace DispelTools.Components
                     if (highlight != null)
                     {
                         float zoom = (float)zoomStepsTable[currentZoomStepNumber];
-                        var coords = ConvertToPictureBoxCoords(highlight);
-                        e.Graphics.DrawRectangle(highlightPen, coords.X, coords.Y, zoom, zoom);
+                        if (pictureDisplayer.CurrentMouseMode == MouseMode.TileSelector)
+                        {
+                            var tileCoords = ConvertToPictureBoxCoords(GetClosestTileCenter(highlight));
+                            var points = new PointF[]
+                            {
+                                new PointF(tileCoords.X - (32*zoom), tileCoords.Y),
+                                new PointF(tileCoords.X, tileCoords.Y - (16*zoom)),
+                                new PointF(tileCoords.X + (32*zoom), tileCoords.Y),
+                                new PointF(tileCoords.X, tileCoords.Y + (16*zoom)),
+                                new PointF(tileCoords.X - (32*zoom), tileCoords.Y),
+
+                            };
+                            e.Graphics.DrawLines(highlightPen, points);
+                        }
+                        else
+                        {
+                            var coords = ConvertToPictureBoxCoords(highlight);
+                            e.Graphics.DrawRectangle(highlightPen, coords.X, coords.Y, zoom, zoom);
+                        }
                     }
                     if (pictureDisplayer.CurrentMouseMode != MouseMode.Pointer && selectStart != Point.Empty && selectEnd != Point.Empty)
                     {
                         DisplaySelection(e.Graphics);
                     }
-                    if (ShowDataTip && pictureDisplayer.CurrentMouseMode == MouseMode.Pointer)
+                    if (ShowDataTip && (pictureDisplayer.CurrentMouseMode == MouseMode.Pointer || pictureDisplayer.CurrentMouseMode == MouseMode.TileSelector))
                     {
                         DisplayDataTip(e.Graphics);
                     }
                 }
+            }
+
+            private bool isCenterOfTile(Point point) => (point.X & 1) == (point.Y & 1);
+
+            private Point GetClosestTileCenter(Point pointerCoords)
+            {
+                double yTileDistance = (double)pointerCoords.Y / (double)TILE_HEIGHT_HALF;
+                double xTileDistance = (double)pointerCoords.X / (double)TILE_WIDTH_HALF;
+                int top = (int)Math.Floor(yTileDistance);
+                int bottom = (int)Math.Ceiling(yTileDistance);
+                int left = (int)Math.Floor(xTileDistance);
+                int right = (int)Math.Ceiling(xTileDistance);
+
+                var corners = new Point[]
+                {
+                    new Point(left, top),
+                    new Point(right, top),
+                    new Point(left, bottom),
+                    new Point(right, bottom)
+                };
+                var possibleCoords = new HashSet<Point>();
+                foreach (var corner in corners)
+                {
+                    if (isCenterOfTile(corner))
+                    {
+                        possibleCoords.Add(new Point(corner.X * TILE_WIDTH_HALF, corner.Y * TILE_HEIGHT_HALF));
+                    }
+                }
+                var bestCoords = Point.Empty;
+                double? bestDistance = null;
+                foreach (var coords in possibleCoords)
+                {
+                    float xPow = (coords.X - pointerCoords.X) * (coords.X - pointerCoords.X);
+                    float yPow = (coords.Y - pointerCoords.Y) * (coords.Y - pointerCoords.Y);
+                    double distance = Math.Sqrt(xPow + yPow);
+                    if (bestDistance == null || distance < bestDistance)
+                    {
+                        bestDistance = distance;
+                        bestCoords = coords;
+                    }
+                }
+                return bestCoords;
             }
 
             private void DisplaySelection(Graphics g)

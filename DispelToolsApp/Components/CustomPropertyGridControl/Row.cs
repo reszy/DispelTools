@@ -56,7 +56,7 @@ namespace DispelTools.Components.CustomPropertyGridControl
                     Anchor = AnchorStyles.Top | AnchorStyles.Left,
                     AutoEllipsis = true
                 };
-                parent.toolTip.SetToolTip(label, field.Name);
+                parent.toolTip.SetToolTip(label, field.Name + "\n" + field.Description);
                 parent.Controls.Add(label);
 
                 if (!field.ReadOnly)

@@ -44,6 +44,6 @@ namespace DispelTools.DataEditor
 
         public List<ItemFieldDescriptor> Build() => fields;
 
-        private string GetUnknownName() => "? 0x" + byteCounter.ToString("X").ToLower();
+        private string GetUnknownName() => $"? (F:{fields.Count}) 0x{byteCounter.ToString("X").ToLower()}";
     }
 }

@@ -17,15 +17,47 @@ namespace DispelTools.DataEditor.Mappers
             builder.Add("ExtId", AsByte(), "Id from Extra.ini");
 
             builder.Add("name", AsFixedString(NAME_STRING_MAX_LENGTH, FILLER));
-            builder.Add(AsByte());//4 ? end of string? EOT
+            builder.Add("type", AsByte(), "7-magic, 6-interactive object, 5-altar, 4-sign, 2-door, 0-chest");
 
             builder.Add("xPos", AsInt32());
             builder.Add("yPos", AsInt32());
 
-            builder.Add(AsFixedString(4, FILLER));
+            builder.Add(AsByteArray(4));
 
-            builder.Fill(25, AsInt32());
-            builder.Fill(36, AsByte());
+            builder.Add(AsInt32());
+            builder.Add(AsInt32());
+
+            builder.Add("required item id", AsByte(), "lower bound");
+            builder.Add("required item type id", AsByte());
+            builder.Add(AsByte());
+            builder.Add(AsByte());
+
+            builder.Add("2?required item id", AsByte(), "upper bound");
+            builder.Add("2?required item type id", AsByte());
+            builder.Add(AsByte());
+            builder.Add(AsByte());
+
+            builder.Fill(4, AsInt32());
+
+            builder.Add("gold amount", AsInt32());
+
+            builder.Add("item id", AsByte());
+            builder.Add("item group type id", AsByte());
+            builder.Add(AsByte());
+            builder.Add(AsByte());
+
+            builder.Add("item count", AsInt32());
+
+            builder.Fill(10, AsInt32());
+
+            builder.Add("event id",AsInt32(), "id from event.ini");
+            builder.Add("message id",AsInt32(), "id from message.scr for signs");
+            builder.Add(AsInt32());
+            builder.Add(AsInt32());
+
+            builder.Fill(32, AsByte());
+            builder.Add("Visibility?", AsByte());
+            builder.Fill(3, AsByte());
 
             return builder.Build();
         }

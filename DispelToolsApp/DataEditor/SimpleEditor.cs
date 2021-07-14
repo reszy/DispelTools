@@ -64,6 +64,10 @@ namespace DispelTools.DataEditor
             {
                 return new MonRefMapper();
             }
+            if (filenameWithExtension.ToUpper().StartsWith("EXT") && filenameWithExtension.ToUpper().EndsWith("REF"))
+            {
+                return new ExtRefMapper();
+            }
             if (filenameWithExtension.ToUpper().Equals("EDITITEM.DB"))
             {
                 return new EditItemDbMapper();

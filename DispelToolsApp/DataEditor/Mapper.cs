@@ -111,5 +111,20 @@ namespace DispelTools.DataEditor
                 Description = description
             };
         }
+
+        public static void FillWithUnknownBytes(int count, List<ItemFieldDescriptor> list)
+        {
+            for(int i = 0; i< count;i++)
+            {
+                list.Add(new ItemFieldDescriptor("?", false, ItemFieldDescriptor.AsByte()));
+            }
+        }
+        public static void FillWithUnknownInts(int count, List<ItemFieldDescriptor> list)
+        {
+            for(int i = 0; i< count;i++)
+            {
+                list.Add(new ItemFieldDescriptor("?", false, ItemFieldDescriptor.AsInt32()));
+            }
+        }
     }
 }

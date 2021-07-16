@@ -33,7 +33,7 @@ namespace DispelTools.DataEditor
             this.openedFileLabel = new System.Windows.Forms.Label();
             this.inElementNumber = new System.Windows.Forms.NumericUpDown();
             this.maxElementsLabel = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.debugButton = new System.Windows.Forms.Button();
             this.saveButton = new System.Windows.Forms.Button();
             this.customPropertyGrid1 = new DispelTools.Components.CustomPropertyGridControl.CustomPropertyGrid();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
@@ -76,15 +76,16 @@ namespace DispelTools.DataEditor
             this.maxElementsLabel.TabIndex = 4;
             this.maxElementsLabel.Text = "/0";
             // 
-            // button1
+            // debugButton
             // 
-            this.button1.Location = new System.Drawing.Point(364, 13);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(26, 23);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "!";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.debugButton.Location = new System.Drawing.Point(364, 13);
+            this.debugButton.Name = "debugButton";
+            this.debugButton.Size = new System.Drawing.Size(26, 23);
+            this.debugButton.TabIndex = 6;
+            this.debugButton.Text = "!";
+            this.debugButton.UseVisualStyleBackColor = true;
+            this.debugButton.Visible = false;
+            this.debugButton.Click += new System.EventHandler(this.debugButton_Click);
             // 
             // saveButton
             // 
@@ -135,7 +136,7 @@ namespace DispelTools.DataEditor
             this.Controls.Add(this.hideUnnamedCheckBox);
             this.Controls.Add(this.customPropertyGrid1);
             this.Controls.Add(this.saveButton);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.debugButton);
             this.Controls.Add(this.maxElementsLabel);
             this.Controls.Add(this.inElementNumber);
             this.Controls.Add(this.openedFileLabel);
@@ -153,7 +154,7 @@ namespace DispelTools.DataEditor
         private System.Windows.Forms.Label openedFileLabel;
         private System.Windows.Forms.NumericUpDown inElementNumber;
         private System.Windows.Forms.Label maxElementsLabel;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button debugButton;
         private System.Windows.Forms.Button saveButton;
         private Components.CustomPropertyGridControl.CustomPropertyGrid customPropertyGrid1;
         private System.Windows.Forms.OpenFileDialog openFileDialog;

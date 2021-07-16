@@ -1,6 +1,5 @@
 ﻿using DispelTools.Common;
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace DispelTools.DataEditor
@@ -9,7 +8,6 @@ namespace DispelTools.DataEditor
     {
 
         private SimpleEditor editor;
-        private SortedSet<int> stat = new SortedSet<int>();
         public SimpleEditorForm()
         {
             InitializeComponent();
@@ -37,27 +35,11 @@ namespace DispelTools.DataEditor
             });
         }
 
-        private void elementNumber_ValueChanged(object sender, EventArgs e)
-        {
-            Read();
-        }
+        private void elementNumber_ValueChanged(object sender, EventArgs e) => Read();
         private void SetMaxElementsLabel(decimal number) => maxElementsLabel.Text = "/ " + number;
 
-        private void button1_Click(object sender, EventArgs e)
+        private void debugButton_Click(object sender, EventArgs e)
         {
-            //if (editor != null)
-            //{
-            //    var count = stat.Count;
-            //    for (int i = 0; i <= editor.GetElementCount(); i++)
-            //    {
-            //        var npc = (NpcRefDto)editor.ReadValue(i);
-            //        stat.Add(npc.NpcId);
-            //    }
-            //    count = stat.Count - count;
-            //    var txt = string.Join(", ", stat);
-            //    if (MessageBox.Show(txt, $"Found {count} new NPCs. (OK to copy)", MessageBoxButtons.OKCancel) == DialogResult.OK)
-            //    { Clipboard.SetText(txt); }
-            //}
         }
 
         private void saveButton_Click(object sender, EventArgs e) => editor?.Save(customPropertyGrid1.SelectedItem, (int)inElementNumber.Value);

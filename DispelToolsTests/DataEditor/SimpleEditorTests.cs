@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
-using System.Linq;
+using static DispelToolsTests.TestHelpers;
 
 namespace DispelTools.DataEditor.Tests
 {
@@ -16,7 +16,8 @@ namespace DispelTools.DataEditor.Tests
             private static byte[] testData;
             private static byte[] testDataSwitched;
 
-            public static readonly byte[] STR_FILLER = new byte[9] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            public static readonly byte[] STR_ZERO = new byte[1] { 0 };
+            public static readonly byte[] STR_FILLER = new byte[8] { 0xcd, 0xcd, 0xcd, 0xcd, 0xcd, 0xcd, 0xcd, 0xcd };
             public const string STR_DATA = "test field name data1";
             public const int I32_DATA = 291;
             public const short I16_DATA = 16;
@@ -37,7 +38,7 @@ namespace DispelTools.DataEditor.Tests
             protected override List<ItemFieldDescriptor> CreateDescriptors()
             {
                 var builder = new FileDescriptorBuilder();
-                builder.Add("name", ItemFieldDescriptor.AsFixedString(30, 0x0));
+                builder.Add("name", ItemFieldDescriptor.AsFixedString(30, 0xcd));
                 builder.Add("i32", ItemFieldDescriptor.AsInt32());
                 builder.Add("i16", ItemFieldDescriptor.AsInt16());
                 builder.Add("byte", ItemFieldDescriptor.AsByte());
@@ -51,14 +52,14 @@ namespace DispelTools.DataEditor.Tests
             private void CreateTestData()
             {
                 const int DATA_SIZE = PROPERTY_ITEM_SIZE * 2 + 4;
-                testData = Combine(
+                testData = CombineByteArrays(
                     BitConverter.GetBytes(2),
-                    System.Text.Encoding.ASCII.GetBytes(STR_DATA), STR_FILLER,
+                    System.Text.Encoding.ASCII.GetBytes(STR_DATA), STR_ZERO, STR_FILLER,
                     BitConverter.GetBytes(I32_DATA),
                     BitConverter.GetBytes(I16_DATA),
                     new byte[1] { BYTE_DATA },
                     BYA_DATA,
-                    System.Text.Encoding.ASCII.GetBytes(STR_DATA2), STR_FILLER,
+                    System.Text.Encoding.ASCII.GetBytes(STR_DATA2), STR_ZERO, STR_FILLER,
                     BitConverter.GetBytes(I32_DATA2),
                     BitConverter.GetBytes(I16_DATA2),
                     new byte[1] { BYTE_DATA2 },
@@ -72,14 +73,14 @@ namespace DispelTools.DataEditor.Tests
             private void CreateTestDataSwitched()
             {
                 const int DATA_SIZE = PROPERTY_ITEM_SIZE * 2 + 4;
-                testDataSwitched = Combine(
+                testDataSwitched = CombineByteArrays(
                     BitConverter.GetBytes(2),
-                    System.Text.Encoding.ASCII.GetBytes(STR_DATA2), STR_FILLER,
+                    System.Text.Encoding.ASCII.GetBytes(STR_DATA2), STR_ZERO, STR_FILLER,
                     BitConverter.GetBytes(I32_DATA2),
                     BitConverter.GetBytes(I16_DATA2),
                     new byte[1] { BYTE_DATA2 },
                     BYA_DATA2,
-                    System.Text.Encoding.ASCII.GetBytes(STR_DATA), STR_FILLER,
+                    System.Text.Encoding.ASCII.GetBytes(STR_DATA), STR_ZERO, STR_FILLER,
                     BitConverter.GetBytes(I32_DATA),
                     BitConverter.GetBytes(I16_DATA),
                     new byte[1] { BYTE_DATA },
@@ -89,17 +90,6 @@ namespace DispelTools.DataEditor.Tests
                 {
                     throw new InternalTestFailureException($"data Length {testData.Length} is not {DATA_SIZE}");
                 }
-            }
-            private byte[] Combine(params byte[][] arrays)
-            {
-                byte[] rv = new byte[arrays.Sum(a => a.Length)];
-                int offset = 0;
-                foreach (byte[] array in arrays)
-                {
-                    System.Buffer.BlockCopy(array, 0, rv, offset, array.Length);
-                    offset += array.Length;
-                }
-                return rv;
             }
         }
 

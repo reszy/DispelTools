@@ -113,11 +113,15 @@ namespace DispelTools.DataEditor
             public void Write(BinaryWriter writer, object value)
             {
                 byte[] bytes = (byte[])value;
-                int countermax = System.Math.Min(stringMaxLength, bytes.Length);
-                for (int i = 0; i < stringMaxLength; i++)
+                int countermax = System.Math.Min(stringMaxLength - 1, bytes.Length);
+                for (int i = 0; i < countermax; i++)
                 {
-                    byte byteToWrite = countermax > i ? bytes[i] : filler;
-                    writer.Write(byteToWrite);
+                    writer.Write(bytes[i]);
+                }
+                writer.Write((byte)0);
+                for (int i = countermax; i < stringMaxLength - 1; i++)
+                {
+                    writer.Write(filler);
                 }
             }
         }

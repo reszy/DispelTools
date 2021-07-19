@@ -12,8 +12,12 @@ namespace DispelTools.Viewers.MapViewer
     {
         public static readonly int TILE_WIDTH = 62;
         public static readonly int TILE_HEIGHT = 32;
+
         public static readonly int TILE_WIDTH_HALF = TILE_WIDTH / 2;
         public static readonly int TILE_HEIGHT_HALF = TILE_HEIGHT / 2;
+
+        public static readonly int TILE_HORIZONTAL_OFFSET_HALF = 32;
+
         public static readonly int TILE_PIXEL_NUMBER = 32 * 32;
 
         private readonly ColorManagement colorManager = ColorManagement.From(ColorManagement.ColorMode.RGB16_565);

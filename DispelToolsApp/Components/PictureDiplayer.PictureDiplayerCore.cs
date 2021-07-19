@@ -282,7 +282,7 @@ namespace DispelTools.Components
             private Point GetClosestTileCenter(Point pointerCoords)
             {
                 double yTileDistance = (double)pointerCoords.Y / (double)TILE_HEIGHT_HALF;
-                double xTileDistance = (double)pointerCoords.X / (double)TILE_WIDTH_HALF;
+                double xTileDistance = (double)pointerCoords.X / (double)TILE_HORIZONTAL_OFFSET_HALF;
                 int top = (int)Math.Floor(yTileDistance);
                 int bottom = (int)Math.Ceiling(yTileDistance);
                 int left = (int)Math.Floor(xTileDistance);
@@ -300,7 +300,7 @@ namespace DispelTools.Components
                 {
                     if (isCenterOfTile(corner))
                     {
-                        possibleCoords.Add(new Point(corner.X * TILE_WIDTH_HALF, corner.Y * TILE_HEIGHT_HALF));
+                        possibleCoords.Add(new Point(corner.X * TILE_HORIZONTAL_OFFSET_HALF, corner.Y * TILE_HEIGHT_HALF));
                     }
                 }
                 var bestCoords = Point.Empty;

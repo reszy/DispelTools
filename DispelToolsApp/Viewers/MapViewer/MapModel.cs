@@ -5,18 +5,39 @@ namespace DispelTools.Viewers.MapViewer
 {
     public class MapModel
     {
+        private static readonly int MAP_CHUNK_SIZE = 25;
+
         private readonly MapCell[,] cells;
         private readonly List<SpriteData> sprites;
 
-        public int Width { get; }
-        public int Height { get; }
+        public Size MapSize { get; }
+        public Size TiledMapSize { get; }
+        public int MapDiagonalTiles { get; }
+        public Size MapSizeInPixels { get; }
+        public Point MapNonOccludedStart { get; }
 
         public MapModel(int width, int height)
         {
             sprites = new List<SpriteData>();
-            cells = new MapCell[width, height];
-            Width = width;
-            Height = height;
+            MapSize = new Size(width, height);
+            TiledMapSize = new Size(width * MAP_CHUNK_SIZE - 1, height * MAP_CHUNK_SIZE - 1);
+            MapDiagonalTiles = TiledMapSize.Width + TiledMapSize.Height;
+
+            cells = new MapCell[TiledMapSize.Width, TiledMapSize.Height];
+
+            int diagonal = width + height;
+            MapSizeInPixels = new Size(
+                diagonal * MAP_CHUNK_SIZE * TileSet.TILE_HORIZONTAL_OFFSET_HALF,
+                diagonal * MAP_CHUNK_SIZE * TileSet.TILE_HEIGHT_HALF);
+
+            double xAspect = 0.3;
+            double yAspect = 0.2;
+
+            int compensateX = (width % 2 == 0) ? TileSet.TILE_HORIZONTAL_OFFSET_HALF : 0;
+            int compensateY = (width % 2 == 0) ? 0 : TileSet.TILE_HEIGHT_HALF;
+            MapNonOccludedStart = new Point(
+                (int)(xAspect * MapSizeInPixels.Width - compensateX),
+                (int)(yAspect * MapSizeInPixels.Height - compensateY));
         }
 
         private struct MapCell
@@ -52,6 +73,6 @@ namespace DispelTools.Viewers.MapViewer
         public int GetBldg(int x, int y) => cells[x, y].Bldg;
 
         public void SetSprite(int id, int x, int y) => sprites.Add(new SpriteData(id, new Point(x, y)));
-        public List<SpriteData> GetSprites() => sprites;
+        public List<SpriteData> GetSpritesData() => sprites;
     }
 }

@@ -44,6 +44,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.openButton = new System.Windows.Forms.Button();
             this.tileShowNumber = new System.Windows.Forms.NumericUpDown();
             this.tileSetCombo = new System.Windows.Forms.ComboBox();
@@ -59,6 +60,8 @@
             this.tileDiplayer = new DispelTools.Components.PictureDiplayer();
             this.progressBar = new DispelTools.Components.ProgressBarWithText();
             this.pictureBox1 = new DispelTools.Components.PictureDiplayer();
+            this.occludeCheckBox = new System.Windows.Forms.CheckBox();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.tileShowNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tileDiplayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -99,7 +102,7 @@
             // collisionsCheckBox
             // 
             this.collisionsCheckBox.AutoSize = true;
-            this.collisionsCheckBox.Location = new System.Drawing.Point(1039, 224);
+            this.collisionsCheckBox.Location = new System.Drawing.Point(1039, 248);
             this.collisionsCheckBox.Name = "collisionsCheckBox";
             this.collisionsCheckBox.Size = new System.Drawing.Size(69, 17);
             this.collisionsCheckBox.TabIndex = 7;
@@ -110,7 +113,7 @@
             // 
             this.btlCheckBox.AutoSize = true;
             this.btlCheckBox.Enabled = false;
-            this.btlCheckBox.Location = new System.Drawing.Point(1039, 248);
+            this.btlCheckBox.Location = new System.Drawing.Point(1039, 272);
             this.btlCheckBox.Name = "btlCheckBox";
             this.btlCheckBox.Size = new System.Drawing.Size(46, 17);
             this.btlCheckBox.TabIndex = 8;
@@ -121,7 +124,7 @@
             // 
             this.bldgCheckBox.AutoSize = true;
             this.bldgCheckBox.Enabled = false;
-            this.bldgCheckBox.Location = new System.Drawing.Point(1039, 272);
+            this.bldgCheckBox.Location = new System.Drawing.Point(1039, 296);
             this.bldgCheckBox.Name = "bldgCheckBox";
             this.bldgCheckBox.Size = new System.Drawing.Size(55, 17);
             this.bldgCheckBox.TabIndex = 9;
@@ -133,7 +136,7 @@
             this.gtlCheckBox.AutoSize = true;
             this.gtlCheckBox.Checked = true;
             this.gtlCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.gtlCheckBox.Location = new System.Drawing.Point(1038, 201);
+            this.gtlCheckBox.Location = new System.Drawing.Point(1038, 225);
             this.gtlCheckBox.Name = "gtlCheckBox";
             this.gtlCheckBox.Size = new System.Drawing.Size(47, 17);
             this.gtlCheckBox.TabIndex = 10;
@@ -167,7 +170,7 @@
             // spritesCheckBox
             // 
             this.spritesCheckBox.AutoSize = true;
-            this.spritesCheckBox.Location = new System.Drawing.Point(1039, 295);
+            this.spritesCheckBox.Location = new System.Drawing.Point(1039, 319);
             this.spritesCheckBox.Name = "spritesCheckBox";
             this.spritesCheckBox.Size = new System.Drawing.Size(94, 17);
             this.spritesCheckBox.TabIndex = 13;
@@ -176,10 +179,10 @@
             // 
             // statsTextBox
             // 
-            this.statsTextBox.Location = new System.Drawing.Point(1038, 318);
+            this.statsTextBox.Location = new System.Drawing.Point(1038, 368);
             this.statsTextBox.Name = "statsTextBox";
             this.statsTextBox.ReadOnly = true;
-            this.statsTextBox.Size = new System.Drawing.Size(131, 378);
+            this.statsTextBox.Size = new System.Drawing.Size(131, 328);
             this.statsTextBox.TabIndex = 14;
             this.statsTextBox.Text = "";
             // 
@@ -221,11 +224,24 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
+            // occludeCheckBox
+            // 
+            this.occludeCheckBox.AutoSize = true;
+            this.occludeCheckBox.Checked = true;
+            this.occludeCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.occludeCheckBox.Location = new System.Drawing.Point(1038, 202);
+            this.occludeCheckBox.Name = "occludeCheckBox";
+            this.occludeCheckBox.Size = new System.Drawing.Size(66, 17);
+            this.occludeCheckBox.TabIndex = 15;
+            this.occludeCheckBox.Text = "Occlude";
+            this.occludeCheckBox.UseVisualStyleBackColor = true;
+            // 
             // MapViewerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1173, 754);
+            this.Controls.Add(this.occludeCheckBox);
             this.Controls.Add(this.statsTextBox);
             this.Controls.Add(this.spritesCheckBox);
             this.Controls.Add(this.button1);
@@ -267,5 +283,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox spritesCheckBox;
         private System.Windows.Forms.RichTextBox statsTextBox;
+        private System.Windows.Forms.CheckBox occludeCheckBox;
+        private System.Windows.Forms.ToolTip toolTip;
     }
 }

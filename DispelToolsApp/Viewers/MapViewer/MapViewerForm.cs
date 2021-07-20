@@ -16,6 +16,8 @@ namespace DispelTools.Viewers.MapViewer
         private DirectBitmap image;
         private DirectBitmap tileImage;
 
+        private bool generatedOccluded;
+
         public MapViewerForm()
         {
             InitializeComponent();
@@ -26,6 +28,13 @@ namespace DispelTools.Viewers.MapViewer
             backgroundWorker.DoWork += LoadMap;
             backgroundWorker.ProgressChanged += ProgressChanged;
             backgroundWorker.RunWorkerCompleted += LoadingCompleted;
+
+            toolTip.SetToolTip(occludeCheckBox, "Prevents from generating corners of map that are not visible in game");
+            toolTip.SetToolTip(gtlCheckBox, "Shows ground tiles");
+            toolTip.SetToolTip(btlCheckBox, "Shows tiles that can overlap other tiles");
+            toolTip.SetToolTip(collisionsCheckBox, "Shows which tiles can be accessed by player");
+            toolTip.SetToolTip(bldgCheckBox, "Shows which tiles are signed as bldg");
+            toolTip.SetToolTip(spritesCheckBox, "Shows sprites which are included in map file");
         }
 
         private void TileClicked(object sender, PictureDiplayer.PixelSelectedArgs point)
@@ -43,6 +52,8 @@ namespace DispelTools.Viewers.MapViewer
             if (image != null)
             {
                 pictureBox1.SetImage(image.Bitmap, true);
+                pictureBox1.OffsetTileSelector = generatedOccluded ^ (image.Height / TileSet.TILE_HEIGHT % 2 == 0);
+
                 sb.AppendLine();
                 sb.AppendLine("--Image--");
                 sb.AppendLine($"Image size: {image.Width}x{image.Height}");
@@ -71,9 +82,11 @@ namespace DispelTools.Viewers.MapViewer
             image?.Dispose();
             pictureBox1.Image?.Dispose();
             pictureBox1.Image = null;
+            generatedOccluded = occludeCheckBox.Checked;
             image = mapReader.GenerateMap(
                 new GeneratorOptions()
                 {
+                    Occlusion = generatedOccluded,
                     GTL = gtlCheckBox.Checked,
                     Collisions = collisionsCheckBox.Checked,
                     BTL = btlCheckBox.Checked,

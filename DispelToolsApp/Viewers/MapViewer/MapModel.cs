@@ -14,6 +14,7 @@ namespace DispelTools.Viewers.MapViewer
         public Size TiledMapSize { get; }
         public int MapDiagonalTiles { get; }
         public Size MapSizeInPixels { get; }
+        public Size OccludedMapSizeInPixels { get; }
         public Point MapNonOccludedStart { get; }
 
         public MapModel(int width, int height)
@@ -38,6 +39,11 @@ namespace DispelTools.Viewers.MapViewer
             MapNonOccludedStart = new Point(
                 (int)(xAspect * MapSizeInPixels.Width - compensateX),
                 (int)(yAspect * MapSizeInPixels.Height - compensateY));
+
+            OccludedMapSizeInPixels = new Size(
+                MapSizeInPixels.Width - (MapNonOccludedStart.X * 2),
+                MapSizeInPixels.Height - (MapNonOccludedStart.Y * 2)
+                ); ;
         }
 
         private struct MapCell

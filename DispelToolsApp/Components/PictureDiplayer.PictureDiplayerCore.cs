@@ -11,6 +11,9 @@ namespace DispelTools.Components
     {
         private class PictureDiplayerCore
         {
+            private readonly PictureDiplayer pictureDisplayer;
+
+            //VIEWPORT
             private Point startingPoint;
             private Point movingPoint;
             private bool panning;
@@ -27,7 +30,6 @@ namespace DispelTools.Components
             private Point highlight;
             private readonly Pen highlightPen;
 
-
             //DATA TIP
             private readonly Pen dataTipPen;
             private readonly Brush dataTipBrush;
@@ -42,13 +44,11 @@ namespace DispelTools.Components
             private Point selectEnd;
 
             private ImageAnalyzer.DataAnalyzedBitmap.DataPixel selectedPixelData;
-            public ImageAnalyzer.DataAnalyzedBitmap DataAnalyzedBitamp { private get; set; }
 
-            private readonly PictureDiplayer pictureDisplayer;
-
-            private Bitmap Image => ((Bitmap)pictureDisplayer.Image);
 
             public bool ShowDataTip { get; internal set; } = true;
+            public ImageAnalyzer.DataAnalyzedBitmap DataAnalyzedBitamp { private get; set; }
+            private Bitmap Image => ((Bitmap)pictureDisplayer.Image);
 
             public PictureDiplayerCore(PictureDiplayer pictureDisplayer)
             {
@@ -81,34 +81,6 @@ namespace DispelTools.Components
             {
                 return new PointF((float)Math.Floor(point.X * zoomStepsTable[currentZoomStepNumber] + movingPoint.X),
                                  (float)Math.Floor(point.Y * zoomStepsTable[currentZoomStepNumber] + movingPoint.Y));
-            }
-
-            public void InitZoom(double defaultZoomSetting)
-            {
-                var zoomTable = new List<double>
-                {
-                    defaultZoomSetting, 1, 1.25, 1.5,2, 3, 4, 5, 8, 10
-                };
-                if (defaultZoomSetting < 1)
-                {
-                    double zoom = defaultZoomSetting;
-                    for (int i = 1; i < 10; zoom *= 2, i++)
-                    {
-                        if (1 - zoom > zoomStep)
-                        {
-                            zoomTable.Add(zoom);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                }
-                zoomTable.Sort();
-                zoomTable = zoomTable.Distinct().ToList();
-
-                zoomStepsTable = zoomTable.ToArray();
-                currentZoomStepNumber = zoomTable.IndexOf(defaultZoomSetting);
             }
 
             public void InitImageInContainer()
@@ -162,40 +134,6 @@ namespace DispelTools.Components
                 }
             }
 
-            public void MouseUpAction(object sender, MouseEventArgs e)
-            {
-                Cursor.Current = Cursors.Default;
-                panning = false;
-                selecting = false;
-            }
-
-            public void MouseWheelAction(object sender, MouseEventArgs e)
-            {
-                if (Image != null)
-                {
-                    if (zoomStepsTable != null && !panning)
-                    {
-                        var oldposition = ConvertToImageCoords(Point.Empty);
-                        currentZoomStepNumber += e.Delta / SystemInformation.MouseWheelScrollDelta;
-                        if (currentZoomStepNumber >= zoomStepsTable.Length)
-                        {
-                            currentZoomStepNumber = zoomStepsTable.Length - 1;
-                        }
-                        else if (currentZoomStepNumber < 0)
-                        {
-                            currentZoomStepNumber = 0;
-                        }
-                        else
-                        {
-                            movingPoint = Point.Empty;
-                            var newPosition = ConvertToPictureBoxCoords(oldposition);
-                            movingPoint = new Point(-(int)newPosition.X, -(int)newPosition.Y);
-                        }
-                        pictureDisplayer.Invalidate();
-                    }
-                }
-            }
-
             public void MouseMoveAction(object sender, MouseEventArgs e)
             {
                 if (Image != null)
@@ -218,6 +156,34 @@ namespace DispelTools.Components
                     }
                     pictureDisplayer.Invalidate();
                 }
+            }
+
+            private void InitZoom(double defaultZoomSetting)
+            {
+                var zoomTable = new List<double>
+                {
+                    defaultZoomSetting, 1, 1.25, 1.5,2, 3, 4, 5, 8, 10
+                };
+                if (defaultZoomSetting < 1)
+                {
+                    double zoom = defaultZoomSetting;
+                    for (int i = 1; i < 10; zoom *= 2, i++)
+                    {
+                        if (1 - zoom > zoomStep)
+                        {
+                            zoomTable.Add(zoom);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+                zoomTable.Sort();
+                zoomTable = zoomTable.Distinct().ToList();
+
+                zoomStepsTable = zoomTable.ToArray();
+                currentZoomStepNumber = zoomTable.IndexOf(defaultZoomSetting);
             }
 
             private void Highlight(Point point)
@@ -248,17 +214,7 @@ namespace DispelTools.Components
                         float zoom = (float)zoomStepsTable[currentZoomStepNumber];
                         if (pictureDisplayer.CurrentMouseMode == MouseMode.TileSelector)
                         {
-                            var tileCoords = ConvertToPictureBoxCoords(GetClosestTileCenter(highlight));
-                            var points = new PointF[]
-                            {
-                                new PointF(tileCoords.X - (32*zoom), tileCoords.Y),
-                                new PointF(tileCoords.X, tileCoords.Y - (16*zoom)),
-                                new PointF(tileCoords.X + (32*zoom), tileCoords.Y),
-                                new PointF(tileCoords.X, tileCoords.Y + (16*zoom)),
-                                new PointF(tileCoords.X - (32*zoom), tileCoords.Y),
-
-                            };
-                            e.Graphics.DrawLines(highlightPen, points);
+                            DrawTileSelector(e, zoom);
                         }
                         else
                         {
@@ -277,12 +233,27 @@ namespace DispelTools.Components
                 }
             }
 
-            private bool isCenterOfTile(Point point) => (point.X & 1) == (point.Y & 1);
+            private void DrawTileSelector(PaintEventArgs e, float zoom)
+            {
+                var tileCoords = ConvertToPictureBoxCoords(GetClosestTileCenter(highlight));
+                var points = new PointF[]
+                {
+                    new PointF(tileCoords.X - (32*zoom), tileCoords.Y),
+                    new PointF(tileCoords.X, tileCoords.Y - (16*zoom)),
+                    new PointF(tileCoords.X + (32*zoom), tileCoords.Y),
+                    new PointF(tileCoords.X, tileCoords.Y + (16*zoom)),
+                    new PointF(tileCoords.X - (32*zoom), tileCoords.Y),
+
+                };
+                e.Graphics.DrawLines(highlightPen, points);
+            }
+
+            private bool IsCenterOfTile(Point point) => ((point.X & 1) == (point.Y & 1)) ^ pictureDisplayer.OffsetTileSelector ;
 
             private Point GetClosestTileCenter(Point pointerCoords)
             {
-                double yTileDistance = (double)pointerCoords.Y / (double)TILE_HEIGHT_HALF;
-                double xTileDistance = (double)pointerCoords.X / (double)TILE_HORIZONTAL_OFFSET_HALF;
+                double yTileDistance = pointerCoords.Y / (double)TILE_HEIGHT_HALF;
+                double xTileDistance = pointerCoords.X / (double)TILE_HORIZONTAL_OFFSET_HALF;
                 int top = (int)Math.Floor(yTileDistance);
                 int bottom = (int)Math.Ceiling(yTileDistance);
                 int left = (int)Math.Floor(xTileDistance);
@@ -298,7 +269,7 @@ namespace DispelTools.Components
                 var possibleCoords = new HashSet<Point>();
                 foreach (var corner in corners)
                 {
-                    if (isCenterOfTile(corner))
+                    if (IsCenterOfTile(corner))
                     {
                         possibleCoords.Add(new Point(corner.X * TILE_HORIZONTAL_OFFSET_HALF, corner.Y * TILE_HEIGHT_HALF));
                     }
@@ -373,6 +344,40 @@ namespace DispelTools.Components
                     g.DrawString($"W: {w}", pictureDisplayer.Font, Brushes.White, new PointF(xPos, yPosition + 16F));
                     g.DrawString($"DW:{d}", pictureDisplayer.Font, Brushes.White, new PointF(xPos, yPosition + 29F));
                     g.DrawString($"QW:{q}", pictureDisplayer.Font, Brushes.White, new PointF(xPos, yPosition + 42F));
+                }
+            }
+
+            public void MouseUpAction(object sender, MouseEventArgs e)
+            {
+                Cursor.Current = Cursors.Default;
+                panning = false;
+                selecting = false;
+            }
+
+            public void MouseWheelAction(object sender, MouseEventArgs e)
+            {
+                if (Image != null)
+                {
+                    if (zoomStepsTable != null && !panning)
+                    {
+                        var oldposition = ConvertToImageCoords(Point.Empty);
+                        currentZoomStepNumber += e.Delta / SystemInformation.MouseWheelScrollDelta;
+                        if (currentZoomStepNumber >= zoomStepsTable.Length)
+                        {
+                            currentZoomStepNumber = zoomStepsTable.Length - 1;
+                        }
+                        else if (currentZoomStepNumber < 0)
+                        {
+                            currentZoomStepNumber = 0;
+                        }
+                        else
+                        {
+                            movingPoint = Point.Empty;
+                            var newPosition = ConvertToPictureBoxCoords(oldposition);
+                            movingPoint = new Point(-(int)newPosition.X, -(int)newPosition.Y);
+                        }
+                        pictureDisplayer.Invalidate();
+                    }
                 }
             }
         }

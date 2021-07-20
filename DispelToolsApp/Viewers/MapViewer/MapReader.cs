@@ -26,9 +26,11 @@ namespace DispelTools.Viewers.MapViewer
         private int progressTrack = 0;
 
         private bool tilesLoaded = false;
+        private bool occluded;
         private bool disposedValue;
         public class GeneratorOptions
         {
+            public bool Occlusion { get; set; } = true;
             public bool GTL { get; set; } = true;
             public bool Sprites { get; set; } = false;
             public bool Collisions { get; set; } = false;
@@ -54,8 +56,8 @@ namespace DispelTools.Viewers.MapViewer
         {
             using (var file = new BinaryReader(new FileStream(filename, FileMode.Open, FileAccess.Read)))
             {
-                var width = file.ReadInt32();
-                var height = file.ReadInt32();
+                int width = file.ReadInt32();
+                int height = file.ReadInt32();
                 map = new MapModel(width, height);
 
                 ReadFirstBlock(file);
@@ -69,7 +71,7 @@ namespace DispelTools.Viewers.MapViewer
 
         public Point TranslateImageToMapPosition(Point position)
         {
-            var diagonal = map.MapDiagonalTiles;
+            int diagonal = map.MapDiagonalTiles;
 
             int sx = position.X;
             int sy = position.Y;
@@ -251,10 +253,15 @@ namespace DispelTools.Viewers.MapViewer
         private DirectBitmap CreateImageOfMap(GeneratorOptions generatorOptions)
         {
             progressTrack = 2000;
-            var mapImage = new DirectBitmap(map.MapSizeInPixels.Width, map.MapSizeInPixels.Height);
+
+            var imageWidth = generatorOptions.Occlusion ? map.OccludedMapSizeInPixels.Width :map.MapSizeInPixels.Width;
+            var imageHeight = generatorOptions.Occlusion ? map.OccludedMapSizeInPixels.Height:map.MapSizeInPixels.Height;
+            var mapImage = new DirectBitmap(imageWidth, imageHeight);
+
             int total = map.MapSizeInPixels.Width * map.MapSizeInPixels.Height;
             backgroundWorker.ReportProgress(progressTrack, "Generating map...");
             workReporter.ReportProgress(0, total);
+
             for (int y = 0; y < map.TiledMapSize.Height; y++)
             {
                 for (int x = 0; x < map.TiledMapSize.Width; x++)
@@ -268,7 +275,12 @@ namespace DispelTools.Viewers.MapViewer
                     {
                         tile = tile.MixColor(Color.Blue, 128);
                     }
-                    var mapCoords = ConvertCoordsToMap(x, y);
+                    var mapCoords = ConvertMapCoordsToImageCoords(x, y);
+                    if (occluded)
+                    {
+                        mapCoords.X -= map.MapNonOccludedStart.X;
+                        mapCoords.Y -= map.MapNonOccludedStart.Y;
+                    }
                     tile.PlotTileOnBitmap(ref mapImage, mapCoords.X, mapCoords.Y);
                     workReporter.ReportProgress(x + y * map.TiledMapSize.Width, total);
                 }
@@ -287,7 +299,8 @@ namespace DispelTools.Viewers.MapViewer
             }
             return mapImage;
         }
-        class SpriteSorter : IComparer<MapModel.SpriteData>
+
+        private class SpriteSorter : IComparer<MapModel.SpriteData>
         {
             public int Compare(MapModel.SpriteData x, MapModel.SpriteData y) => x.Position.Y - y.Position.Y;
         }
@@ -302,6 +315,7 @@ namespace DispelTools.Viewers.MapViewer
             {
                 LoadTiles();
             }
+            occluded = generatorOptions.Occlusion;
             var mapImage = CreateImageOfMap(generatorOptions);
             backgroundWorker.ReportProgress(3000, "Complete");
             return mapImage;
@@ -328,10 +342,11 @@ namespace DispelTools.Viewers.MapViewer
             //map1 20x20
             //destX += 9568; //2400 * 1.6 - TileSet.TILE_HORIZONTAL_OFFSET_HALF;
             //destY += 3200; //784 * 1.6 + TileSet.TileHeight
-
-            destX += map.MapNonOccludedStart.X;
-            destY += map.MapNonOccludedStart.Y;
-
+            if (!occluded)
+            {
+                destX += map.MapNonOccludedStart.X;
+                destY += map.MapNonOccludedStart.Y;
+            }
             if (destX + sprite.Width <= parent.Width && destX >= 0 && destY >= 0 && destY + sprite.Height <= parent.Height)
             {
                 for (int y = 0; y < sprite.Height; y++)
@@ -350,7 +365,12 @@ namespace DispelTools.Viewers.MapViewer
             }
         }
 
-        private Point ConvertCoordsToMap(int x, int y) => new Point((x + y) * TileSet.TILE_HORIZONTAL_OFFSET_HALF, (-x + y) * TileSet.TILE_HEIGHT_HALF + (map.MapDiagonalTiles / 2 * TileSet.TILE_HEIGHT_HALF));
+        private Point ConvertMapCoordsToImageCoords(int x, int y)
+        {
+            return new Point(
+                   (x + y) * TileSet.TILE_HORIZONTAL_OFFSET_HALF,
+                   (-x + y) * TileSet.TILE_HEIGHT_HALF + (map.MapDiagonalTiles / 2 * TileSet.TILE_HEIGHT_HALF));
+        }
 
         public class WorkReporter
         {
@@ -366,8 +386,8 @@ namespace DispelTools.Viewers.MapViewer
 
         public string GetStats()
         {
-            StringBuilder sb = new StringBuilder();
-            if(map != null)
+            var sb = new StringBuilder();
+            if (map != null)
             {
                 sb.Append("Height: ");
                 sb.Append(map.TiledMapSize.Height);

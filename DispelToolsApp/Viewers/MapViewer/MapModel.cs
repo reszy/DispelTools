@@ -55,14 +55,16 @@ namespace DispelTools.Viewers.MapViewer
         }
         public struct SpriteData
         {
-            public SpriteData(int id, Point position)
+            public SpriteData(int id, Point position, Point bottomRightPosition)
             {
                 Id = id;
                 Position = position;
+                BottomRightPosition = bottomRightPosition;
             }
 
             public int Id { get; set; }
             public Point Position { get; set; }
+            public Point BottomRightPosition { get; set; }
         }
 
         public void SetIds(int x, int y, int gtlId, int btlId)
@@ -78,7 +80,7 @@ namespace DispelTools.Viewers.MapViewer
         public bool GetCollision(int x, int y) => cells[x, y].Collision;
         public int GetBldg(int x, int y) => cells[x, y].Bldg;
 
-        public void SetSprite(int id, int x, int y) => sprites.Add(new SpriteData(id, new Point(x, y)));
+        public void SetSprite(int id, int x, int y, int bottomRightX, int bottomRightY) => sprites.Add(new SpriteData(id, new Point(x, y), new Point(bottomRightX, bottomRightY)));
         public List<SpriteData> GetSpritesData() => sprites;
     }
 }

@@ -177,11 +177,11 @@ namespace DispelTools.Viewers.MapViewer
                 int sprId = file.ReadInt32();
                 file.ReadInt32();
                 file.ReadInt32();
-                file.ReadInt32();
-                file.ReadInt32();
+                int sprBottomRightX = file.ReadInt32();
+                int sprBottomRightY = file.ReadInt32();
                 int sprX = file.ReadInt32();
                 int sprY = file.ReadInt32();
-                map.SetSprite(sprId, sprX, sprY);
+                map.SetSprite(sprId, sprX, sprY, sprBottomRightX, sprBottomRightY);
             }
 
             int bundlesCount = 0;
@@ -302,8 +302,8 @@ namespace DispelTools.Viewers.MapViewer
         {
             progressTrack = 2000;
 
-            var imageWidth = generatorOptions.Occlusion ? map.OccludedMapSizeInPixels.Width :map.MapSizeInPixels.Width;
-            var imageHeight = generatorOptions.Occlusion ? map.OccludedMapSizeInPixels.Height:map.MapSizeInPixels.Height;
+            int imageWidth = generatorOptions.Occlusion ? map.OccludedMapSizeInPixels.Width : map.MapSizeInPixels.Width;
+            int imageHeight = generatorOptions.Occlusion ? map.OccludedMapSizeInPixels.Height : map.MapSizeInPixels.Height;
             var mapImage = new DirectBitmap(imageWidth, imageHeight);
 
             int total = map.MapSizeInPixels.Width * map.MapSizeInPixels.Height;
@@ -350,7 +350,7 @@ namespace DispelTools.Viewers.MapViewer
 
         private class SpriteSorter : IComparer<MapModel.SpriteData>
         {
-            public int Compare(MapModel.SpriteData x, MapModel.SpriteData y) => x.Position.Y - y.Position.Y;
+            public int Compare(MapModel.SpriteData a, MapModel.SpriteData b) => (a.Position.Y + a.BottomRightPosition.Y) - (b.Position.Y + b.BottomRightPosition.Y);
         }
 
         private void PlotSpriteOnBitmap(ref DirectBitmap parent, DirectBitmap sprite, int destX, int destY)

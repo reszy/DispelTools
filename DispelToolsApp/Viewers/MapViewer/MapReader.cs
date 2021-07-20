@@ -11,7 +11,7 @@ using static DispelTools.Viewers.MapViewer.MapReader.WorkReporter;
 
 namespace DispelTools.Viewers.MapViewer
 {
-    public class MapReader : IDisposable
+    public partial class MapReader : IDisposable
     {
         private const uint WHITE_COLOR = 0xFF000000;
         private readonly string filename;
@@ -41,6 +41,7 @@ namespace DispelTools.Viewers.MapViewer
         public TileSet Btl => btl;
         public TileSet Gtl => gtl;
         public List<SpriteSequence> Sprites => sprites;
+        public bool MapModelLoaded => map != null;
         public MapReader(string filename, BackgroundWorker backgroundWorker)
         {
             this.filename = filename;
@@ -50,8 +51,21 @@ namespace DispelTools.Viewers.MapViewer
             workReporter.ReportWork += ProgressChanged;
         }
 
-        private void ProgressChanged(object sender, ProgressReportArgs e) => backgroundWorker.ReportProgress(progressTrack + (int)((double)e.Progress / e.Max * 1000));
-
+        public DirectBitmap GenerateMap(GeneratorOptions generatorOptions)
+        {
+            if (map == null)
+            {
+                ReadMap();
+            }
+            if (!tilesLoaded)
+            {
+                LoadTiles();
+            }
+            occluded = generatorOptions.Occlusion;
+            var mapImage = CreateImageOfMap(generatorOptions);
+            backgroundWorker.ReportProgress(3000, "Complete");
+            return mapImage;
+        }
         public void ReadMap()
         {
             using (var file = new BinaryReader(new FileStream(filename, FileMode.Open, FileAccess.Read)))
@@ -67,6 +81,40 @@ namespace DispelTools.Viewers.MapViewer
                 ReadEventAndBtlgBlock(file);
                 ReadTilesAndAccessBlock(file);
             }
+        }
+
+        public string GetStats()
+        {
+            var sb = new StringBuilder();
+            if (MapModelLoaded)
+            {
+                sb.AppendLine("--Map Model--");
+                sb.Append("Height: ");
+                sb.Append(map.TiledMapSize.Height);
+                sb.AppendLine();
+                sb.Append("Width: ");
+                sb.Append(map.TiledMapSize.Width);
+                sb.AppendLine();
+                sb.Append("Sprites included: ");
+                sb.Append(sprites.Count);
+                sb.AppendLine();
+                sb.Append("Sprites on map: ");
+                sb.Append(map.GetSpritesData().Count);
+                sb.AppendLine();
+            }
+            if (tilesLoaded)
+            {
+                sb.AppendLine();
+                sb.AppendLine("--Tiles--");
+                sb.Append("GTL: ");
+                sb.AppendLine();
+                sb.Append(gtl.Count);
+                sb.AppendLine();
+                sb.Append("BTL: ");
+                sb.Append(btl.Count);
+                sb.AppendLine();
+            }
+            return sb.ToString();
         }
 
         public Point TranslateImageToMapPosition(Point position)
@@ -305,22 +353,6 @@ namespace DispelTools.Viewers.MapViewer
             public int Compare(MapModel.SpriteData x, MapModel.SpriteData y) => x.Position.Y - y.Position.Y;
         }
 
-        public DirectBitmap GenerateMap(GeneratorOptions generatorOptions)
-        {
-            if (map == null)
-            {
-                ReadMap();
-            }
-            if (!tilesLoaded)
-            {
-                LoadTiles();
-            }
-            occluded = generatorOptions.Occlusion;
-            var mapImage = CreateImageOfMap(generatorOptions);
-            backgroundWorker.ReportProgress(3000, "Complete");
-            return mapImage;
-        }
-
         private void PlotSpriteOnBitmap(ref DirectBitmap parent, DirectBitmap sprite, int destX, int destY)
         {
             //TODO Move comments to docs
@@ -372,35 +404,7 @@ namespace DispelTools.Viewers.MapViewer
                    (-x + y) * TileSet.TILE_HEIGHT_HALF + (map.MapDiagonalTiles / 2 * TileSet.TILE_HEIGHT_HALF));
         }
 
-        public class WorkReporter
-        {
-            public class ProgressReportArgs : EventArgs
-            {
-                public int Max { get; set; }
-                public int Progress { get; set; }
-            }
-            public void ReportProgress(int progress, int max) => ReportWork?.Invoke(this, new ProgressReportArgs() { Progress = progress, Max = max });
-            public delegate void ReportWorkHandler(object sender, ProgressReportArgs e);
-            public event ReportWorkHandler ReportWork;
-        }
-
-        public string GetStats()
-        {
-            var sb = new StringBuilder();
-            if (map != null)
-            {
-                sb.Append("Height: ");
-                sb.Append(map.TiledMapSize.Height);
-                sb.AppendLine();
-                sb.Append("Width: ");
-                sb.Append(map.TiledMapSize.Width);
-                sb.AppendLine();
-                sb.Append("Sprites on map: ");
-                sb.Append(map.GetSpritesData().Count);
-                sb.AppendLine();
-            }
-            return sb.ToString();
-        }
+        private void ProgressChanged(object sender, ProgressReportArgs e) => backgroundWorker.ReportProgress(progressTrack + (int)((double)e.Progress / e.Max * 1000));
 
         protected virtual void Dispose(bool disposing)
         {

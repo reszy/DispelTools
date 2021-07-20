@@ -206,6 +206,7 @@
     </Compile>
     <Compile Include="Viewers\MapViewer\MapModel.cs" />
     <Compile Include="Viewers\MapViewer\MapReader.cs" />
+    <Compile Include="Viewers\MapViewer\MapReader.WorkReporter.cs" />
     <Compile Include="Viewers\MapViewer\MapViewerForm.cs">
       <SubType>Form</SubType>
     </Compile>

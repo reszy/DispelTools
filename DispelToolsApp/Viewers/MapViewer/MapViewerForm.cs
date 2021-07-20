@@ -47,7 +47,6 @@ namespace DispelTools.Viewers.MapViewer
         {
             tileSetCombo_SelectedIndexChanged(null, EventArgs.Empty);
             var sb = new StringBuilder();
-            sb.AppendLine("--Map Model--");
             sb.Append(mapReader.GetStats());
             if (image != null)
             {
@@ -76,13 +75,6 @@ namespace DispelTools.Viewers.MapViewer
 
         private void LoadMap(object sender, DoWorkEventArgs e)
         {
-            tileShowNumber.Value = 0;
-            tileShowNumber.Maximum = 0;
-            progressBar.Maximum = 3000;
-            image?.Dispose();
-            pictureBox1.Image?.Dispose();
-            pictureBox1.Image = null;
-            generatedOccluded = occludeCheckBox.Checked;
             image = mapReader.GenerateMap(
                 new GeneratorOptions()
                 {
@@ -160,6 +152,16 @@ namespace DispelTools.Viewers.MapViewer
         {
             if (mapReader != null && !backgroundWorker.IsBusy)
             {
+                if (!mapReader.MapModelLoaded)
+                {
+                    tileShowNumber.Value = 0;
+                    tileShowNumber.Maximum = 0;
+                    progressBar.Maximum = 3000;
+                }
+                image?.Dispose();
+                pictureBox1.Image?.Dispose();
+                pictureBox1.Image = null;
+                generatedOccluded = occludeCheckBox.Checked;
                 backgroundWorker.RunWorkerAsync();
             }
         }

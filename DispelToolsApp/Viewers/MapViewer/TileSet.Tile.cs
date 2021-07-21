@@ -71,7 +71,10 @@ namespace DispelTools.Viewers.MapViewer
                             var pixel = pixels[i++];
                             int finalX = destX + x + mask[0, y];
                             int finalY = destY + y;
-                            parent.SetPixel(finalX, finalY, pixel);
+                            if (pixel.ToArgb() != Color.Black.ToArgb())
+                            {
+                                parent.SetPixel(finalX, finalY, pixel);
+                            }
                         }
                     }
                 }

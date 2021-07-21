@@ -112,7 +112,6 @@
             // btlCheckBox
             // 
             this.btlCheckBox.AutoSize = true;
-            this.btlCheckBox.Enabled = false;
             this.btlCheckBox.Location = new System.Drawing.Point(1039, 272);
             this.btlCheckBox.Name = "btlCheckBox";
             this.btlCheckBox.Size = new System.Drawing.Size(46, 17);
@@ -195,6 +194,7 @@
             this.tileDiplayer.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
             this.tileDiplayer.Location = new System.Drawing.Point(1038, 85);
             this.tileDiplayer.Name = "tileDiplayer";
+            this.tileDiplayer.OffsetTileSelector = false;
             this.tileDiplayer.Size = new System.Drawing.Size(124, 110);
             this.tileDiplayer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.tileDiplayer.TabIndex = 5;
@@ -219,6 +219,7 @@
             this.pictureBox1.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
             this.pictureBox1.Location = new System.Drawing.Point(12, 32);
             this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.OffsetTileSelector = false;
             this.pictureBox1.Size = new System.Drawing.Size(1019, 664);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;

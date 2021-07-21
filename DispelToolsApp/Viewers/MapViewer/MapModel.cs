@@ -9,6 +9,7 @@ namespace DispelTools.Viewers.MapViewer
 
         private readonly MapCell[,] cells;
         private readonly List<SpriteData> sprites;
+        private readonly List<BtlData> btl;
 
         public Size MapSize { get; }
         public Size TiledMapSize { get; }
@@ -20,6 +21,7 @@ namespace DispelTools.Viewers.MapViewer
         public MapModel(int width, int height)
         {
             sprites = new List<SpriteData>();
+            btl = new List<BtlData>();
             MapSize = new Size(width, height);
             TiledMapSize = new Size(width * MAP_CHUNK_SIZE - 1, height * MAP_CHUNK_SIZE - 1);
             MapDiagonalTiles = TiledMapSize.Width + TiledMapSize.Height;
@@ -67,6 +69,23 @@ namespace DispelTools.Viewers.MapViewer
             public Point BottomRightPosition { get; set; }
         }
 
+        public class BtlData
+        {
+            public int Size { get; }
+            public Point Position { get; }
+            private int[] ids;
+
+            public BtlData(int x, int y, int[] ids)
+            {
+                Size = ids.Length;
+                this.ids = ids;
+                Position = new Point(x, y);
+            }
+
+            public int GetId(int i) => ids[i];
+
+        }
+
         public void SetIds(int x, int y, int gtlId, int btlId)
         {
             cells[x, y].Btl = btlId;
@@ -74,9 +93,10 @@ namespace DispelTools.Viewers.MapViewer
         }
         public void SetCollision(int x, int y, bool collision) => cells[x, y].Collision = collision;
         public void SetBldg(int x, int y, int bldg) => cells[x, y].Bldg = bldg;
+        public void SetBtl(int x, int y, int[] ids) => btl.Add(new BtlData(x, y, ids));
 
         public int GetGtlId(int x, int y) => cells[x, y].Gtl;
-        public int GetBtlId(int x, int y) => cells[x, y].Btl;
+        public List<BtlData> GetBtlData() => btl;
         public bool GetCollision(int x, int y) => cells[x, y].Collision;
         public int GetBldg(int x, int y) => cells[x, y].Bldg;
 

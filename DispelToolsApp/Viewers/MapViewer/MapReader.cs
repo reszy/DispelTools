@@ -77,7 +77,8 @@ namespace DispelTools.Viewers.MapViewer
                 ReadFirstBlock(file);
                 ReadSecondBlock(file);
                 ReadSpritesBlock(file);
-                ReadFourthBlock(file);
+                ReadInternalSpriteInfo(file);
+                ReadFifthBlock(file);
                 ReadEventAndBtlgBlock(file);
                 ReadTilesAndAccessBlock(file);
             }
@@ -158,18 +159,8 @@ namespace DispelTools.Viewers.MapViewer
             }
         }
 
-        private void ReadFourthBlock(BinaryReader file)
+        private void ReadInternalSpriteInfo(BinaryReader file)
         {
-            int zeros = 0;
-            int data = 0;
-            long dataStart = file.BaseStream.Position;
-            long zerosStart = 0;
-
-            int[] sequence = new[] { 8, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 };
-            int sequenceLength = 12;
-            int sequencePointer = 0;
-            long sequenceStart = dataStart;
-
             int count = file.ReadInt32();
 
             for (int i = 0; i < count; i++)
@@ -181,25 +172,34 @@ namespace DispelTools.Viewers.MapViewer
                 int sprBottomRightY = file.ReadInt32();
                 int sprX = file.ReadInt32();
                 int sprY = file.ReadInt32();
-                map.SetSprite(sprId, sprX, sprY, sprBottomRightX, sprBottomRightY);
-            }
-
-            int bundlesCount = 0;
-            bool stop = false;
-            while (!stop)
-            {
-                int v1 = file.ReadInt32();
-                long position = file.BaseStream.Position;
-                file.ReadInt32();
-                int v3 = file.ReadInt32();
-                file.SetPosition(position);
-                if (v3 == 0)
+                if (sprId >= 0 && sprId < sprites.Count)
                 {
-                    bundlesCount = v1;
-                    file.Skip(4);
-                    stop = true;
+                    var restOfFramesByteCount = (sprites[sprId].FrameCount - 1) * 6 * 4;
+                    file.Skip(restOfFramesByteCount);
+                    map.SetSprite(sprId, sprX, sprY, sprBottomRightX, sprBottomRightY);
+                }
+                else
+                {
+                    Metrics.Count(MetricFile.MapReadMetric, filename, "missedInternalSprite");
                 }
             }
+        }
+
+        private void ReadFifthBlock(BinaryReader file)
+        {
+            int zeros = 0;
+            int data = 0;
+            long dataStart = file.BaseStream.Position;
+            long zerosStart = 0;
+
+            int[] sequence = new[] { 8, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 };
+            int sequenceLength = 12;
+            int sequencePointer = 0;
+            long sequenceStart = 0;
+
+            int bundlesCount = file.ReadInt32();
+            Metrics.Count(MetricFile.MapReadMetric, Path.GetFileName(filename), "bundlesCount", bundlesCount);
+            var number1 = file.ReadInt32();
 
             while (zeros < 300)
             {
@@ -216,7 +216,7 @@ namespace DispelTools.Viewers.MapViewer
                         }
                         if (sequencePointer == sequenceLength)
                         {
-                            Metrics.Count(MetricFile.MapReadMetric, $"{Path.GetFileName(filename)}.sequenceFound");
+                            Metrics.Count(MetricFile.MapReadMetric, Path.GetFileName(filename), "sequenceFound");
                         }
                     }
                     else
@@ -415,6 +415,9 @@ namespace DispelTools.Viewers.MapViewer
                     backgroundWorker?.Dispose();
                     btl?.Dispose();
                     gtl?.Dispose();
+                    foreach (var sprite in sprites) {
+                        sprite.Dispose();
+                    }
                     workReporter.ReportWork -= ProgressChanged;
                 }
                 disposedValue = true;

@@ -10,6 +10,7 @@ namespace DispelTools.ImageProcessing.Sprite
     public class SpriteSequence : IDisposable
     {
         public bool Animated => frames.Length > 1;
+        public int FrameCount => frames.Length;
 
         private readonly SpriteFrame[] frames;
 

@@ -5,7 +5,7 @@ using SixLabors.ImageSharp.Processing;
 using System;
 using System.Drawing.Imaging;
 
-namespace DispelTools.ImageProcessing.Sprite
+namespace DispelTools.GameDataModels.Sprite
 {
     public class SpriteSequence : IDisposable
     {
@@ -108,7 +108,7 @@ namespace DispelTools.ImageProcessing.Sprite
             for (int i = 0; i < bitmap.Bits.Length; i++)
             {
                 byte[] pixel = BitConverter.GetBytes(bitmap.Bits[i]);
-                int bytePixelNumber = (i * 4);
+                int bytePixelNumber = i * 4;
                 array[bytePixelNumber + 0] = pixel[2];
                 array[bytePixelNumber + 1] = pixel[1];
                 array[bytePixelNumber + 2] = pixel[0];

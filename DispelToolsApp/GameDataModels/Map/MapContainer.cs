@@ -1,4 +1,4 @@
-﻿using DispelTools.ImageProcessing.Sprite;
+﻿using DispelTools.GameDataModels.Sprite;
 using System;
 using System.Collections.Generic;
 using System.Linq;

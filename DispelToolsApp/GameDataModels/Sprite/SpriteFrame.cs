@@ -1,6 +1,6 @@
 ﻿using DispelTools.Common;
 
-namespace DispelTools.ImageProcessing.Sprite
+namespace DispelTools.GameDataModels.Sprite
 {
     public class SpriteFrame
     {

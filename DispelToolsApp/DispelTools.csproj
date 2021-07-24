@@ -190,9 +190,9 @@
     <Compile Include="ImageProcessing\Filters\IPerPixelFilter.cs" />
     <Compile Include="ImageProcessing\Filters\ValueFilter.cs" />
     <Compile Include="ImageProcessing\ImageLoader.cs" />
-    <Compile Include="ImageProcessing\Sprite\SpriteFrame.cs" />
-    <Compile Include="ImageProcessing\Sprite\SpriteLoader.cs" />
-    <Compile Include="ImageProcessing\Sprite\SpriteSequence.cs" />
+    <Compile Include="GameDataModels\Sprite\SpriteFrame.cs" />
+    <Compile Include="GameDataModels\Sprite\SpriteLoader.cs" />
+    <Compile Include="GameDataModels\Sprite\SpriteSequence.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -316,8 +316,6 @@
     <Content Include="Resources\select.png" />
     <Content Include="Resources\transparentPattern.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="GameDataModels\Sprite\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

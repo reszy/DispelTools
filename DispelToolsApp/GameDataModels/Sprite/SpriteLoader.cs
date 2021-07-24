@@ -1,10 +1,11 @@
 ﻿using DispelTools.Common;
 using DispelTools.DebugTools.MetricTools;
+using DispelTools.ImageProcessing;
 using System;
 using System.IO;
 using System.Linq;
 
-namespace DispelTools.ImageProcessing.Sprite
+namespace DispelTools.GameDataModels.Sprite
 {
     public class SpriteLoader
     {

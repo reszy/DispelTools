@@ -29,8 +29,8 @@
             tileDiplayer.Image?.Dispose();
             tileDiplayer.Image = null;
             backgroundWorker?.Dispose();
-            mapReader?.Dispose();
-            mapReader = null;
+            mapContainer?.Dispose();
+            mapContainer = null;
             image = null;
 
             base.Dispose(disposing);
@@ -50,7 +50,7 @@
             this.tileSetCombo = new System.Windows.Forms.ComboBox();
             this.collisionsCheckBox = new System.Windows.Forms.CheckBox();
             this.btlCheckBox = new System.Windows.Forms.CheckBox();
-            this.bldgCheckBox = new System.Windows.Forms.CheckBox();
+            this.roofsCheckBox = new System.Windows.Forms.CheckBox();
             this.gtlCheckBox = new System.Windows.Forms.CheckBox();
             this.generateButton = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
@@ -119,16 +119,15 @@
             this.btlCheckBox.Text = "BTL";
             this.btlCheckBox.UseVisualStyleBackColor = true;
             // 
-            // bldgCheckBox
+            // roofsCheckBox
             // 
-            this.bldgCheckBox.AutoSize = true;
-            this.bldgCheckBox.Enabled = false;
-            this.bldgCheckBox.Location = new System.Drawing.Point(1039, 296);
-            this.bldgCheckBox.Name = "bldgCheckBox";
-            this.bldgCheckBox.Size = new System.Drawing.Size(55, 17);
-            this.bldgCheckBox.TabIndex = 9;
-            this.bldgCheckBox.Text = "BLDG";
-            this.bldgCheckBox.UseVisualStyleBackColor = true;
+            this.roofsCheckBox.AutoSize = true;
+            this.roofsCheckBox.Location = new System.Drawing.Point(1039, 296);
+            this.roofsCheckBox.Name = "roofsCheckBox";
+            this.roofsCheckBox.Size = new System.Drawing.Size(54, 17);
+            this.roofsCheckBox.TabIndex = 9;
+            this.roofsCheckBox.Text = "Roofs";
+            this.roofsCheckBox.UseVisualStyleBackColor = true;
             // 
             // gtlCheckBox
             // 
@@ -248,7 +247,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.generateButton);
             this.Controls.Add(this.gtlCheckBox);
-            this.Controls.Add(this.bldgCheckBox);
+            this.Controls.Add(this.roofsCheckBox);
             this.Controls.Add(this.btlCheckBox);
             this.Controls.Add(this.collisionsCheckBox);
             this.Controls.Add(this.tileSetCombo);
@@ -277,7 +276,7 @@
         private System.Windows.Forms.ComboBox tileSetCombo;
         private System.Windows.Forms.CheckBox collisionsCheckBox;
         private System.Windows.Forms.CheckBox btlCheckBox;
-        private System.Windows.Forms.CheckBox bldgCheckBox;
+        private System.Windows.Forms.CheckBox roofsCheckBox;
         private System.Windows.Forms.CheckBox gtlCheckBox;
         private System.Windows.Forms.Button generateButton;
         private System.Windows.Forms.OpenFileDialog openFileDialog;

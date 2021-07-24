@@ -3,7 +3,7 @@ using DispelTools.ImageProcessing;
 using System.Drawing;
 using System.IO;
 
-namespace DispelTools.Viewers.MapViewer
+namespace DispelTools.GameDataModels.Map
 {
     public partial class TileSet
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using static DispelTools.Viewers.MapViewer.TileSet;
+using static DispelTools.GameDataModels.Map.TileSet;
 
 namespace DispelTools.Components
 {

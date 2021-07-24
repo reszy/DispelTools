@@ -4,9 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using static DispelTools.Viewers.MapViewer.MapReader;
 
-namespace DispelTools.Viewers.MapViewer
+namespace DispelTools.GameDataModels.Map
 {
     public partial class TileSet : IDisposable
     {
@@ -38,11 +37,11 @@ namespace DispelTools.Viewers.MapViewer
             {
                 int tileNumber = (int)(file.BaseStream.Length / (32 * 32 * 2)) - 2;
                 tiles = new List<Tile>(tileNumber);
-                workReporter.ReportProgress(0, tileNumber);
+                workReporter.SetTotal(tileNumber);
                 for (int i = 0; i < tileNumber || file.BaseStream.Length > file.BaseStream.Position; i++)
                 {
                     tiles.Add(Tile.ReadTile(file, colorManager));
-                    workReporter.ReportProgress(i, tileNumber);
+                    workReporter.ReportProgress(i);
                 }
             }
         }

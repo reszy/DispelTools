@@ -12,11 +12,14 @@ namespace DispelTools.GameDataModels.Sprite
         public bool Animated => frames.Length > 1;
         public int FrameCount => frames.Length;
 
+        public bool ImagesLoaded {get;}
+
         private readonly SpriteFrame[] frames;
 
-        public SpriteSequence(int frames)
+        public SpriteSequence(int frames, bool imagesLoaded)
         {
             this.frames = new SpriteFrame[frames];
+            ImagesLoaded = imagesLoaded;
         }
 
         public void SaveAsImage(string directory, string filename, bool createGifs = true)
@@ -119,9 +122,12 @@ namespace DispelTools.GameDataModels.Sprite
 
         public void Dispose()
         {
-            foreach (var frame in frames)
+            if (ImagesLoaded)
             {
-                frame.Bitmap.Dispose();
+                foreach (var frame in frames)
+                {
+                    frame.Bitmap.Dispose();
+                }
             }
         }
     }

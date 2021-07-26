@@ -92,7 +92,7 @@ namespace DispelTools.GameDataModels.Map.Reader
                 file.Skip(264);
                 if (skipImages)
                 {
-                    spriteLoader.SkipSequence();
+                    sprites.Add(spriteLoader.SkipSequence());
                 }
                 else
                 {
@@ -224,8 +224,6 @@ namespace DispelTools.GameDataModels.Map.Reader
                 }
             }
         }
-
-
 
         private class SpriteSorter : IComparer<InternalSpriteInfo>
         {

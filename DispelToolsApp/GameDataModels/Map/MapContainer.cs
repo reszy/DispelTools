@@ -64,8 +64,8 @@ namespace DispelTools.GameDataModels.Map
                         sprite.Dispose();
                     }
                     InternalSprites.Clear();
-                    Gtl.Dispose();
-                    Btl.Dispose();
+                    Gtl?.Dispose();
+                    Btl?.Dispose();
                 }
                 disposedValue = true;
             }

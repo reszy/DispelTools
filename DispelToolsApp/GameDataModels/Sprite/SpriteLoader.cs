@@ -21,16 +21,17 @@ namespace DispelTools.GameDataModels.Sprite
             this.colorMode = colorMode;
         }
 
-        public void SkipSequence()
+        public SpriteSequence SkipSequence()
         {
             var info = GetSequenceInfo();
             reader.BaseStream.Seek(info.SequenceEndPosition, SeekOrigin.Begin);
+            return new SpriteSequence(info.FrameInfos.Length, false);
         }
 
         public SpriteSequence LoadSequence()
         {
             var info = GetSequenceInfo();
-            var sequence = new SpriteSequence(info.FrameInfos.Length);
+            var sequence = new SpriteSequence(info.FrameInfos.Length, true);
             for (int i = 0; i < info.FrameInfos.Length; i++)
             {
                 var frameInfo = info.FrameInfos[i];

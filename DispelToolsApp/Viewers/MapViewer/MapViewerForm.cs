@@ -1,9 +1,11 @@
 ﻿using DispelTools.Common;
 using DispelTools.Components;
+using DispelTools.DebugTools.MetricTools;
 using DispelTools.GameDataModels.Map;
 using DispelTools.GameDataModels.Map.Generator;
 using DispelTools.GameDataModels.Map.Reader;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
@@ -194,14 +196,29 @@ namespace DispelTools.Viewers.MapViewer
         private void button1_Click(object sender, EventArgs e)
         {
             string[] files = Directory.GetFiles(Settings.GameRootDir + @"\Map", "*.map");
-            var worker = new BackgroundWorker();
-            foreach (string file in files)
+            using (var worker = new BackgroundWorker())
             {
-                var reader = new MapReader(file, new WorkReporter(worker));
-                var map = reader.ReadMap(true);
-                map.Dispose();
+                foreach (string file in files)
+                {
+                    var reader = new MapReader(file, new WorkReporter(worker));
+                    using (var map = reader.ReadMap(true))
+                    {
+                        var spriteList = new SortedSet<int>();
+                        for (int i = 0; i < map.InternalSprites.Count; i++)
+                        {
+                            spriteList.Add(i);
+                        }
+                        foreach (var spriteInfo in map.Model.InternalSpriteInfos)
+                        {
+                            spriteList.Remove(spriteInfo.Id);
+                        }
+                        foreach (int id in spriteList)
+                        {
+                            Metrics.List(MetricFile.MapReadMetric, Path.GetFileNameWithoutExtension(file), id.ToString());
+                        }
+                    }
+                }
             }
-            worker.Dispose();
         }
     }
 }

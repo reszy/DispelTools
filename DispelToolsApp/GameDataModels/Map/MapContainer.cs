@@ -28,6 +28,9 @@ namespace DispelTools.GameDataModels.Map
             var sb = new StringBuilder();
 
             sb.AppendLine("--Map Model--");
+            sb.Append("Name: ");
+            sb.Append(MapName);
+            sb.AppendLine();
             sb.Append("Height: ");
             sb.Append(Model.TiledMapSize.Height);
             sb.AppendLine();

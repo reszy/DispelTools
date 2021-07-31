@@ -12,7 +12,7 @@ namespace DispelTools.GameDataModels.Sprite
         public bool Animated => frames.Length > 1;
         public int FrameCount => frames.Length;
 
-        public bool ImagesLoaded {get;}
+        public bool ImagesLoaded { get; }
 
         private readonly SpriteFrame[] frames;
 

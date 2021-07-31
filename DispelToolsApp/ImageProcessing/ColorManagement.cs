@@ -140,9 +140,9 @@ namespace DispelTools.ImageProcessing
         internal class RGB16_565 : ColorManagement
         {
 
-            private static ushort red_mask = 0xF800;
-            private static ushort green_mask = 0x7E0;
-            private static ushort blue_mask = 0x1F;
+            private const ushort red_mask = 0xF800;
+            private const ushort green_mask = 0x7E0;
+            private const ushort blue_mask = 0x1F;
 
             internal RGB16_565()
             {
@@ -188,9 +188,9 @@ namespace DispelTools.ImageProcessing
         internal class RGB16_565_Skip2 : ColorManagement
         {
 
-            private static ushort red_mask = 0xF800;
-            private static ushort green_mask = 0x7E0;
-            private static ushort blue_mask = 0x1F;
+            private const ushort red_mask = 0xF800;
+            private const ushort green_mask = 0x7E0;
+            private const ushort blue_mask = 0x1F;
 
             internal RGB16_565_Skip2()
             {
@@ -236,9 +236,9 @@ namespace DispelTools.ImageProcessing
         internal class RGB16_555 : ColorManagement
         {
 
-            private static ushort red_mask = 0x7C00;
-            private static ushort green_mask = 0x3E0;
-            private static ushort blue_mask = 0x1F;
+            private const ushort red_mask = 0x7C00;
+            private const ushort green_mask = 0x3E0;
+            private const ushort blue_mask = 0x1F;
 
             internal RGB16_555()
             {

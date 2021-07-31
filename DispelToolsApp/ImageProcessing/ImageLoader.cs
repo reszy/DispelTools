@@ -1,5 +1,4 @@
 ﻿using DispelTools.Common;
-using System.Drawing;
 
 namespace DispelTools.ImageProcessing
 {

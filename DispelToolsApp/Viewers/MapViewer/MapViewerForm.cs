@@ -193,7 +193,7 @@ namespace DispelTools.Viewers.MapViewer
         }
 
         // Debug function
-        private void button1_Click(object sender, EventArgs e)
+        private void debugButton_Click(object sender, EventArgs e)
         {
             string[] files = Directory.GetFiles(Settings.GameRootDir + @"\Map", "*.map");
             using (var worker = new BackgroundWorker())

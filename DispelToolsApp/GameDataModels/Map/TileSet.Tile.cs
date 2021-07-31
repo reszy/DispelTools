@@ -9,8 +9,8 @@ namespace DispelTools.GameDataModels.Map
     {
         public class Tile
         {
-            private Color[] pixels;
-            private static int[,] mask = CreateMask();
+            private readonly Color[] pixels;
+            private static readonly int[,] mask = CreateMask();
 
             private Tile(BinaryReader reader, ColorManagement colorManagement)
             {

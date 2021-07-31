@@ -7,6 +7,7 @@ using System.IO;
 
 namespace DispelTools.GameDataModels.Map.Reader
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "these are values of unknown purpose but important")]
     public partial class MapReader
     {
         private readonly string filename;
@@ -18,12 +19,6 @@ namespace DispelTools.GameDataModels.Map.Reader
         private readonly List<SpriteSequence> sprites = new List<SpriteSequence>();
 
         public MapReader(string filename, WorkReporter workReporter)
-        {
-            this.filename = filename;
-            this.workReporter = workReporter;
-            mapName = Path.GetFileNameWithoutExtension(filename);
-        }
-        public MapReader(string filename, BinaryReader file, WorkReporter workReporter)
         {
             this.filename = filename;
             this.workReporter = workReporter;

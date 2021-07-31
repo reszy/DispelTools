@@ -10,7 +10,7 @@ namespace DispelTools.Common
         private class DebugIgnoreAttribute : Attribute { }
         private class SettingsDto
         {
-            private static SettingsDto defaultSettings = Default();
+            private static readonly SettingsDto defaultSettings = Default();
             public string GameRootDir { get; set; }
 
             public string OutRootDir { get; set; }

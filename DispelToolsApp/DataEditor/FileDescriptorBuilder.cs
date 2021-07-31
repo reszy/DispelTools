@@ -7,12 +7,12 @@ namespace DispelTools.DataEditor
         private readonly List<ItemFieldDescriptor> fields = new List<ItemFieldDescriptor>();
         private int byteCounter = 0;
 
-        public void Add(ItemFieldDescriptor.FieldType type, bool readOnly = false)
+        public void Add(ItemFieldDescriptor.IFieldType type, bool readOnly = false)
         {
             fields.Add(new ItemFieldDescriptor(GetUnknownName(), readOnly, type));
             byteCounter += type.ByteSize;
         }
-        public void Add(ItemFieldDescriptor.FieldType type, string description, bool readOnly = false)
+        public void Add(ItemFieldDescriptor.IFieldType type, string description, bool readOnly = false)
         {
             fields.Add(new ItemFieldDescriptor(GetUnknownName(), readOnly, type)
             {
@@ -20,12 +20,12 @@ namespace DispelTools.DataEditor
             });
             byteCounter += type.ByteSize;
         }
-        public void Add(string name, ItemFieldDescriptor.FieldType type, bool readOnly = false)
+        public void Add(string name, ItemFieldDescriptor.IFieldType type, bool readOnly = false)
         {
             fields.Add(new ItemFieldDescriptor(name, readOnly, type));
             byteCounter += type.ByteSize;
         }
-        public void Add(string name, ItemFieldDescriptor.FieldType type, string description, bool readOnly = false)
+        public void Add(string name, ItemFieldDescriptor.IFieldType type, string description, bool readOnly = false)
         {
             fields.Add(new ItemFieldDescriptor(name, readOnly, type)
             {
@@ -34,7 +34,7 @@ namespace DispelTools.DataEditor
             byteCounter += type.ByteSize;
         }
 
-        public void Fill(int count, ItemFieldDescriptor.FieldType type)
+        public void Fill(int count, ItemFieldDescriptor.IFieldType type)
         {
             for (int i = 0; i < count; i++)
             {

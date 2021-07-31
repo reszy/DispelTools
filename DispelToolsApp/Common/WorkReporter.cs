@@ -7,13 +7,14 @@ namespace DispelTools.Common
     {
         private const int STAGE_MAX = 1000;
 
-        private readonly BackgroundWorker backgroundWorker;
-        public readonly int stageCount;
+        protected readonly BackgroundWorker backgroundWorker;
+        protected readonly int stageCount;
+        protected int currentStage = 0;
+        protected int totalInStage;
+        protected int currentProgress;
+
         public int Max => stageCount * STAGE_MAX;
         public int StagesLeft => stageCount - currentStage;
-
-        public int currentStage = 0;
-        public int totalInStage;
 
         public WorkReporter(BackgroundWorker backgroundWorker, int stageCount = 1)
         {
@@ -33,9 +34,12 @@ namespace DispelTools.Common
                 throw new ArgumentOutOfRangeException("stage count out of range");
             }
             currentStage = stage;
-            backgroundWorker.ReportProgress((currentStage - 1) * STAGE_MAX, text);
+            currentProgress = (currentStage - 1) * STAGE_MAX;
+            backgroundWorker.ReportProgress(currentProgress, text);
 
         }
-        public void ReportProgress(int progress) => backgroundWorker.ReportProgress(((currentStage - 1) * STAGE_MAX) + (int)((double)progress / totalInStage * STAGE_MAX));
+        public void ReportProgress(int progress) {
+            currentProgress = ((currentStage - 1) * STAGE_MAX) + (int)((double)progress / totalInStage * STAGE_MAX);
+            backgroundWorker.ReportProgress(currentProgress); }
     }
 }

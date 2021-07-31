@@ -1,4 +1,6 @@
-﻿namespace DispelTools.DataExtractor
+﻿using DispelTools.DataExtractor.ExtractionStatus;
+
+namespace DispelTools.DataExtractor
 {
     public class ExtractionFile
     {
@@ -14,7 +16,7 @@
         public string OuputDirectory { get => outputDirectory; }
         public string FileName { get => file; }
 
-        public ExtractionFileProcess CreateProcess(ExtractionManager extractor) => new ExtractionFileProcess(extractor, file, outputDirectory);
+        public ExtractionFileProcess CreateProcess(ExtractionParams extractionParams, ExtractionWorkReporter workReporter) => new ExtractionFileProcess(extractionParams, file, outputDirectory, workReporter);
         public override string ToString() => $"[file: '{FileName}', out: '{OuputDirectory}']";
     }
 }

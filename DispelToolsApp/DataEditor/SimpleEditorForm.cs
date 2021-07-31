@@ -11,7 +11,7 @@ namespace DispelTools.DataEditor
         public SimpleEditorForm()
         {
             InitializeComponent();
-            customPropertyGrid1.SelectedItem = Components.CustomPropertyGridControl.PropertyItem.Sample();
+            customPropertyGrid.SelectedItem = Components.CustomPropertyGridControl.PropertyItem.Sample();
         }
 
         private void openButton_Click(object sender, EventArgs e)
@@ -23,7 +23,7 @@ namespace DispelTools.DataEditor
                 if (editor.CanOpen())
                 {
                     inElementNumber.Value = 0;
-                    customPropertyGrid1.SelectedItem = editor.ReadValue(0);
+                    customPropertyGrid.SelectedItem = editor.ReadValue(0);
 
                     SetMaxElementsLabel(inElementNumber.Maximum = editor.GetElementCount());
                     openedFileLabel.Text = openFileDialog.FileName;
@@ -36,26 +36,26 @@ namespace DispelTools.DataEditor
         }
 
         private void elementNumber_ValueChanged(object sender, EventArgs e) => Read();
-        private void SetMaxElementsLabel(decimal number) => maxElementsLabel.Text = "/ " + number;
 
         private void debugButton_Click(object sender, EventArgs e)
         {
         }
 
-        private void saveButton_Click(object sender, EventArgs e) => editor?.Save(customPropertyGrid1.SelectedItem, (int)inElementNumber.Value);
+        private void saveButton_Click(object sender, EventArgs e) => editor?.Save(customPropertyGrid.SelectedItem, (int)inElementNumber.Value);
+
+        private void hideUnnamedCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            customPropertyGrid.HideUnnamedFields = hideUnnamedCheckBox.Checked;
+            Read();
+        }
+        private void SetMaxElementsLabel(decimal number) => maxElementsLabel.Text = "/ " + number;
 
         private void Read()
         {
             if (editor != null)
             {
-                customPropertyGrid1.SelectedItem = editor.ReadValue((int)inElementNumber.Value);
+                customPropertyGrid.SelectedItem = editor.ReadValue((int)inElementNumber.Value);
             }
-        }
-
-        private void hideUnnamedCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            customPropertyGrid1.HideUnnamedFields = hideUnnamedCheckBox.Checked;
-            Read();
         }
     }
 }

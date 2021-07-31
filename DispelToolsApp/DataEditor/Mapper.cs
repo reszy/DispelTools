@@ -71,8 +71,10 @@ namespace DispelTools.DataEditor
             {
                 var fieldDescriptor = descriptorList[i];
                 object value = fieldDescriptor.ItemFieldDescriptorType.Read(reader);
-                var field = new Field(fieldDescriptor.Name, value, fieldDescriptor.ItemFieldDescriptorType.VisualFieldType, fieldDescriptor.ReadOnly);
-                field.Description = fieldDescriptor.Description;
+                var field = new Field(fieldDescriptor.Name, value, fieldDescriptor.ItemFieldDescriptorType.VisualFieldType, fieldDescriptor.ReadOnly)
+                {
+                    Description = fieldDescriptor.Description
+                };
                 propertyItem.AddField(field);
             }
             return propertyItem;

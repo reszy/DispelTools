@@ -1,5 +1,4 @@
-﻿using DispelTools.DataExtractor.ExtractionStatus;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
@@ -24,19 +23,19 @@ namespace DispelTools.DataExtractor.AllExtractor
             {
                 case ".spr":
                 {
-                    process.Extractor.ReportNewStatus(StatusNameChanged.NewStatusInProgress("Extracting sprites"));
+                    process.WorkReporter.SetText("Extracting sprites...");
                     new ImageExtractor.SprImageExtractor().ExtractFile(process);
                 }
                 break;
                 case ".map":
                 {
-                    process.Extractor.ReportNewStatus(StatusNameChanged.NewStatusInProgress("Extracting map sprites"));
+                    process.WorkReporter.SetText("Extracting map sprites...");
                     new MapExtractor.MapImageExtractor().ExtractFile(process);
                 }
                 break;
                 case ".snf":
                 {
-                    process.Extractor.ReportNewStatus(StatusNameChanged.NewStatusInProgress("Extracting sounds"));
+                    process.WorkReporter.SetText("Extracting sounds...");
                     new SoundExtractor.SnfSoundExtractor().ExtractFile(process);
                 }
                 break;
@@ -45,12 +44,11 @@ namespace DispelTools.DataExtractor.AllExtractor
             }
         }
 
-        public override List<ExtractionFile> Initialize(ExtractionManager extractionManager, List<string> filenames, string outputDirectory)
+        public override List<ExtractionFile> Initialize(List<string> filenames, string outputDirectory)
         {
-            extractionManager.ReportNewStatus(StatusNameChanged.NewStatusInProgress("Scanning"));
             string gameDirectory = filenames[0];
             string[] fileExtensions = new string[] { ".spr", ".snf", ".map", ".btl", ".gtl" };
-            if (isDispelDirectory(gameDirectory))
+            if (IsDispelDirectory(gameDirectory))
             {
                 return GetAllFiles(gameDirectory)
                     .Where(file => fileExtensions.Contains(fs.Path.GetExtension(file.ToLower())))
@@ -79,7 +77,7 @@ namespace DispelTools.DataExtractor.AllExtractor
             }
         }
 
-        private bool isDispelDirectory(string gameDirectory)
+        private bool IsDispelDirectory(string gameDirectory)
         {
             string[] filesInDirectory = fs.Directory.GetFiles(gameDirectory);
             string[] directoriesInDirectory = fs.Directory.GetDirectories(gameDirectory);

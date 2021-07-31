@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
 
 namespace DispelTools.DataExtractor.RgbConverter
@@ -19,9 +17,9 @@ namespace DispelTools.DataExtractor.RgbConverter
                     newBitmap.SetPixel(x, y, ConvertFrom555to565(bitmap.GetPixel(x, y)));
                 }
             }
-            var newFilename = $"{ process.Filename }_Converted.png";
+            string newFilename = $"{ process.Filename }_Converted.png";
             newBitmap.Save($"{process.OutputDirectory}\\{newFilename}", ImageFormat.Png);
-            process.Extractor.RaportFileCreatedDetail(process, newFilename);
+            process.WorkReporter.ReportFileCreated(process, newFilename);
         }
 
         private Color ConvertFrom555to565(Color color)

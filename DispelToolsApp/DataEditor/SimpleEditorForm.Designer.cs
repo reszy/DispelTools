@@ -35,7 +35,7 @@ namespace DispelTools.DataEditor
             this.maxElementsLabel = new System.Windows.Forms.Label();
             this.debugButton = new System.Windows.Forms.Button();
             this.saveButton = new System.Windows.Forms.Button();
-            this.customPropertyGrid1 = new DispelTools.Components.CustomPropertyGridControl.CustomPropertyGrid();
+            this.customPropertyGrid = new DispelTools.Components.CustomPropertyGridControl.CustomPropertyGrid();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.hideUnnamedCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.inElementNumber)).BeginInit();
@@ -97,20 +97,20 @@ namespace DispelTools.DataEditor
             this.saveButton.UseVisualStyleBackColor = true;
             this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
-            // customPropertyGrid1
+            // customPropertyGrid
             // 
-            this.customPropertyGrid1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.customPropertyGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.customPropertyGrid1.AutoScroll = true;
-            this.customPropertyGrid1.AutoScrollMinSize = new System.Drawing.Size(20, 20);
-            this.customPropertyGrid1.BackColor = System.Drawing.SystemColors.Window;
-            this.customPropertyGrid1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.customPropertyGrid1.Location = new System.Drawing.Point(12, 69);
-            this.customPropertyGrid1.Name = "customPropertyGrid1";
-            this.customPropertyGrid1.SelectedItem = null;
-            this.customPropertyGrid1.Size = new System.Drawing.Size(377, 432);
-            this.customPropertyGrid1.TabIndex = 8;
+            this.customPropertyGrid.AutoScroll = true;
+            this.customPropertyGrid.AutoScrollMinSize = new System.Drawing.Size(20, 20);
+            this.customPropertyGrid.BackColor = System.Drawing.SystemColors.Window;
+            this.customPropertyGrid.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.customPropertyGrid.Location = new System.Drawing.Point(12, 69);
+            this.customPropertyGrid.Name = "customPropertyGrid1";
+            this.customPropertyGrid.SelectedItem = null;
+            this.customPropertyGrid.Size = new System.Drawing.Size(377, 432);
+            this.customPropertyGrid.TabIndex = 8;
             // 
             // openFileDialog
             // 
@@ -134,7 +134,7 @@ namespace DispelTools.DataEditor
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(398, 513);
             this.Controls.Add(this.hideUnnamedCheckBox);
-            this.Controls.Add(this.customPropertyGrid1);
+            this.Controls.Add(this.customPropertyGrid);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.debugButton);
             this.Controls.Add(this.maxElementsLabel);
@@ -156,7 +156,7 @@ namespace DispelTools.DataEditor
         private System.Windows.Forms.Label maxElementsLabel;
         private System.Windows.Forms.Button debugButton;
         private System.Windows.Forms.Button saveButton;
-        private Components.CustomPropertyGridControl.CustomPropertyGrid customPropertyGrid1;
+        private Components.CustomPropertyGridControl.CustomPropertyGrid customPropertyGrid;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.CheckBox hideUnnamedCheckBox;
     }

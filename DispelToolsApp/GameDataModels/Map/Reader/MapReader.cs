@@ -23,47 +23,58 @@ namespace DispelTools.GameDataModels.Map.Reader
             this.workReporter = workReporter;
             mapName = Path.GetFileNameWithoutExtension(filename);
         }
+        public MapReader(string filename, BinaryReader file, WorkReporter workReporter)
+        {
+            this.filename = filename;
+            this.workReporter = workReporter;
+            mapName = Path.GetFileNameWithoutExtension(filename);
+        }
 
         public MapContainer ReadMap(bool skipImages)
         {
-            workReporter.SetTotal(9);
             using (var file = new BinaryReader(new FileStream(filename, FileMode.Open, FileAccess.Read)))
             {
-                workReporter.ReportProgress(0);
-
-                int width = file.ReadInt32();
-                int height = file.ReadInt32();
-                map = new MapModel(width, height);
-
-                ReadFirstBlock(file);
-                workReporter.ReportProgress(1);
-
-                ReadSecondBlock(file);
-                workReporter.ReportProgress(2);
-
-                ReadSpritesBlock(file, skipImages);
-                workReporter.ReportProgress(3);
-
-                ReadInternalSpriteInfo(file);
-                workReporter.ReportProgress(4);
-
-                ReadTiledObjectsBlock(file);
-                workReporter.ReportProgress(5);
-
-                ReadEventAndBtlgBlock(file);
-                workReporter.ReportProgress(6);
-
-                ReadTilesAndAccessBlock(file);
-                workReporter.ReportProgress(7);
-
-                ReadRoofTiles(file);
-                workReporter.ReportProgress(8);
-
-                map.InternalSpriteInfos.Sort(new SpriteSorter());
-                map.TiledObjectInfos.Sort(new BtlSorter());
-
-                workReporter.ReportProgress(9);
+                return ReadMap(file, skipImages);
             }
+        }
+        public MapContainer ReadMap(BinaryReader file, bool skipImages)
+        {
+            workReporter.SetTotal(9);
+            workReporter.ReportProgress(0);
+
+            int width = file.ReadInt32();
+            int height = file.ReadInt32();
+            map = new MapModel(width, height);
+
+            ReadFirstBlock(file);
+            workReporter.ReportProgress(1);
+
+            ReadSecondBlock(file);
+            workReporter.ReportProgress(2);
+
+            ReadSpritesBlock(file, skipImages);
+            workReporter.ReportProgress(3);
+
+            ReadInternalSpriteInfo(file);
+            workReporter.ReportProgress(4);
+
+            ReadTiledObjectsBlock(file);
+            workReporter.ReportProgress(5);
+
+            ReadEventAndBtlgBlock(file);
+            workReporter.ReportProgress(6);
+
+            ReadTilesAndAccessBlock(file);
+            workReporter.ReportProgress(7);
+
+            ReadRoofTiles(file);
+            workReporter.ReportProgress(8);
+
+            map.InternalSpriteInfos.Sort(new SpriteSorter());
+            map.TiledObjectInfos.Sort(new BtlSorter());
+
+            workReporter.ReportProgress(9);
+
             return new MapContainer(mapName, map, sprites);
         }
 

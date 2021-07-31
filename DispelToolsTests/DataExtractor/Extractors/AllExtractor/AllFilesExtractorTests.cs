@@ -43,8 +43,7 @@ namespace DispelTools.DataExtractor.AllExtractor.Tests
                 Filename = new List<string>() { gameFolder },
                 OutputDirectory = outputDirectory
             };
-            var manager = new ExtractionManager(mockFileSystem, extractor, extractionParams, new System.ComponentModel.BackgroundWorker());
-            var results = extractor.Initialize(manager, extractionParams.Filename, extractionParams.OutputDirectory);
+            var results = extractor.Initialize(extractionParams.Filename, extractionParams.OutputDirectory);
 
             foreach (var result in results)
             {

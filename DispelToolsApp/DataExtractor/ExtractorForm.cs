@@ -9,11 +9,10 @@ namespace DispelTools.DataExtractor
 {
     public partial class ExtractorForm : Form
     {
-        private IExtractorFactory extractorFactory;
+        private readonly IExtractorFactory extractorFactory;
         private List<string> filenames;
         private string outputDirectory;
         private ExtractionParams extractionParams = new ExtractionParams();
-        private BackgroundWorker backgroundWorker;
 
         public ExtractorForm(IExtractorFactory extractorFactory)
         {
@@ -21,11 +20,6 @@ namespace DispelTools.DataExtractor
             Text = extractorFactory.ExtractorName;
             this.extractorFactory = extractorFactory;
             optionsButton.Enabled = extractorFactory.AcceptedOptions != ExtractionParams.NoOptions;
-            backgroundWorker = new BackgroundWorker();
-
-            backgroundWorker.DoWork += ExtractAllFiles;
-            backgroundWorker.RunWorkerCompleted += ExtractionCompleted;
-            backgroundWorker.ProgressChanged += ExtractionProgressChanged;
         }
 
         private void openButton_Click(object sender, EventArgs e)
@@ -61,14 +55,14 @@ namespace DispelTools.DataExtractor
             {
                 if (Settings.RootsValid)
                 {
-                    setOutputDirectory(Settings.TranslateToOutDir(outDirectory));
+                    SetOutputDirectory(Settings.TranslateToOutDir(outDirectory));
                 }
                 else
                 {
-                    setOutputDirectory(outDirectory);
+                    SetOutputDirectory(outDirectory);
                 }
             }
-            setIfReady();
+            SetIfReady();
         }
 
         private void extractButton_Click(object sender, EventArgs e)
@@ -78,6 +72,10 @@ namespace DispelTools.DataExtractor
             progressBar.Text = null;
             details.ClearDetails();
             extractButton.Enabled = false;
+            directorySelectButton.Enabled = false;
+            openButton.Enabled = false;
+            openOutputDirectoryButton.Enabled = false;
+            optionsButton.Enabled = false;
             backgroundWorker.RunWorkerAsync(filenames);
         }
 
@@ -89,32 +87,17 @@ namespace DispelTools.DataExtractor
                 extractionParams.Filename = filenames;
                 extractionParams.OutputDirectory = outputDirectory;
                 var extractor = new ExtractionManager(extractorFactory.CreateInstance(), extractionParams, worker);
+                progressBar.Maximum = extractor.Prepare() * 1000;
                 extractor.Start();
             }
         }
 
         private void ExtractionProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            if (e.UserState is ExtractionStatus.ProgressChanged)
+            progressBar.Value = e.ProgressPercentage;
+            if (e.UserState is string text)
             {
-                var extractionStatus = e.UserState as ExtractionStatus.ProgressChanged;
-                if (progressBar.Maximum != extractionStatus.ProgressTotal)
-                {
-                    progressBar.Maximum = extractionStatus.ProgressTotal;
-                }
-                if (extractionStatus.Action != null)
-                {
-                    details.AddDetails(extractionStatus.Action);
-                }
-                progressBar.Value = extractionStatus.CurrentProgress;
-            }
-            if (e.UserState is ExtractionStatus.StatusNameChanged)
-            {
-                var newStatus = e.UserState as ExtractionStatus.StatusNameChanged;
-                if (progressBar.Text != newStatus.ExtraStatusName)
-                {
-                    progressBar.Text = newStatus.ExtraStatusName;
-                }
+                progressBar.Text = text;
             }
             if (e.UserState is ExtractionStatus.SimpleDetail)
             {
@@ -123,7 +106,15 @@ namespace DispelTools.DataExtractor
             }
         }
 
-        private void ExtractionCompleted(object sender, RunWorkerCompletedEventArgs e) => extractButton.Enabled = true;
+        private void ExtractionCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            extractButton.Enabled = true;
+            directorySelectButton.Enabled = true;
+            openButton.Enabled = true;
+            openOutputDirectoryButton.Enabled = true;
+            optionsButton.Enabled = true;
+            progressBar.Text = "Completed";
+        }
 
         private void outputDirectoryButton_Click(object sender, EventArgs e)
         {
@@ -133,11 +124,11 @@ namespace DispelTools.DataExtractor
                 folderBrowserDialog.SelectedPath = outputDirectory;
             }
             folderBrowserDialog.ShowDialog();
-            setOutputDirectory(folderBrowserDialog.SelectedPath);
-            setIfReady();
+            SetOutputDirectory(folderBrowserDialog.SelectedPath);
+            SetIfReady();
         }
 
-        private void setIfReady()
+        private void SetIfReady()
         {
             if (outputDirectory != null)
             {
@@ -149,7 +140,7 @@ namespace DispelTools.DataExtractor
             }
         }
 
-        private void setOutputDirectory(string dir)
+        private void SetOutputDirectory(string dir)
         {
             outputDirectory = dir;
             outputDirectoryInfo.Text = dir;

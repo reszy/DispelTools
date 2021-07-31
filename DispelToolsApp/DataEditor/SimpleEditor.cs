@@ -8,8 +8,8 @@ namespace DispelTools.DataEditor
 {
     public class SimpleEditor
     {
-        private IFileSystem fs;
-        private string filename;
+        private readonly IFileSystem fs;
+        private readonly string filename;
         private bool validated;
         private Mapper mapper;
         private List<PropertyItem> values;

@@ -6,7 +6,7 @@ namespace DispelTools.DataEditor
 {
     public class ItemFieldDescriptor
     {
-        public ItemFieldDescriptor(string name, bool readOnly, FieldType itemFieldDescriptorType)
+        public ItemFieldDescriptor(string name, bool readOnly, IFieldType itemFieldDescriptorType)
         {
             Name = name;
             ReadOnly = readOnly;
@@ -16,15 +16,15 @@ namespace DispelTools.DataEditor
         public string Name { get; set; }
         public string Description { get; set; }
         public bool ReadOnly { get; set; }
-        public FieldType ItemFieldDescriptorType { get; set; }
+        public IFieldType ItemFieldDescriptorType { get; set; }
 
-        public static FieldType AsByte() => new ByteField();
-        public static FieldType AsInt32() => new Int32Field();
-        public static FieldType AsInt16() => new Int16Field();
-        public static FieldType AsFixedString(int stringMaxLength, byte filler) => AsFixedString(stringMaxLength, filler, Field.DisplayType.TEXT_PL);
-        public static FieldType AsFixedString(int stringMaxLength, byte filler, Field.DisplayType encoding) => new FixedStringField(stringMaxLength, filler, encoding);
-        public static FieldType AsByteArray(int length) => new ByteArrayField(length);
-        public interface FieldType
+        public static IFieldType AsByte() => new ByteField();
+        public static IFieldType AsInt32() => new Int32Field();
+        public static IFieldType AsInt16() => new Int16Field();
+        public static IFieldType AsFixedString(int stringMaxLength, byte filler) => AsFixedString(stringMaxLength, filler, Field.DisplayType.TEXT_PL);
+        public static IFieldType AsFixedString(int stringMaxLength, byte filler, Field.DisplayType encoding) => new FixedStringField(stringMaxLength, filler, encoding);
+        public static IFieldType AsByteArray(int length) => new ByteArrayField(length);
+        public interface IFieldType
         {
             Field.DisplayType VisualFieldType { get; }
 
@@ -33,7 +33,7 @@ namespace DispelTools.DataEditor
 
             void Write(BinaryWriter writer, object value);
         }
-        private class ByteField : FieldType
+        private class ByteField : IFieldType
         {
             public Field.DisplayType VisualFieldType => Field.DisplayType.HEX;
             public int ByteSize => 1;
@@ -41,7 +41,7 @@ namespace DispelTools.DataEditor
             public object Read(BinaryReader reader) => reader.ReadByte();
             public void Write(BinaryWriter writer, object value) => writer.Write((byte)value);
         }
-        private class ByteArrayField : FieldType
+        private class ByteArrayField : IFieldType
         {
             private readonly int length;
 
@@ -56,7 +56,7 @@ namespace DispelTools.DataEditor
             public object Read(BinaryReader reader) => reader.ReadBytes(length);
             public void Write(BinaryWriter writer, object value) => writer.Write((byte[])value);
         }
-        private class Int32Field : FieldType
+        private class Int32Field : IFieldType
         {
             public Field.DisplayType VisualFieldType => Field.DisplayType.DEC;
             public int ByteSize => 4;
@@ -64,7 +64,7 @@ namespace DispelTools.DataEditor
             public object Read(BinaryReader reader) => reader.ReadInt32();
             public void Write(BinaryWriter writer, object value) => writer.Write((int)value);
         }
-        private class Int16Field : FieldType
+        private class Int16Field : IFieldType
         {
             public Field.DisplayType VisualFieldType => Field.DisplayType.DEC;
             public int ByteSize => 2;
@@ -72,7 +72,7 @@ namespace DispelTools.DataEditor
             public object Read(BinaryReader reader) => reader.ReadInt16();
             public void Write(BinaryWriter writer, object value) => writer.Write((short)value);
         }
-        private class FixedStringField : FieldType
+        private class FixedStringField : IFieldType
         {
             private readonly int stringMaxLength;
             private readonly byte filler;

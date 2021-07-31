@@ -33,23 +33,24 @@ namespace DispelTools.DataExtractor.SoundExtractor
 
         private void SaveToWaveFormat(ExtractionFileProcess process, BinaryReader reader, int dataSize, int sampleRate, short bitsPerSample)
         {
-            using (var writer = new BinaryWriter(new FileStream($"{process.OutputDirectory}\\{process.Filename}.wav", FileMode.Create)))
+            var outputFileName = $"{process.Filename}.wav";
+            using (var writer = new BinaryWriter(new FileStream($"{process.OutputDirectory}\\{outputFileName}", FileMode.Create)))
             {
-                writeRiff(writer, dataSize);
-                writeFmt(writer, sampleRate, bitsPerSample);
-                writeData(writer, reader, dataSize);
+                WriteRiff(writer, dataSize);
+                WriteFmt(writer, sampleRate, bitsPerSample);
+                WriteData(writer, reader, dataSize);
             }
-            process.Extractor.RaportFileCreatedDetail(process, $"{process.Filename}.wav");
+            process.WorkReporter.ReportFileCreated(process, outputFileName);
         }
 
-        private void writeRiff(BinaryWriter writer, int dataSize)
+        private void WriteRiff(BinaryWriter writer, int dataSize)
         {
             writer.Write(new char[4] { 'R', 'I', 'F', 'F' });
             writer.Write(44 + dataSize);
             writer.Write(new char[4] { 'W', 'A', 'V', 'E' });
         }
 
-        private void writeFmt(BinaryWriter writer, int sampleRate, short bitsPerSample)
+        private void WriteFmt(BinaryWriter writer, int sampleRate, short bitsPerSample)
         {
             writer.Write(new char[4] { 'f', 'm', 't', ' ' });
             writer.Write(16);
@@ -61,7 +62,7 @@ namespace DispelTools.DataExtractor.SoundExtractor
             writer.Write(bitsPerSample);
         }
 
-        private void writeData(BinaryWriter writer, BinaryReader reader, int dataSize)
+        private void WriteData(BinaryWriter writer, BinaryReader reader, int dataSize)
         {
             writer.Write(new char[4] { 'd', 'a', 't', 'a' });
             writer.Write(dataSize);

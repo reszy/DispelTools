@@ -1,7 +1,6 @@
 ﻿using DispelTools.Common;
+using DispelTools.GameDataModels.Map.Reader;
 using DispelTools.GameDataModels.Sprite;
-using System;
-using System.IO;
 
 namespace DispelTools.DataExtractor.MapExtractor
 {
@@ -9,44 +8,25 @@ namespace DispelTools.DataExtractor.MapExtractor
     {
         public override void ExtractFile(ExtractionFileProcess process)
         {
-            SeekForSprites(process);
-            var file = process.File;
-            int spritesCount = file.ReadInt32();
-
-            var spriteLoader = new SpriteLoader(file, process.Filename, process.Options.ColorMode);
-            for (int i = 0; i < spritesCount; i++)
+            var mapReader = new MapReader(process.Filename, process.WorkReporter);
+            var container = mapReader.ReadMap(process.File, false);
+            for (int i = 0; i < container.InternalSprites.Count; i++)
             {
-                int imageStamp = file.ReadInt32();
-                int imageOffset = imageStamp == 6 ? 1904 : (imageStamp == 9 ? 2996 : throw new NotImplementedException($"Unexpected imageStamp {imageStamp}"));
-                file.Skip(264);
-                LoadAndSaveSequence(process, spriteLoader, i);
-                file.Skip(imageOffset);
+                var sequence = container.InternalSprites[i];
+                SaveSequence(process, sequence, i);
+                sequence.Dispose();
             }
         }
 
-        private void SeekForSprites(ExtractionFileProcess process)
+        private void SaveSequence(ExtractionFileProcess process, SpriteSequence sequence, int imageNumber)
         {
-            var file = process.File;
-            process.Stream.Seek(8, SeekOrigin.Begin);//Set position after map dimensions
-            int multiplier = file.ReadInt32();
-            int size = file.ReadInt32();
-            file.BaseStream.Seek(8, SeekOrigin.Begin);
-            file.Skip(multiplier * size * 4);//skip unknown data
-
-            size = file.ReadInt32();
-            file.Skip(size * 2);
-        }
-        private void LoadAndSaveSequence(ExtractionFileProcess process, SpriteLoader loader, int imageNumber)
-        {
-            var sequence = loader.LoadSequence();
             string createdFileName = $"{process.Filename}.{imageNumber}";
 
             if (!Settings.ExtractorReadOnly)
             {
                 sequence.SaveAsImage(process.OutputDirectory, createdFileName, process.Options.CreateAnimatedGifs);
-                process.Extractor.RaportFileCreatedDetail(process, createdFileName);
+                process.WorkReporter.ReportFileCreated(process, createdFileName);
             }
-            sequence.Dispose();
         }
     }
 }

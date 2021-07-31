@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DispelTools.DataExtractor.ExtractionStatus;
+using System;
 using System.IO;
 
 namespace DispelTools.DataExtractor
@@ -8,7 +9,6 @@ namespace DispelTools.DataExtractor
         private readonly BinaryReader file;
         private readonly string filename;
         private readonly string outputDirectory;
-        private readonly ExtractionManager extractor;
 
         public string ErrorMessage { get; set; } = null;
         public BinaryReader File => file;
@@ -18,16 +18,17 @@ namespace DispelTools.DataExtractor
         public string Extension { get; private set; }
         public int FilesCreated { get; set; } = 0;
 
-        public ExtractionManager Extractor => extractor;
-        public ExtractionParams Options => extractor.ExtractionParams;
+        public ExtractionWorkReporter WorkReporter { get; }
+        public ExtractionParams Options { get; }
 
-        public ExtractionFileProcess(ExtractionManager extractor, string file, string outputDirectory)
+        public ExtractionFileProcess(ExtractionParams extractionParams, string file, string outputDirectory, ExtractionWorkReporter workReporter)
         {
             this.file = new BinaryReader(new FileStream(file, FileMode.Open));
+            WorkReporter = workReporter;
             this.outputDirectory = outputDirectory;
             filename = Path.GetFileNameWithoutExtension(file);
             Extension = Path.GetExtension(file);
-            this.extractor = extractor;
+            Options = extractionParams;
         }
 
         public void Dispose() => file.Close();

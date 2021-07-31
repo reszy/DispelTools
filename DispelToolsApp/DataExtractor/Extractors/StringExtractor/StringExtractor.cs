@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 
 namespace DispelTools.DataExtractor.StringExtractor
 {
     public class StringExtractor : Extractor
     {
-
         public override void ExtractFile(ExtractionFileProcess process)
         {
             var file = process.File;
@@ -32,7 +30,7 @@ namespace DispelTools.DataExtractor.StringExtractor
                 }
             }
 
-            var finalname = $"{process.OutputDirectory}\\{process.Filename}_strings.txt";
+            string finalname = $"{process.OutputDirectory}\\{process.Filename}_strings.txt";
             using (var writer = new StreamWriter(new FileStream(finalname, FileMode.Create)))
             {
                 foreach (var entry in strings)
@@ -40,8 +38,7 @@ namespace DispelTools.DataExtractor.StringExtractor
                     writer.WriteLine($"{entry.Key:X}({entry.Key}): {entry.Value}");
                 }
             }
-            process.Extractor.RaportFileCreatedDetail(process,finalname);
-            //ResultDetails.Add($"Total entires: {strings.Count}");
+            process.WorkReporter.ReportFileCreated(process, finalname);
         }
 
         private bool isTextCharacter(char c) => c >= 32 && c <= 0x7d;

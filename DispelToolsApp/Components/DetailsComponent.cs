@@ -39,7 +39,6 @@ namespace DispelTools.Components
 
         public void AddDetails(List<string> details)
         {
-            //detailsContetns.AddRange(details);
             foreach (var detail in details)
             {
                 contentBox.AppendText(detail + "\r\n");

@@ -13,11 +13,11 @@ namespace DispelTools.DataExtractor
         private readonly BackgroundWorker backgroundWorker;
         private readonly List<string> filenames;
         private readonly string outputDirectory;
-        private int filesAtStartCount;
         private int currentFileInProcess;
         private int errosOccured = 0;
-        private bool statusUsed = false;
         private readonly Extractor extractor;
+
+        private List<ExtractionFile> preparedFiles;
 
         public ExtractionParams ExtractionParams { get; private set; }
 
@@ -42,41 +42,25 @@ namespace DispelTools.DataExtractor
         {
         }
 
-        public void RaportFileCreatedDetail(ExtractionFileProcess process, string filename)
+        public int Prepare()
         {
-            var progressChanged = ProgressChanged.CreateAsWorker(process.Stream.Position, process.Stream.Length, $"Created file: {filename}");
-            progressChanged.CompleteStatus(currentFileInProcess, filesAtStartCount);
-            backgroundWorker.ReportProgress(0, progressChanged);
-            process.FilesCreated += 1;
+            preparedFiles = PrepareListOfFilesToExtract();
+            return preparedFiles.Count;
         }
-        public void ReportNewStatus(StatusNameChanged status) { statusUsed = true; backgroundWorker.ReportProgress(0, status); }
-
-        public void ReportFileCompleted(ProgressChanged progress)
-        {
-            progress.CompleteStatus(currentFileInProcess, filesAtStartCount);
-            backgroundWorker.ReportProgress(0, progress);
-        }
-        public void ReportDetail(SimpleDetail detail) => backgroundWorker.ReportProgress(0, detail);
 
         public void Start()
         {
             int createdFilesCount = 0;
-            var files = new List<ExtractionFile>();
-            try
+
+            var workReporter = new ExtractionWorkReporter(backgroundWorker, preparedFiles.Count);
+            workReporter.SetText("Extracting...");
+            for (currentFileInProcess = 0; currentFileInProcess < preparedFiles.Count; currentFileInProcess++)
             {
-                files.AddRange(extractor.Initialize(this, filenames, outputDirectory));
-                filesAtStartCount = files.Count;
-            }
-            catch (Exception e)
-            {
-                ReportFileCompleted(ProgressChanged.FileCompleted($"Error: {e.Message}"));
-                errosOccured++;
-            }
-            for (currentFileInProcess = 0; currentFileInProcess < filesAtStartCount; currentFileInProcess++)
-            {
-                using (var fileProcess = files[currentFileInProcess].CreateProcess(this))
+                using (var fileProcess = preparedFiles[currentFileInProcess].CreateProcess(ExtractionParams, workReporter))
                 {
                     string errorMessage = null;
+                    workReporter.StartNewStage(currentFileInProcess + 1, null);
+                    workReporter.PrepareWorkerForProcess(fileProcess);
                     try
                     {
                         extractor.ExtractFile(fileProcess);
@@ -88,11 +72,7 @@ namespace DispelTools.DataExtractor
                         errosOccured++;
                     }
                     var resultDetails = fileProcess.ResultDetails;
-                    ReportFileCompleted(ProgressChanged.FileCompleted(
-                            errorMessage ?? resultDetails.ErrorMessage,
-                            $"Finished extracting from file {fileProcess.Filename}",
-                            $"Total files created: {resultDetails.FilesCreated}"
-                        ));
+                    workReporter.ReportDetails(FileCompleted.Create(errorMessage ?? resultDetails.ErrorMessage, fileProcess.Filename, fileProcess.FilesCreated));
                     if (resultDetails.ErrorMessage != null && resultDetails.ErrorMessage.Length > 0)
                     {
                         errosOccured++;
@@ -100,13 +80,23 @@ namespace DispelTools.DataExtractor
                     createdFilesCount += resultDetails.FilesCreated;
                 }
             }
-            if (statusUsed)
-            {
-                ReportNewStatus(StatusNameChanged.Completed());
-            }
-            ReportDetail(SimpleDetail.NewDetails(
-                $"From {filesAtStartCount} files, created {createdFilesCount} files total.",
+            workReporter.ReportDetails(SimpleDetail.NewDetails(
+                $"From {preparedFiles.Count} files, created {createdFilesCount} files total.",
                 $"Errors count: {errosOccured}"));
+        }
+
+        private List<ExtractionFile> PrepareListOfFilesToExtract()
+        {
+            try
+            {
+                return extractor.Initialize(filenames, outputDirectory);
+            }
+            catch (Exception e)
+            {
+                backgroundWorker.ReportProgress(0, $"Error: {e.Message}");
+                errosOccured++;
+                return new List<ExtractionFile>();
+            }
         }
     }
 }

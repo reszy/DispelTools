@@ -36,7 +36,7 @@ namespace DispelTools.DataEditor.Mappers
             builder.Add("isUndead", ItemFieldDescriptor.AsInt32(), "0 or 1");
 
             builder.Add("isAlive", ItemFieldDescriptor.AsInt32(), "0 or 1, golem is not alive and not undead");
-            builder.Add("atack type?", ItemFieldDescriptor.AsInt32(), "goblin and chicken = 1,archers = 2, worm bot no zombie =3, deer and dog = 5");
+            builder.Add("Attack type?", ItemFieldDescriptor.AsInt32(), "goblin and chicken = 1,archers = 2, worm bot no zombie =3, deer and dog = 5");
             builder.Add("EXP MAX", ItemFieldDescriptor.AsInt32());
             builder.Add("EXP MIN", ItemFieldDescriptor.AsInt32());
 

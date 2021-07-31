@@ -106,18 +106,6 @@ namespace DispelTools
 
         private void exitToolStripMenuItem1_Click(object sender, EventArgs e) => Close();
 
-        private void rgbConverterToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            selectMenuButton(sender);
-            nestForm(new DataExtractor.ExtractorForm(new DataExtractor.RgbConverter.RgbConverterFactory()));
-        }
-
-        private void gifCreatorToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            selectMenuButton(sender);
-            nestForm(new GifCreator.GifCreatorForm());
-        }
-
         private void mapViewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             selectMenuButton(sender);

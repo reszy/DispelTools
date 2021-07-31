@@ -134,8 +134,6 @@
     <Compile Include="DataExtractor\Extractors\ImageExtractor\SprImageExtractorFactory.cs" />
     <Compile Include="DataExtractor\Extractors\MapExtractor\MapImageExtractor.cs" />
     <Compile Include="DataExtractor\Extractors\MapExtractor\MapImageExtractorFactory.cs" />
-    <Compile Include="DataExtractor\Extractors\RgbConverter\Rgb24Converter.cs" />
-    <Compile Include="DataExtractor\Extractors\RgbConverter\RgbConverterFactory.cs" />
     <Compile Include="DataExtractor\Extractors\SoundExtractor\SnfSoundExtractor.cs" />
     <Compile Include="DataExtractor\Extractors\SoundExtractor\SnfSoundExtractorFactory.cs" />
     <Compile Include="DataExtractor\Extractors\StringExtractor\StringExtractor.cs" />
@@ -151,13 +149,6 @@
     <Compile Include="GameDataModels\Map\Generator\GeneratorOptions.cs" />
     <Compile Include="GameDataModels\Map\Generator\MapImageGenerator.cs" />
     <Compile Include="GameDataModels\Map\MapContainer.cs" />
-    <Compile Include="GifCreator\GifCreatorForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GifCreator\GifCreatorForm.Designer.cs">
-      <DependentUpon>GifCreatorForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GifCreator\ToGifConverter.cs" />
     <Compile Include="ImageAnalyzer\DataAnalyzedBitmap.cs" />
     <Compile Include="ImageAnalyzer\ImageAlignControls.cs">
       <SubType>UserControl</SubType>
@@ -236,9 +227,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataExtractor\ExtractorOptionsForm.resx">
       <DependentUpon>ExtractorOptionsForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GifCreator\GifCreatorForm.resx">
-      <DependentUpon>GifCreatorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ImageAnalyzer\ImageAlignControls.resx">
       <DependentUpon>ImageAlignControls.cs</DependentUpon>

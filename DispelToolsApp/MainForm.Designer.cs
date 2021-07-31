@@ -148,13 +148,6 @@ namespace DispelTools
             this.allExtractorToolStripMenuItem.Text = "AllExtractor";
             this.allExtractorToolStripMenuItem.Click += new System.EventHandler(this.allExtractorToolStripMenuItem_Click);
             // 
-            // rgbConverterToolStripMenuItem
-            // 
-            this.rgbConverterToolStripMenuItem.Name = "rgbConverterToolStripMenuItem";
-            this.rgbConverterToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.rgbConverterToolStripMenuItem.Text = "RgbConverter";
-            this.rgbConverterToolStripMenuItem.Click += new System.EventHandler(this.rgbConverterToolStripMenuItem_Click);
-            // 
             // editorsToolStripMenuItem
             // 
             this.editorsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -178,14 +171,6 @@ namespace DispelTools
             this.mapViewerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.mapViewerToolStripMenuItem.Text = "MapViewer";
             this.mapViewerToolStripMenuItem.Click += new System.EventHandler(this.mapViewerToolStripMenuItem_Click);
-            // 
-            // gifCreatorToolStripMenuItem
-            // 
-            this.gifCreatorToolStripMenuItem.CheckOnClick = true;
-            this.gifCreatorToolStripMenuItem.Name = "gifCreatorToolStripMenuItem";
-            this.gifCreatorToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
-            this.gifCreatorToolStripMenuItem.Text = "GifCreator";
-            this.gifCreatorToolStripMenuItem.Click += new System.EventHandler(this.gifCreatorToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 

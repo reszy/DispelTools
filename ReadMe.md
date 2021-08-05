@@ -13,6 +13,6 @@ Dispel Tools are tools made to help extract, edit and identify data from Dispel'
 - Simple Editor - Opens most of binary files like ***.ref**, ***.db**  *(does not open ref files that are text files)**
 - Map Viewer - Generates image of whole map
 
-## Game file's documentation
+## [Game file's documentation](Docs/game/files.md)
 
 ## Devlog

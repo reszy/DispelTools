@@ -12,6 +12,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		ReadMe.md = ReadMe.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{E10873BB-0BEC-4A18-A56C-FE06D5ED3D75}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Game", "Game", "{131528E4-7BDE-4360-9072-E1CEFD1068B3}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\game\files.md = Docs\game\files.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "devlog", "devlog", "{9405A94B-9912-490D-B2D4-FC4AC94ACE21}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\devlog\main.md = Docs\devlog\main.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +41,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{131528E4-7BDE-4360-9072-E1CEFD1068B3} = {E10873BB-0BEC-4A18-A56C-FE06D5ED3D75}
+		{9405A94B-9912-490D-B2D4-FC4AC94ACE21} = {E10873BB-0BEC-4A18-A56C-FE06D5ED3D75}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CBE07400-64DE-46E8-8F31-D403DF59F5B3}

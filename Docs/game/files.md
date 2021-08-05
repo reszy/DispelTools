@@ -63,6 +63,7 @@ Save file, contains also items lying on ground and things like states of objects
 #### save.ifo
 info about save files like timestamps and available slots
 
+---
 ### CharacterInGame/
 #### ChData
 ?
@@ -81,10 +82,12 @@ ids, names, haggle values for stores
 #### *.spr
 Sprites for body, hairs, party members, footprints
 
+---
 ### CloseInGame/
 #### *.spr
 Sprites of clothes and weapons animations
 
+---
 ### ExtraInGame/
 #### fogdata.dat
    ?
@@ -112,18 +115,22 @@ Messages for signs
  - title
  - description
 
+---
 ### Inter/
 Sprites for interface (also items displayed on interface like inventory)
 
+---
 ### MagicInGame/
 #### Magic.db
 ?
 #### *.spr
 Sprites of magic (also arrows)
 
+---
 ### Main/
-Sprites of some interface elements but in different directory ¯\_(ツ)_/¯
+Sprites of some interface elements but in different directory ¯\\\_(ツ)\_/¯
 
+---
 ### Map/
 #### *.btl
 Tiles for walls, roofs, some objects
@@ -132,9 +139,11 @@ Tiles for ground
 #### *.map
 map info (sprites of objects, collisions, event fields, tile info)
 
+---
 ### Menu/
    Images of main menu and loading screens
 
+---
 ### MonsterInGame/
 #### Mosnster.db
 Info about monsters, like stats and effects
@@ -143,6 +152,7 @@ Info about monsters on maps like coordinates, loot, events caused by death
 #### *.spr
 Sprites of monsters
 
+---
 ### NpcInGame/
 #### PrtIni.db
 ? something about party members
@@ -186,6 +196,7 @@ Info about NPCs on maps
 #### *.spr
 NPCs animations
 
+---
 ### Ref/
 #### drawitem.ref
 Items that lays on ground from begging of the game
@@ -217,5 +228,6 @@ Party members info (translated from Korean)
  - DLG id when in party
  - id ghost face
 
+---
 ### Wave/
 Sound files

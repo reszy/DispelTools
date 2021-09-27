@@ -5,8 +5,6 @@ namespace DispelTools.GameDataModels.Map.Generator
 {
     public class MapImageGenerator
     {
-        private const uint WHITE_COLOR = 0xFF000000;
-
         private readonly WorkReporter workReporter;
         private readonly MapContainer mapContainer;
         private GeneratorOptions generatorOptions;
@@ -85,7 +83,7 @@ namespace DispelTools.GameDataModels.Map.Generator
         {
             foreach (var spriteData in Model.InternalSpriteInfos)
             {
-                var sprite = mapContainer.SpritesImageCache[spriteData.Id];
+                var sprite = mapContainer.InternalSprites[spriteData.Id];
                 int destX = spriteData.Position.X;
                 int destY = spriteData.Position.Y;
                 if (!generatorOptions.Occlusion)
@@ -93,7 +91,7 @@ namespace DispelTools.GameDataModels.Map.Generator
                     destX += Model.MapNonOccludedStart.X;
                     destY += Model.MapNonOccludedStart.Y;
                 }
-                PlotSpriteOnBitmap(ref image, sprite, destX, destY);
+                PlotSpriteOnBitmap(ref image, sprite.GetFrame(0).RawRgb, destX, destY);
                 workReporter.ReportProgress(++progressTracker);
             }
         }
@@ -136,7 +134,7 @@ namespace DispelTools.GameDataModels.Map.Generator
                    (-x + y) * TileSet.TILE_HEIGHT_HALF + (Model.MapDiagonalTiles / 2 * TileSet.TILE_HEIGHT_HALF));
         }
 
-        private void PlotSpriteOnBitmap(ref DirectBitmap parent, DirectBitmap sprite, int destX, int destY)
+        private void PlotSpriteOnBitmap(ref DirectBitmap parent, RawRgb sprite, int destX, int destY)
         {
             //TODO Move comments to docs
             //destX += (map.Width / 5) * TileSet.TILE_WIDTH *;
@@ -164,7 +162,7 @@ namespace DispelTools.GameDataModels.Map.Generator
                     for (int x = 0; x < sprite.Width; x++)
                     {
                         var color = sprite.GetPixel(x, y);
-                        if ((uint)color.ToArgb() != WHITE_COLOR)
+                        if (color.A != 0)
                         {
                             int finalX = destX + x;
                             int finalY = destY + y;

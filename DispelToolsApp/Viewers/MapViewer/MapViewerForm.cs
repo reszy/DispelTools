@@ -4,6 +4,7 @@ using DispelTools.DebugTools.MetricTools;
 using DispelTools.GameDataModels.Map;
 using DispelTools.GameDataModels.Map.Generator;
 using DispelTools.GameDataModels.Map.Reader;
+using DispelTools.ImageProcessing;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,8 +19,8 @@ namespace DispelTools.Viewers.MapViewer
         private readonly BackgroundWorker backgroundWorker;
 
 
-        private DirectBitmap image;
-        private DirectBitmap tileImage;
+        private DirectBitmap mapImage;
+        private DirectBitmap sidePreviewImage;
 
         private string filename;
         private bool generatedOccluded;
@@ -57,15 +58,15 @@ namespace DispelTools.Viewers.MapViewer
             tileSetCombo_SelectedIndexChanged(null, EventArgs.Empty);
             var sb = new StringBuilder();
             sb.Append(mapContainer.GetStats());
-            if (image != null)
+            if (mapImage != null)
             {
-                pictureBox1.SetImage(image.Bitmap, true);
-                pictureBox1.OffsetTileSelector = generatedOccluded ^ (image.Height / TileSet.TILE_HEIGHT % 2 == 0);
+                pictureBox1.SetImage(mapImage.Bitmap, true);
+                pictureBox1.OffsetTileSelector = generatedOccluded ^ (mapImage.Height / TileSet.TILE_HEIGHT % 2 == 0);
 
                 sb.AppendLine();
                 sb.AppendLine("--Image--");
-                sb.AppendLine($"Image size: {image.Width}x{image.Height}");
-                sb.Append($"Memory size: {BytesFormatter.GetBytesReadable(image.Bits.Length * 4)}");
+                sb.AppendLine($"Image size: {mapImage.Width}x{mapImage.Height}");
+                sb.Append($"Memory size: {BytesFormatter.GetBytesReadable(mapImage.Bits.Length * 4)}");
             }
             statsTextBox.Text = sb.ToString();
         }
@@ -100,7 +101,7 @@ namespace DispelTools.Viewers.MapViewer
 
             workReporter.StartNewStage(4, "Generating map...");
             var mapGenerator = new MapImageGenerator(workReporter, mapContainer);
-            image = mapGenerator.GenerateMap(
+            mapImage = mapGenerator.GenerateMap(
                 new GeneratorOptions()
                 {
                     Occlusion = generatedOccluded,
@@ -138,19 +139,19 @@ namespace DispelTools.Viewers.MapViewer
 
                 if (tileSetCombo.SelectedIndex == 2)
                 {
-                    tileImage?.Dispose();
-                    var bmp = mapContainer.SpritesImageCache[(int)tileShowNumber.Value];
-                    tileDiplayer.SetImage(bmp.Bitmap, true);
+                    sidePreviewImage?.Dispose();
+                    sidePreviewImage = mapContainer.InternalSprites[(int)tileShowNumber.Value].GetFrame(0).RawRgb.ToDirectBitmap();
+                    tileDiplayer.SetImage(sidePreviewImage.Bitmap, true);
                 }
             }
         }
 
         private void ShowTile(TileSet.Tile tile)
         {
-            tileImage?.Dispose();
-            tileImage = new DirectBitmap(TileSet.TILE_WIDTH, TileSet.TILE_HEIGHT);
-            tile.PlotTileOnBitmap(ref tileImage, 0, 0);
-            tileDiplayer.SetImage(tileImage.Bitmap, true);
+            sidePreviewImage?.Dispose();
+            sidePreviewImage = new DirectBitmap(TileSet.TILE_WIDTH, TileSet.TILE_HEIGHT);
+            tile.PlotTileOnBitmap(ref sidePreviewImage, 0, 0);
+            tileDiplayer.SetImage(sidePreviewImage.Bitmap, true);
         }
 
         private void tileSetCombo_SelectedIndexChanged(object sender, EventArgs e)
@@ -184,7 +185,7 @@ namespace DispelTools.Viewers.MapViewer
                     tileShowNumber.Maximum = 0;
                     progressBar.Maximum = 4000;
                 }
-                image?.Dispose();
+                mapImage?.Dispose();
                 pictureBox1.Image?.Dispose();
                 pictureBox1.Image = null;
                 generatedOccluded = occludeCheckBox.Checked;

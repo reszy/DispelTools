@@ -22,7 +22,8 @@
             backgroundWorker.ProgressChanged -= ProgressChanged;
             backgroundWorker.RunWorkerCompleted -= LoadingCompleted;
 
-            image?.Dispose();
+            mapImage?.Dispose();
+            sidePreviewImage?.Dispose();
             pictureBox1.Image?.Dispose();
             pictureBox1.Image = null;
 
@@ -31,7 +32,8 @@
             backgroundWorker?.Dispose();
             mapContainer?.Dispose();
             mapContainer = null;
-            image = null;
+            mapImage = null;
+            sidePreviewImage = null;
 
             base.Dispose(disposing);
         }

@@ -14,6 +14,11 @@ namespace DispelTools.DataExtractor.ExtractionStatus
             ReportDetails(SimpleDetail.NewDetails($"Created file: {filename}"));
             process.FilesCreated += 1;
         }
+        public void ReportFinishedStage(SimpleDetail completedDetail)
+        {
+            ReportProgress(totalInStage);
+            ReportDetails(completedDetail);
+        }
         public void SetText(string text) => backgroundWorker.ReportProgress(currentProgress, text);
         public void ReportDetails(SimpleDetail detail) => backgroundWorker.ReportProgress(currentProgress, detail);
     }

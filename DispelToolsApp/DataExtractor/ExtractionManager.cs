@@ -73,7 +73,7 @@ namespace DispelTools.DataExtractor
                         System.Diagnostics.Debug.WriteLine(e.ToString());
                     }
                     var resultDetails = fileProcess.ResultDetails;
-                    workReporter.ReportDetails(FileCompleted.Create(errorMessage ?? resultDetails.ErrorMessage, fileProcess.Filename, fileProcess.FilesCreated));
+                    workReporter.ReportFinishedStage(FileCompleted.Create(errorMessage ?? resultDetails.ErrorMessage, fileProcess.Filename, fileProcess.FilesCreated));
                     if (resultDetails.ErrorMessage != null && resultDetails.ErrorMessage.Length > 0)
                     {
                         errosOccured++;

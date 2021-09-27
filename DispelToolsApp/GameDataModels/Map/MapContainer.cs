@@ -1,9 +1,6 @@
-﻿using DispelTools.Common;
-using DispelTools.GameDataModels.Sprite;
-using DispelTools.ImageProcessing;
+﻿using DispelTools.GameDataModels.Sprite;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace DispelTools.GameDataModels.Map
@@ -15,7 +12,6 @@ namespace DispelTools.GameDataModels.Map
         public string MapName { get; }
         public MapModel Model { get; }
         public List<SpriteSequence> InternalSprites { get; }
-        public List<DirectBitmap> SpritesImageCache { get; }
         public TileSet Gtl { get; set; }
         public TileSet Btl { get; set; }
 
@@ -24,7 +20,6 @@ namespace DispelTools.GameDataModels.Map
             MapName = mapName;
             Model = model;
             InternalSprites = sprites;
-            SpritesImageCache = sprites.Select(s => s.GetFrame(0).RawRgb.ToDirectBitmap()).ToList();
         }
 
         public string GetStats()
@@ -66,10 +61,6 @@ namespace DispelTools.GameDataModels.Map
             {
                 if (disposing)
                 {
-                    foreach (var sprite in SpritesImageCache)
-                    {
-                        sprite.Dispose();
-                    }
                     InternalSprites.Clear();
                     Gtl?.Dispose();
                     Btl?.Dispose();

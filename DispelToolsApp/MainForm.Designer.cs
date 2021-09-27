@@ -40,16 +40,14 @@ namespace DispelTools
             this.stringExtractorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mapImageExtractorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.allExtractorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.rgbConverterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.simpleEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mapViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gifCreatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.contentPanel = new System.Windows.Forms.Panel();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -70,7 +68,6 @@ namespace DispelTools
             this.extractorsToolStripMenuItem,
             this.editorsToolStripMenuItem,
             this.mapViewerToolStripMenuItem,
-            this.gifCreatorToolStripMenuItem,
             this.toolStripSeparator1,
             this.settingsToolStripMenuItem,
             this.exitToolStripMenuItem,
@@ -84,7 +81,7 @@ namespace DispelTools
             this.analyzersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.imageAnalyzerToolStripMenuItem});
             this.analyzersToolStripMenuItem.Name = "analyzersToolStripMenuItem";
-            this.analyzersToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.analyzersToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.analyzersToolStripMenuItem.Text = "Analyzers";
             // 
             // imageAnalyzerToolStripMenuItem
@@ -102,17 +99,16 @@ namespace DispelTools
             this.soundExtractorToolStripMenuItem,
             this.stringExtractorToolStripMenuItem,
             this.mapImageExtractorToolStripMenuItem,
-            this.allExtractorToolStripMenuItem,
-            this.rgbConverterToolStripMenuItem});
+            this.allExtractorToolStripMenuItem});
             this.extractorsToolStripMenuItem.Name = "extractorsToolStripMenuItem";
-            this.extractorsToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.extractorsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.extractorsToolStripMenuItem.Text = "Extractors";
             // 
             // imageExtractorToolStripMenuItem
             // 
             this.imageExtractorToolStripMenuItem.CheckOnClick = true;
             this.imageExtractorToolStripMenuItem.Name = "imageExtractorToolStripMenuItem";
-            this.imageExtractorToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.imageExtractorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.imageExtractorToolStripMenuItem.Text = "ImageExtractor";
             this.imageExtractorToolStripMenuItem.Click += new System.EventHandler(this.imageExtractorToolStripMenuItem_Click);
             // 
@@ -120,7 +116,7 @@ namespace DispelTools
             // 
             this.soundExtractorToolStripMenuItem.CheckOnClick = true;
             this.soundExtractorToolStripMenuItem.Name = "soundExtractorToolStripMenuItem";
-            this.soundExtractorToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.soundExtractorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.soundExtractorToolStripMenuItem.Text = "SoundExtractor";
             this.soundExtractorToolStripMenuItem.Click += new System.EventHandler(this.soundExtractorToolStripMenuItem_Click);
             // 
@@ -128,7 +124,7 @@ namespace DispelTools
             // 
             this.stringExtractorToolStripMenuItem.CheckOnClick = true;
             this.stringExtractorToolStripMenuItem.Name = "stringExtractorToolStripMenuItem";
-            this.stringExtractorToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.stringExtractorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.stringExtractorToolStripMenuItem.Text = "StringExtractor";
             this.stringExtractorToolStripMenuItem.Click += new System.EventHandler(this.stringExtractorToolStripMenuItem_Click);
             // 
@@ -136,7 +132,7 @@ namespace DispelTools
             // 
             this.mapImageExtractorToolStripMenuItem.CheckOnClick = true;
             this.mapImageExtractorToolStripMenuItem.Name = "mapImageExtractorToolStripMenuItem";
-            this.mapImageExtractorToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.mapImageExtractorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.mapImageExtractorToolStripMenuItem.Text = "MapImageExtractor";
             this.mapImageExtractorToolStripMenuItem.Click += new System.EventHandler(this.mapImageExtractorToolStripMenuItem_Click);
             // 
@@ -144,7 +140,7 @@ namespace DispelTools
             // 
             this.allExtractorToolStripMenuItem.CheckOnClick = true;
             this.allExtractorToolStripMenuItem.Name = "allExtractorToolStripMenuItem";
-            this.allExtractorToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.allExtractorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.allExtractorToolStripMenuItem.Text = "AllExtractor";
             this.allExtractorToolStripMenuItem.Click += new System.EventHandler(this.allExtractorToolStripMenuItem_Click);
             // 
@@ -153,14 +149,14 @@ namespace DispelTools
             this.editorsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.simpleEditorToolStripMenuItem});
             this.editorsToolStripMenuItem.Name = "editorsToolStripMenuItem";
-            this.editorsToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.editorsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.editorsToolStripMenuItem.Text = "Editors";
             // 
             // simpleEditorToolStripMenuItem
             // 
             this.simpleEditorToolStripMenuItem.CheckOnClick = true;
             this.simpleEditorToolStripMenuItem.Name = "simpleEditorToolStripMenuItem";
-            this.simpleEditorToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.simpleEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.simpleEditorToolStripMenuItem.Text = "SimpleEditor";
             this.simpleEditorToolStripMenuItem.Click += new System.EventHandler(this.simpleEditorToolStripMenuItem_Click);
             // 
@@ -172,15 +168,27 @@ namespace DispelTools
             this.mapViewerToolStripMenuItem.Text = "MapViewer";
             this.mapViewerToolStripMenuItem.Click += new System.EventHandler(this.mapViewerToolStripMenuItem_Click);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(130, 6);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(177, 6);
             // 
             // exitToolStripMenuItem1
             // 
             this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
-            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(133, 22);
+            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem1.Text = "Exit";
             this.exitToolStripMenuItem1.Click += new System.EventHandler(this.exitToolStripMenuItem1_Click);
             // 
@@ -196,18 +204,6 @@ namespace DispelTools
             this.contentPanel.Size = new System.Drawing.Size(484, 137);
             this.contentPanel.TabIndex = 1;
             this.contentPanel.Resize += new System.EventHandler(this.contentPanel_Resize);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
-            // 
-            // settingsToolStripMenuItem
-            // 
-            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.settingsToolStripMenuItem.Text = "Settings";
-            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -247,8 +243,6 @@ namespace DispelTools
         private System.Windows.Forms.ToolStripMenuItem allExtractorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editorsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem simpleEditorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem rgbConverterToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem gifCreatorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mapViewerToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;

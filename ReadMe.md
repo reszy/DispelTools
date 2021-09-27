@@ -15,4 +15,4 @@ Dispel Tools are tools made to help extract, edit and identify data from Dispel'
 
 ## [Game file's documentation](Docs/game/files.md)
 
-## Devlog
+## [Devlog](Docs/devlog/main.md)

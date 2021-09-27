@@ -36,10 +36,9 @@ namespace DispelTools.DataExtractor.ImageExtractor
 
             if (!Settings.ExtractorReadOnly)
             {
-                sequence.SaveAsImage(process.OutputDirectory, createdFileName, process.Options.CreateAnimatedGifs);
+                sequence.SaveAsImage(process.OutputDirectory, createdFileName, process.Options.CreateAnimatedGifs, process.Options.BlackAsTransparent);
                 process.WorkReporter.ReportFileCreated(process, createdFileName);
             }
-            sequence.Dispose();
         }
 
         private bool SeekNextSequence(ExtractionFileProcess process)

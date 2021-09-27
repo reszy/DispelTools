@@ -70,6 +70,7 @@ namespace DispelTools.DataExtractor
                         Metrics.List(MetricFile.SpriteFileMetric, $"ExtractorError.{extractor.GetType().Name}.{fileProcess.Filename}", $"{e.Message} p: {fileProcess.File.BaseStream.Position}");
                         errorMessage = $"Error: {e.Message}";
                         errosOccured++;
+                        System.Diagnostics.Debug.WriteLine(e.ToString());
                     }
                     var resultDetails = fileProcess.ResultDetails;
                     workReporter.ReportDetails(FileCompleted.Create(errorMessage ?? resultDetails.ErrorMessage, fileProcess.Filename, fileProcess.FilesCreated));

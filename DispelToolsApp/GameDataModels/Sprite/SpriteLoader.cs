@@ -43,21 +43,20 @@ namespace DispelTools.GameDataModels.Sprite
             return sequence;
         }
 
-        private DirectBitmap LoadImageFromFile(int width, int height)
+        private RawRgb LoadImageFromFile(int width, int height)
         {
             var colorManager = ColorManagement.From(colorMode);
 
-            var bitmap = new DirectBitmap(width, height);
-            for (int y = 0; y < height; y++)
+            var rawRgb = new RawRgb(width, height);
+            for (int i = 0; i < rawRgb.Bytes.Length; i += 3)
             {
-                for (int x = 0; x < width; x++)
-                {
-                    byte[] colorBytes = reader.ReadBytes(colorManager.BytesConsumed);
-                    var color = colorManager.ProduceColor(colorBytes);
-                    bitmap.SetPixel(x, y, color);
-                }
+                byte[] colorBytes = reader.ReadBytes(colorManager.BytesConsumed);
+                var color = colorManager.ProduceColor(colorBytes);
+                rawRgb.Bytes[i + 0] = color.R;
+                rawRgb.Bytes[i + 1] = color.G;
+                rawRgb.Bytes[i + 2] = color.B;
             }
-            return bitmap;
+            return rawRgb;
         }
 
         private SequenceInfo GetSequenceInfo()

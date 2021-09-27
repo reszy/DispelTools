@@ -35,6 +35,7 @@ namespace DispelTools.DataExtractor
             this.animatedGifCheckBox = new System.Windows.Forms.CheckBox();
             this.cancelButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
+            this.blackAsTransparentCheckBox = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -43,6 +44,7 @@ namespace DispelTools.DataExtractor
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.blackAsTransparentCheckBox);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.colorModeComboBox);
             this.panel1.Controls.Add(this.animatedGifCheckBox);
@@ -105,6 +107,16 @@ namespace DispelTools.DataExtractor
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
             // 
+            // blakcToAlphaCheckBox
+            // 
+            this.blackAsTransparentCheckBox.AutoSize = true;
+            this.blackAsTransparentCheckBox.Location = new System.Drawing.Point(3, 50);
+            this.blackAsTransparentCheckBox.Name = "blackAsTransparentCheckBox";
+            this.blackAsTransparentCheckBox.Size = new System.Drawing.Size(144, 17);
+            this.blackAsTransparentCheckBox.TabIndex = 3;
+            this.blackAsTransparentCheckBox.Text = "Use black as transparent";
+            this.blackAsTransparentCheckBox.UseVisualStyleBackColor = true;
+            // 
             // ExtractorOptionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -135,5 +147,6 @@ namespace DispelTools.DataExtractor
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox colorModeComboBox;
         private System.Windows.Forms.CheckBox animatedGifCheckBox;
+        private System.Windows.Forms.CheckBox blackAsTransparentCheckBox;
     }
 }

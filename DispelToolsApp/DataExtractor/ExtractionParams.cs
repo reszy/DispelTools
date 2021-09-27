@@ -5,7 +5,7 @@ namespace DispelTools.DataExtractor
 {
     public class ExtractionParams
     {
-        public enum OptionNames { ColorMode = 1, AnimatedGifs = 2 }
+        public enum OptionNames { ColorMode = 1, AnimatedGifs = 2, BlackAsTransparent = 4 }
         public static OptionNames NoOptions { get; } = 0;
         //Required
         public List<string> Filename { get; set; }
@@ -13,5 +13,6 @@ namespace DispelTools.DataExtractor
         //Optional
         public ColorMode ColorMode { get; set; } = ColorMode.RGB16_565;
         public bool CreateAnimatedGifs { get; set; } = true;
+        public bool BlackAsTransparent { get; set; } = false;
     }
 }

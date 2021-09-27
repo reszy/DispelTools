@@ -6,12 +6,12 @@ namespace DispelTools.GameDataModels.Sprite
     {
         public int OriginX { get; }
         public int OriginY { get; }
-        public DirectBitmap Bitmap { get; }
-        public SpriteFrame(int originX, int originY, DirectBitmap bitmap)
+        public RawRgb RawRgb { get; }
+        public SpriteFrame(int originX, int originY, RawRgb bitmap)
         {
             OriginX = originX;
             OriginY = originY;
-            Bitmap = bitmap;
+            RawRgb = bitmap;
         }
     }
 }

@@ -85,7 +85,7 @@ namespace DispelTools.GameDataModels.Map.Generator
         {
             foreach (var spriteData in Model.InternalSpriteInfos)
             {
-                var sprite = mapContainer.InternalSprites[spriteData.Id];
+                var sprite = mapContainer.SpritesImageCache[spriteData.Id];
                 int destX = spriteData.Position.X;
                 int destY = spriteData.Position.Y;
                 if (!generatorOptions.Occlusion)
@@ -93,7 +93,7 @@ namespace DispelTools.GameDataModels.Map.Generator
                     destX += Model.MapNonOccludedStart.X;
                     destY += Model.MapNonOccludedStart.Y;
                 }
-                PlotSpriteOnBitmap(ref image, sprite.GetFrame(0).Bitmap, destX, destY);
+                PlotSpriteOnBitmap(ref image, sprite, destX, destY);
                 workReporter.ReportProgress(++progressTracker);
             }
         }

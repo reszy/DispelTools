@@ -139,7 +139,7 @@ namespace DispelTools.Viewers.MapViewer
                 if (tileSetCombo.SelectedIndex == 2)
                 {
                     tileImage?.Dispose();
-                    var bmp = mapContainer.InternalSprites[(int)tileShowNumber.Value].GetFrame(0).Bitmap;
+                    var bmp = mapContainer.SpritesImageCache[(int)tileShowNumber.Value];
                     tileDiplayer.SetImage(bmp.Bitmap, true);
                 }
             }

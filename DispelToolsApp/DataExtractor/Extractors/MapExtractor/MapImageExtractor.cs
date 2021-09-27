@@ -14,7 +14,6 @@ namespace DispelTools.DataExtractor.MapExtractor
             {
                 var sequence = container.InternalSprites[i];
                 SaveSequence(process, sequence, i);
-                sequence.Dispose();
             }
         }
 
@@ -24,7 +23,7 @@ namespace DispelTools.DataExtractor.MapExtractor
 
             if (!Settings.ExtractorReadOnly)
             {
-                sequence.SaveAsImage(process.OutputDirectory, createdFileName, process.Options.CreateAnimatedGifs);
+                sequence.SaveAsImage(process.OutputDirectory, createdFileName, process.Options.CreateAnimatedGifs, process.Options.BlackAsTransparent);
                 process.WorkReporter.ReportFileCreated(process, createdFileName);
             }
         }

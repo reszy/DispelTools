@@ -54,6 +54,7 @@
     <Compile Include="Common\DirectBitmap.cs" />
     <Compile Include="Common\FileExtension.cs" />
     <Compile Include="Common\OpenDialogExtension.cs" />
+    <Compile Include="Common\RawRgb.cs" />
     <Compile Include="Common\Settings.cs" />
     <Compile Include="Common\Settings.SettingsDto.cs" />
     <Compile Include="Components\CustomPropertyGridControl\CustomPropertyGrid.cs">
@@ -175,6 +176,7 @@
     <Compile Include="ImageAnalyzer\ImageEditControls.Designer.cs">
       <DependentUpon>ImageEditControls.cs</DependentUpon>
     </Compile>
+    <Compile Include="ImageProcessing\ImageConverter.cs" />
     <Compile Include="ImageProcessing\Filters\ChannelFilter.cs" />
     <Compile Include="ImageProcessing\Filters\ColorLevelFilter.cs" />
     <Compile Include="ImageProcessing\ColorManagement.cs" />
@@ -274,11 +276,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Magick.NET-Q8-AnyCPU">
+      <Version>8.3.2</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
-    </PackageReference>
-    <PackageReference Include="SixLabors.ImageSharp">
-      <Version>1.0.3</Version>
     </PackageReference>
     <PackageReference Include="System.Buffers">
       <Version>4.5.1</Version>

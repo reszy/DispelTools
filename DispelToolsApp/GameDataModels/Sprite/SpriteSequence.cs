@@ -1,13 +1,12 @@
 ﻿using DispelTools.Common;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
+using DispelTools.ImageProcessing;
 using System;
-using System.Drawing.Imaging;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace DispelTools.GameDataModels.Sprite
 {
-    public class SpriteSequence : IDisposable
+    public class SpriteSequence
     {
         public bool Animated => frames.Length > 1;
         public int FrameCount => frames.Length;
@@ -22,24 +21,32 @@ namespace DispelTools.GameDataModels.Sprite
             ImagesLoaded = imagesLoaded;
         }
 
-        public void SaveAsImage(string directory, string filename, bool createGifs = true)
+        public void SaveAsImage(string directory, string filename, bool createGifs, bool blackAsTransparent)
         {
             if (!Animated)
             {
-                frames[0].Bitmap.Bitmap.Save($"{directory}\\{filename}.png", ImageFormat.Png);
+                frames[0].RawRgb.SaveAsPng($"{directory}\\{filename}.png", blackAsTransparent);
             }
             else
             {
                 if (createGifs)
                 {
-                    var gif = CreateGif();
-                    gif.Save($"{directory}\\{filename}.gif");
+                    var dimensions = CalculateDimensions();
+                    var size = new Size(dimensions.Width, dimensions.Height);
+                    var center = new Point(dimensions.X, dimensions.Y);
+                    var gifFrames = new List<ImageProcessing.ImageConverter.AnimationFrame>();
+                    for (int i = 0; i < frames.Length; i++)
+                    {
+                        var offset = CalculateFrameOffset(center, new Point(frames[i].OriginX, frames[i].OriginY));
+                        gifFrames.Add(frames[i].RawRgb.ToFrame(offset.X, offset.Y));
+                    }
+                    ImageProcessing.ImageConverter.SaveAsGif(gifFrames, size.Width, size.Height, $"{directory}\\{filename}.gif", blackAsTransparent);
                 }
                 else
                 {
                     for (int i = 0; i < frames.Length; i++)
                     {
-                        frames[i].Bitmap.Bitmap.Save($"{directory}\\{filename}_f{i}.png", ImageFormat.Png);
+                        frames[i].RawRgb.SaveAsPng($"{directory}\\{filename}_f{i}.png", blackAsTransparent);
                     }
                 }
             }
@@ -47,29 +54,6 @@ namespace DispelTools.GameDataModels.Sprite
 
         public SpriteFrame GetFrame(int i) => frames[i];
         public void SetFrame(SpriteFrame frame, int i) => frames[i] = frame;
-
-        private Image<Rgba32> CreateGif()
-        {
-            var dimensions = CalculateDimensions();
-            var size = new Size(dimensions.Width, dimensions.Height);
-            var center = new Point(dimensions.X, dimensions.Y);
-            var gif = new Image<Rgba32>(size.Width, size.Height);
-
-            foreach (var frame in frames)
-            {
-                var offset = CalculateFrameOffset(center, new Point(frame.OriginX, frame.OriginY));
-                using (var bitmap = BoxImage(frame.Bitmap, size, offset))
-                {
-                    byte[] data = ConvertToRgbaByteArray(bitmap);
-                    var img = Image.LoadPixelData<Rgba32>(data, bitmap.Width, bitmap.Height);
-                    img.Mutate(x => x.BackgroundColor(Color.Black));
-                    var gifFrame = img.Frames[0];
-                    gifFrame.Metadata.GetGifMetadata().FrameDelay = 7;
-                    gif.Frames.AddFrame(gifFrame);
-                }
-            }
-            return gif;
-        }
         private Rectangle CalculateDimensions()
         {
             int maxLeft = 1;
@@ -79,9 +63,9 @@ namespace DispelTools.GameDataModels.Sprite
             foreach (var frame in frames)
             {
                 int left = frame.OriginX;
-                int right = frame.Bitmap.Width - frame.OriginX;
+                int right = frame.RawRgb.Width - frame.OriginX;
                 int up = frame.OriginY;
-                int down = frame.Bitmap.Bitmap.Height - frame.OriginY;
+                int down = frame.RawRgb.Height - frame.OriginY;
                 if (right > maxRight) { maxRight = right; }
                 if (left > maxLeft) { maxLeft = left; }
                 if (up > maxUp) { maxUp = up; }
@@ -103,32 +87,6 @@ namespace DispelTools.GameDataModels.Sprite
                 }
             }
             return image;
-        }
-
-        private byte[] ConvertToRgbaByteArray(DirectBitmap bitmap)
-        {
-            byte[] array = new byte[bitmap.Bits.Length * 4];
-            for (int i = 0; i < bitmap.Bits.Length; i++)
-            {
-                byte[] pixel = BitConverter.GetBytes(bitmap.Bits[i]);
-                int bytePixelNumber = i * 4;
-                array[bytePixelNumber + 0] = pixel[2];
-                array[bytePixelNumber + 1] = pixel[1];
-                array[bytePixelNumber + 2] = pixel[0];
-                array[bytePixelNumber + 3] = pixel[3];
-            }
-            return array;
-        }
-
-        public void Dispose()
-        {
-            if (ImagesLoaded)
-            {
-                foreach (var frame in frames)
-                {
-                    frame.Bitmap.Dispose();
-                }
-            }
         }
     }
 }

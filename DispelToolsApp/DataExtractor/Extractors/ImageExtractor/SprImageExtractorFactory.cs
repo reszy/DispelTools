@@ -8,7 +8,7 @@
 
         public ExtractionManager.ExtractorType Type => ExtractionManager.ExtractorType.MULTI_FILE;
 
-        public ExtractionParams.OptionNames AcceptedOptions => ExtractionParams.OptionNames.AnimatedGifs | ExtractionParams.OptionNames.ColorMode;
+        public ExtractionParams.OptionNames AcceptedOptions => ExtractionParams.OptionNames.AnimatedGifs | ExtractionParams.OptionNames.ColorMode | ExtractionParams.OptionNames.BlackAsTransparent;
 
         public Extractor CreateInstance() => new SprImageExtractor();
     }

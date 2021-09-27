@@ -18,13 +18,16 @@ namespace DispelTools.DataExtractor
         public ExtractorOptionsForm(OptionNames acceptedOptions, ExtractionParams extractionParams)
         {
             InitializeComponent();
-
+            //Enable options
             colorModeComboBox.Enabled = acceptedOptions.HasFlag(OptionNames.ColorMode);
             animatedGifCheckBox.Enabled = acceptedOptions.HasFlag(OptionNames.AnimatedGifs);
+            blackAsTransparentCheckBox.Enabled = acceptedOptions.HasFlag(OptionNames.BlackAsTransparent);
 
+            //Set values
             this.extractionParams = extractionParams;
             colorModeComboBox.SelectedIndex = colorModeComboBox.Items.IndexOf(Enum.GetName(typeof(ColorMode), extractionParams.ColorMode));
             animatedGifCheckBox.Checked = extractionParams.CreateAnimatedGifs;
+            blackAsTransparentCheckBox.Checked = extractionParams.BlackAsTransparent;
         }
 
         public ExtractionParams Options { get => extractionParams; }
@@ -35,6 +38,7 @@ namespace DispelTools.DataExtractor
             {
                 ColorMode = (string)colorModeComboBox.SelectedItem == "RGB16_555" ? ColorMode.RGB16_555 : ColorMode.RGB16_565,
                 CreateAnimatedGifs = animatedGifCheckBox.Checked,
+                BlackAsTransparent = blackAsTransparentCheckBox.Checked
             };
             Close();
         }

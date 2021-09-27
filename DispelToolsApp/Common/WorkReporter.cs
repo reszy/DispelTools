@@ -18,7 +18,7 @@ namespace DispelTools.Common
 
         public WorkReporter(BackgroundWorker backgroundWorker, int stageCount = 1)
         {
-            if(stageCount < 1)
+            if (stageCount < 1)
             {
                 throw new ArgumentException("stage count is below 1");
             }
@@ -38,8 +38,10 @@ namespace DispelTools.Common
             backgroundWorker.ReportProgress(currentProgress, text);
 
         }
-        public void ReportProgress(int progress) {
+        public void ReportProgress(int progress)
+        {
             currentProgress = ((currentStage - 1) * STAGE_MAX) + (int)((double)progress / totalInStage * STAGE_MAX);
-            backgroundWorker.ReportProgress(currentProgress); }
+            backgroundWorker.ReportProgress(currentProgress);
+        }
     }
 }

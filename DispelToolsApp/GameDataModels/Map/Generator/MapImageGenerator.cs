@@ -28,24 +28,24 @@ namespace DispelTools.GameDataModels.Map.Generator
 
             if (generatorOptions.GTL)
             {
-                PlotGtlAndCollisions(ref mapImage);
+                PlotGtlAndCollisions(mapImage);
             }
             if (generatorOptions.TiledObjects)
             {
-                PlotTiledObjects(ref mapImage);
+                PlotTiledObjects(mapImage);
             }
             if (generatorOptions.Sprites)
             {
-                PlotInternalSprites(ref mapImage);
+                PlotInternalSprites(mapImage);
             }
             if (generatorOptions.Roofs)
             {
-                PlotRoofs(ref mapImage);
+                PlotRoofs(mapImage);
             }
             return mapImage;
         }
 
-        private void PlotGtlAndCollisions(ref DirectBitmap image)
+        private void PlotGtlAndCollisions(DirectBitmap image)
         {
             for (int y = 0; y < Model.TiledMapSize.Height; y++)
             {
@@ -62,24 +62,24 @@ namespace DispelTools.GameDataModels.Map.Generator
                         mapCoords.X -= Model.MapNonOccludedStart.X;
                         mapCoords.Y -= Model.MapNonOccludedStart.Y;
                     }
-                    tile.PlotTileOnBitmap(ref image, mapCoords.X, mapCoords.Y);
+                    tile.PlotTileOnBitmap(image, mapCoords.X, mapCoords.Y);
                     workReporter.ReportProgress(++progressTracker);
                 }
             }
         }
-        private void PlotTiledObjects(ref DirectBitmap image)
+        private void PlotTiledObjects(DirectBitmap image)
         {
             foreach (var btlData in Model.TiledObjectInfos)
             {
                 for (int i = 0; i < btlData.Size; i++)
                 {
                     var tile = mapContainer.Btl[btlData.GetId(i)];
-                    tile.PlotTileOnBitmap(ref image, btlData.Position.X, btlData.Position.Y + (i * TileSet.TILE_HEIGHT));
+                    tile.PlotTileOnBitmap(image, btlData.Position.X, btlData.Position.Y + (i * TileSet.TILE_HEIGHT));
                 }
                 workReporter.ReportProgress(++progressTracker);
             }
         }
-        private void PlotInternalSprites(ref DirectBitmap image)
+        private void PlotInternalSprites(DirectBitmap image)
         {
             foreach (var spriteData in Model.InternalSpriteInfos)
             {
@@ -91,12 +91,12 @@ namespace DispelTools.GameDataModels.Map.Generator
                     destX += Model.MapNonOccludedStart.X;
                     destY += Model.MapNonOccludedStart.Y;
                 }
-                PlotSpriteOnBitmap(ref image, sprite.GetFrame(0).RawRgb, destX, destY);
+                PlotSpriteOnBitmap(image, sprite.GetFrame(0).RawRgb, destX, destY);
                 workReporter.ReportProgress(++progressTracker);
             }
         }
 
-        private void PlotRoofs(ref DirectBitmap image)
+        private void PlotRoofs(DirectBitmap image)
         {
             for (int y = 0; y < Model.TiledMapSize.Height; y++)
             {
@@ -112,7 +112,7 @@ namespace DispelTools.GameDataModels.Map.Generator
                             mapCoords.X -= Model.MapNonOccludedStart.X;
                             mapCoords.Y -= Model.MapNonOccludedStart.Y;
                         }
-                        tile.PlotTileOnBitmap(ref image, mapCoords.X, mapCoords.Y);
+                        tile.PlotTileOnBitmap(image, mapCoords.X, mapCoords.Y);
                     }
                     workReporter.ReportProgress(++progressTracker);
                 }
@@ -134,7 +134,7 @@ namespace DispelTools.GameDataModels.Map.Generator
                    (-x + y) * TileSet.TILE_HEIGHT_HALF + (Model.MapDiagonalTiles / 2 * TileSet.TILE_HEIGHT_HALF));
         }
 
-        private void PlotSpriteOnBitmap(ref DirectBitmap parent, RawRgb sprite, int destX, int destY)
+        private void PlotSpriteOnBitmap(DirectBitmap parent, RawRgb sprite, int destX, int destY)
         {
             //TODO Move comments to docs
             //destX += (map.Width / 5) * TileSet.TILE_WIDTH *;

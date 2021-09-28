@@ -24,7 +24,7 @@ namespace DispelTools.ImageAnalyzer
             pictureDisplayer.PixelSelectedEvent += imageEditControls.PixelSelected;
 
             imageAnalyzerCore = new ImageAnalyzerCore();
-            imageEditControls.SetImages(ref imageAnalyzerCore);
+            imageEditControls.SetImages(imageAnalyzerCore);
             imageEditControls.ChangesMadeEvent += RefreshImage;
             imageAnalyzerCore.CreatedNewLayerEvent += RefreshImage;
         }

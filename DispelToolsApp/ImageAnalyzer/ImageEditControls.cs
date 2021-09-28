@@ -22,17 +22,14 @@ namespace DispelTools.ImageAnalyzer
             inValue.Minimum = 0;
         }
 
-        public enum EditTool { NONE, COLOR_PICKER, ROW_SELECTOR, RECT_SELECTOR, PENCIL};
+        public enum EditTool { NONE, COLOR_PICKER, ROW_SELECTOR, RECT_SELECTOR, PENCIL };
 
         public EditTool CurrentEditTool { get; private set; }
 
         public event EventHandler EditToolChangedEvent;
         public event EventHandler ChangesMadeEvent;
 
-        internal void SetImages(ref ImageAnalyzerCore imageAnalyzerCore)
-        {
-            images = imageAnalyzerCore;
-        }
+        internal void SetImages(ImageAnalyzerCore imageAnalyzerCore) => images = imageAnalyzerCore;
 
         public void ColorManagmentChanged(ColorManagement.ColorMode colorMode) => colorManagement = ColorManagement.From(colorMode);
 
@@ -49,7 +46,7 @@ namespace DispelTools.ImageAnalyzer
                 UpdateColorInputs();
             }
             UpdateValueInputs();
-            this.Invalidate();
+            Invalidate();
             valuesAreUpdated = false;
         }
 
@@ -60,7 +57,7 @@ namespace DispelTools.ImageAnalyzer
             byte[] bytes = BitConverter.GetBytes((long)inValue.Value);
             selectedColor = colorManagement.ProduceColor(bytes);
             UpdateColorInputs();
-            this.Invalidate();
+            Invalidate();
             valuesAreUpdated = false;
         }
 
@@ -85,7 +82,7 @@ namespace DispelTools.ImageAnalyzer
             valuesAreUpdated = true;
             UpdateColorInputs();
             UpdateValueInputs();
-            this.Invalidate();
+            Invalidate();
             valuesAreUpdated = false;
         }
 
@@ -127,11 +124,11 @@ namespace DispelTools.ImageAnalyzer
 
         public void PixelSelected(object sender, Components.PictureDiplayer.PixelSelectedArgs pixelSelectedArgs)
         {
-            if(CurrentEditTool == EditTool.COLOR_PICKER)
+            if (CurrentEditTool == EditTool.COLOR_PICKER)
             {
                 ProbeColor(pixelSelectedArgs.PixelColor);
             }
-            if(CurrentEditTool == EditTool.PENCIL)
+            if (CurrentEditTool == EditTool.PENCIL)
             {
                 images.EditPixel(pixelSelectedArgs.Position, selectedColor);
                 ChangesMadeEvent?.Invoke(this, EventArgs.Empty);

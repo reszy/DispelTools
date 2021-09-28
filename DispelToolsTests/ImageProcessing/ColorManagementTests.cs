@@ -50,30 +50,30 @@ namespace DispelToolsTests.ImageProcessing
         public static IEnumerable<object[]> GetModesWithParams()
         {
             var modesWithParams = GetModes().ToList();
-            SetModeParams(ref modesWithParams, RGB24,
+            SetModeParams(modesWithParams, RGB24,
                 new byte[] { 128, 255, 0 }, Color.FromArgb(128, 255, 0), new byte[] { 128, 255, 0 });
-            SetModeParams(ref modesWithParams, BGR24,
+            SetModeParams(modesWithParams, BGR24,
                 new byte[] { 128, 255, 0 }, Color.FromArgb(0, 255, 128), new byte[] { 128, 255, 0 });
-            SetModeParams(ref modesWithParams, PALLETE,
+            SetModeParams(modesWithParams, PALLETE,
                 new byte[] { 128 }, Color.FromArgb(128, 128, 128), new byte[] { 128 });
-            SetModeParams(ref modesWithParams, BW8,
+            SetModeParams(modesWithParams, BW8,
                 new byte[] { 128 }, Color.FromArgb(128, 128, 128), new byte[] { 128 });
-            SetModeParams(ref modesWithParams, YB16,
-                new byte[] { 128, 255}, Color.FromArgb(255, 255, 128), new byte[] { 128, 255});
-            SetModeParams(ref modesWithParams, RGB16_565,
+            SetModeParams(modesWithParams, YB16,
+                new byte[] { 128, 255 }, Color.FromArgb(255, 255, 128), new byte[] { 128, 255 });
+            SetModeParams(modesWithParams, RGB16_565,
                 new byte[] { 128, 255 }, Color.FromArgb(248, 240, 0), new byte[] { 128, 255 });
-            SetModeParams(ref modesWithParams, RGB16_565_Skip2,
+            SetModeParams(modesWithParams, RGB16_565_Skip2,
                 new byte[] { 128, 255, 0, 0 }, Color.FromArgb(248, 240, 0), new byte[] { 128, 255, 0, 0 });
-            SetModeParams(ref modesWithParams, RGB16_555,
-                new byte[] { 128, 127}, Color.FromArgb(248, 224, 0), new byte[] { 128, 127 });
-            SetModeParams(ref modesWithParams, DATA32,
+            SetModeParams(modesWithParams, RGB16_555,
+                new byte[] { 128, 127 }, Color.FromArgb(248, 224, 0), new byte[] { 128, 127 });
+            SetModeParams(modesWithParams, DATA32,
                 new byte[] { 255, 255, 255, 255 }, Color.White, new byte[] { 128, 255, 0, 255 });
-            SetModeParams(ref modesWithParams, DATA32_TO_RGBA,
+            SetModeParams(modesWithParams, DATA32_TO_RGBA,
                 new byte[] { 128, 255, 0, 10 }, Color.FromArgb(10, 0, 255, 128), new byte[] { 128, 255, 0, 10 });
             return modesWithParams;
         }
 
-        private static void SetModeParams(ref List<object[]> modes, ColorManagement.ColorMode mode, byte[] expected, Color expectedColor, byte[] actual)
+        private static void SetModeParams(List<object[]> modes, ColorManagement.ColorMode mode, byte[] expected, Color expectedColor, byte[] actual)
         {
             int i = GetModeIndex(modes, mode);
             modes[i] = new object[] { modes[i][0], expected, expectedColor, actual };

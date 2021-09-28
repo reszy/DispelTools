@@ -70,7 +70,7 @@ namespace DispelTools.GameDataModels.Map
                         offsetX = TILE_WIDTH / 2 + 1;
                         offsetY = TILE_HEIGHT / 2;
                     }
-                    tile.PlotTileOnBitmap(ref bigBitmap, x * TILE_WIDTH + offsetX, y / 2 * TILE_HEIGHT + offsetY);
+                    tile.PlotTileOnBitmap(bigBitmap, x * TILE_WIDTH + offsetX, y / 2 * TILE_HEIGHT + offsetY);
                 }
             }
             return bigBitmap;

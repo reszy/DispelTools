@@ -150,7 +150,7 @@ namespace DispelTools.Viewers.MapViewer
         {
             sidePreviewImage?.Dispose();
             sidePreviewImage = new DirectBitmap(TileSet.TILE_WIDTH, TileSet.TILE_HEIGHT);
-            tile.PlotTileOnBitmap(ref sidePreviewImage, 0, 0);
+            tile.PlotTileOnBitmap(sidePreviewImage, 0, 0);
             tileDiplayer.SetImage(sidePreviewImage.Bitmap, true);
         }
 

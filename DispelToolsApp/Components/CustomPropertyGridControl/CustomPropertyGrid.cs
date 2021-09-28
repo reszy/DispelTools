@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace DispelTools.Components.CustomPropertyGridControl
@@ -27,9 +25,11 @@ namespace DispelTools.Components.CustomPropertyGridControl
             selectedItem = propertyItem;
             if (propertyItem != null)
             {
-                for (int i = 0, shownFieldCounter = 0; i< propertyItem.Count; i++) {
-                    if (!HideUnnamedFields || !selectedItem[i].Name.StartsWith("?")) {
-                        var row = new Row(ref selectedItem, i, shownFieldCounter, this);
+                for (int i = 0, shownFieldCounter = 0; i < propertyItem.Count; i++)
+                {
+                    if (!HideUnnamedFields || !selectedItem[i].Name.StartsWith("?"))
+                    {
+                        var row = new Row(selectedItem, i, shownFieldCounter, this);
                         rows.Add(row);
                         shownFieldCounter++;
                     }

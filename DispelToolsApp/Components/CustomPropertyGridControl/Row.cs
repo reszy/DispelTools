@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace DispelTools.Components.CustomPropertyGridControl
@@ -22,9 +21,9 @@ namespace DispelTools.Components.CustomPropertyGridControl
         private Field FieldRef => all[number];
 
         public Point Location { get; set; }
-        public Size Size{ get; set; }
+        public Size Size { get; set; }
         public Font Font { get; set; }
-        public Row(ref PropertyItem item, int number, int locationNumber, CustomPropertyGrid parent)
+        public Row(PropertyItem item, int number, int locationNumber, CustomPropertyGrid parent)
         {
             all = item;
             this.parent = parent;
@@ -150,7 +149,7 @@ namespace DispelTools.Components.CustomPropertyGridControl
 
         public void DisposeAll()
         {
-            parent.toolTip.SetToolTip(label,null);
+            parent.toolTip.SetToolTip(label, null);
             if (resetButton != null)
             {
                 parent.toolTip.SetToolTip(resetButton, null);

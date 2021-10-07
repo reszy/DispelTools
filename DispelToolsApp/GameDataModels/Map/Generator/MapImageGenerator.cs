@@ -69,12 +69,20 @@ namespace DispelTools.GameDataModels.Map.Generator
         }
         private void PlotTiledObjects(DirectBitmap image)
         {
+            int occlusionOffsetX = 0, occlusionOffsetY = 0;
+            if (!generatorOptions.Occlusion)
+            {
+                occlusionOffsetX = Model.MapNonOccludedStart.X;
+                occlusionOffsetY = Model.MapNonOccludedStart.Y;
+            }
             foreach (var btlData in Model.TiledObjectInfos)
             {
                 for (int i = 0; i < btlData.Size; i++)
                 {
                     var tile = mapContainer.Btl[btlData.GetId(i)];
-                    tile.PlotTileOnBitmap(image, btlData.Position.X, btlData.Position.Y + (i * TileSet.TILE_HEIGHT));
+                    var x = btlData.Position.X + occlusionOffsetX;
+                    var y = btlData.Position.Y + (i * TileSet.TILE_HEIGHT) + occlusionOffsetY;
+                    tile.PlotTileOnBitmap(image, x, y);
                 }
                 workReporter.ReportProgress(++progressTracker);
             }

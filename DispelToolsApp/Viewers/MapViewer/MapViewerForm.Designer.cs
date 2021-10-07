@@ -24,8 +24,8 @@
 
             mapImage?.Dispose();
             sidePreviewImage?.Dispose();
-            pictureBox1.Image?.Dispose();
-            pictureBox1.Image = null;
+            pictureBox.Image?.Dispose();
+            pictureBox.Image = null;
 
             tileDiplayer.Image?.Dispose();
             tileDiplayer.Image = null;
@@ -61,12 +61,12 @@
             this.statsTextBox = new System.Windows.Forms.RichTextBox();
             this.tileDiplayer = new DispelTools.Components.PictureDiplayer();
             this.progressBar = new DispelTools.Components.ProgressBarWithText();
-            this.pictureBox1 = new DispelTools.Components.PictureDiplayer();
+            this.pictureBox = new DispelTools.Components.PictureDiplayer();
             this.occludeCheckBox = new System.Windows.Forms.CheckBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.tileShowNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tileDiplayer)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // openButton
@@ -213,18 +213,18 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.pictureBox1.CurrentMouseMode = DispelTools.Components.PictureDiplayer.MouseMode.TileSelector;
-            this.pictureBox1.Font = new System.Drawing.Font("Courier New", 10F);
-            this.pictureBox1.Image = null;
-            this.pictureBox1.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-            this.pictureBox1.Location = new System.Drawing.Point(12, 32);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.OffsetTileSelector = false;
-            this.pictureBox1.Size = new System.Drawing.Size(1019, 664);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            this.pictureBox.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.pictureBox.CurrentMouseMode = DispelTools.Components.PictureDiplayer.MouseMode.TileSelector;
+            this.pictureBox.Font = new System.Drawing.Font("Courier New", 10F);
+            this.pictureBox.Image = null;
+            this.pictureBox.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            this.pictureBox.Location = new System.Drawing.Point(12, 32);
+            this.pictureBox.Name = "pictureBox1";
+            this.pictureBox.OffsetTileSelector = false;
+            this.pictureBox.Size = new System.Drawing.Size(1019, 664);
+            this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox.TabIndex = 0;
+            this.pictureBox.TabStop = false;
             // 
             // occludeCheckBox
             // 
@@ -257,12 +257,12 @@
             this.Controls.Add(this.tileShowNumber);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.openButton);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.pictureBox);
             this.Name = "MapViewerForm";
             this.Text = "MapViewerForm";
             ((System.ComponentModel.ISupportInitialize)(this.tileShowNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tileDiplayer)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -270,7 +270,7 @@
 
         #endregion
 
-        private Components.PictureDiplayer pictureBox1;
+        private Components.PictureDiplayer pictureBox;
         private System.Windows.Forms.Button openButton;
         private Components.ProgressBarWithText progressBar;
         private System.Windows.Forms.NumericUpDown tileShowNumber;

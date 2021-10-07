@@ -32,7 +32,7 @@ namespace DispelTools.Viewers.MapViewer
         {
             InitializeComponent();
 
-            pictureBox1.PixelSelectedEvent += TileClicked;
+            pictureBox.PixelSelectedEvent += TileClicked;
 
             backgroundWorker = new BackgroundWorker();
             backgroundWorker.DoWork += LoadMap;
@@ -49,8 +49,12 @@ namespace DispelTools.Viewers.MapViewer
 
         private void TileClicked(object sender, PictureDiplayer.PixelSelectedArgs point)
         {
-            //var mapPosition = mapReader.TranslateImageToMapPosition(point.Position);
-            //Clipboard.SetText($"TELEPORT({mapPosition.X},{mapPosition.Y})");
+            if (MapLoaded)
+            {
+                var mapPosition = mapContainer.TranslateImageToMapCoords(point.Position.X, point.Position.Y, generatedOccluded);
+                pictureBox.DebugText = $"Tile({mapPosition.X}, {mapPosition.Y})";
+                Clipboard.SetText($"TELEPORT({mapPosition.X},{mapPosition.Y})");
+            }
         }
 
         private void LoadingCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -60,8 +64,8 @@ namespace DispelTools.Viewers.MapViewer
             sb.Append(mapContainer.GetStats());
             if (mapImage != null)
             {
-                pictureBox1.SetImage(mapImage.Bitmap, true);
-                pictureBox1.OffsetTileSelector = generatedOccluded ^ (mapImage.Height / TileSet.TILE_HEIGHT % 2 == 0);
+                pictureBox.SetImage(mapImage.Bitmap, true);
+                pictureBox.OffsetTileSelector = generatedOccluded ^ (mapImage.Height / TileSet.TILE_HEIGHT % 2 == 0);
 
                 sb.AppendLine();
                 sb.AppendLine("--Image--");
@@ -186,8 +190,8 @@ namespace DispelTools.Viewers.MapViewer
                     progressBar.Maximum = 4000;
                 }
                 mapImage?.Dispose();
-                pictureBox1.Image?.Dispose();
-                pictureBox1.Image = null;
+                pictureBox.Image?.Dispose();
+                pictureBox.Image = null;
                 generatedOccluded = occludeCheckBox.Checked;
                 backgroundWorker.RunWorkerAsync();
             }

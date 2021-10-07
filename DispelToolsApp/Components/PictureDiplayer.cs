@@ -23,6 +23,8 @@ namespace DispelTools.Components
         public delegate void PixelSelectedHandler(object sender, PixelSelectedArgs point);
         public event PixelSelectedHandler PixelSelectedEvent;
 
+        public string DebugText { get; set; } = "";
+
         public PictureDiplayer()
         {
             Font = new Font(FontFamily.GenericMonospace, 10.0f);

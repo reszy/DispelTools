@@ -230,7 +230,17 @@ namespace DispelTools.Components
                     {
                         DisplayDataTip(e.Graphics);
                     }
+                    DrawDebugText(e.Graphics);
                 }
+            }
+
+            private void DrawDebugText(Graphics g)
+            {
+                Size sizeOfText = TextRenderer.MeasureText(pictureDisplayer.DebugText, pictureDisplayer.Font);
+                int startX = (int)g.ClipBounds.Width - 30 - sizeOfText.Width;
+                Rectangle rect = new Rectangle(new Point(startX, 30), sizeOfText);
+                g.FillRectangle(Brushes.Black, rect);
+                g.DrawString(pictureDisplayer.DebugText, pictureDisplayer.Font, Brushes.White, rect);
             }
 
             private void DrawTileSelector(PaintEventArgs e, float zoom)

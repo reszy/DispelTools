@@ -38,3 +38,4 @@ D:\DispelData
 ### [Game file's documentation](Docs/game/files.md)
 
 ### [Devlog](Docs/devlog/main.md)
+ - [1. Map viewer](Docs/devlog/mapViewer.md)

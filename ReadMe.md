@@ -3,6 +3,7 @@ Dispel Tools are tools made to help extract, edit and identify data from Dispel'
 
 ## App documentation
 
+### Available view forms
 - Image Analyzer
 - Extractors
   - ImageExtractor - extracts **SPR** files
@@ -10,9 +11,29 @@ Dispel Tools are tools made to help extract, edit and identify data from Dispel'
   - StringExtractor - searches for strings in exec
   - MapImageExtractor - extracts sprites from inside of map files
   - AllExtractor - extracts images and sounds into grouped directories
-- Simple Editor - Opens most of binary files like ***.ref**, ***.db**  *(does not open ref files that are text files)**
+- Simple Editor - Opens most of files like **ref** or 
+**db**  *(does not open ref files that are text files)*
 - Map Viewer - Generates image of whole map
+- Settings - Allows to set game directory and output directory for easier file selection especially for extracor.
 
-## [Game file's documentation](Docs/game/files.md)
+### Configuration file
+App can read from configuration file. Structure of file is simple: **Key _\[newline\]_ Value**. File should have name `DisplelTools.config` and be in same directory as __DispelTools.exe__.
 
-## [Devlog](Docs/devlog/main.md)
+Configs:
+- GameRootDir - directory containing game's files
+- OutRootDir - directory where program can save files
+
+Example:
+
+<pre>
+GameRootDir
+D:\Games\Dispel
+OutRootDir
+D:\DispelData
+</pre>
+
+---
+## Documentation
+### [Game file's documentation](Docs/game/files.md)
+
+### [Devlog](Docs/devlog/main.md)

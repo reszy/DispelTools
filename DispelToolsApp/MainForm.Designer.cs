@@ -43,6 +43,7 @@ namespace DispelTools
             this.editorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.simpleEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mapViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.patcherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripSeparator();
@@ -68,6 +69,7 @@ namespace DispelTools
             this.extractorsToolStripMenuItem,
             this.editorsToolStripMenuItem,
             this.mapViewerToolStripMenuItem,
+            this.patcherToolStripMenuItem,
             this.toolStripSeparator1,
             this.settingsToolStripMenuItem,
             this.exitToolStripMenuItem,
@@ -168,6 +170,13 @@ namespace DispelTools
             this.mapViewerToolStripMenuItem.Text = "MapViewer";
             this.mapViewerToolStripMenuItem.Click += new System.EventHandler(this.mapViewerToolStripMenuItem_Click);
             // 
+            // patcherToolStripMenuItem
+            // 
+            this.patcherToolStripMenuItem.Name = "patcherToolStripMenuItem";
+            this.patcherToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.patcherToolStripMenuItem.Text = "Patcher";
+            this.patcherToolStripMenuItem.Click += new System.EventHandler(this.patcherToolStripMenuItem_Click);
+            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
@@ -243,6 +252,7 @@ namespace DispelTools
         private System.Windows.Forms.ToolStripMenuItem allExtractorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editorsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem simpleEditorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem patcherToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mapViewerToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;

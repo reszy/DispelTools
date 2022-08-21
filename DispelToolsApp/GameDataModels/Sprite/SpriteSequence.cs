@@ -11,13 +11,15 @@ namespace DispelTools.GameDataModels.Sprite
         public bool Animated => frames.Length > 1;
         public int FrameCount => frames.Length;
 
+        public SpriteLoader.SequenceInfo SequenceInfo { get; }
         public bool ImagesLoaded { get; }
 
         private readonly SpriteFrame[] frames;
 
-        public SpriteSequence(int frames, bool imagesLoaded)
+        public SpriteSequence(SpriteLoader.SequenceInfo sequenceInfo, bool imagesLoaded)
         {
-            this.frames = new SpriteFrame[frames];
+            this.frames = new SpriteFrame[sequenceInfo.FrameInfos.Length];
+            SequenceInfo = sequenceInfo;
             ImagesLoaded = imagesLoaded;
         }
 

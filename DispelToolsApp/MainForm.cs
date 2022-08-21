@@ -117,5 +117,11 @@ namespace DispelTools
             selectMenuButton(sender);
             nestForm(new SettingsForm());
         }
+
+        private void patcherToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            selectMenuButton(sender);
+            nestForm(new DataPatcher.PatcherForm(new DataPatcher.Patchers.SpritePatcherFactory()));
+        }
     }
 }

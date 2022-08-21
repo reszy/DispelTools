@@ -25,13 +25,13 @@ namespace DispelTools.GameDataModels.Sprite
         {
             var info = GetSequenceInfo();
             reader.BaseStream.Seek(info.SequenceEndPosition, SeekOrigin.Begin);
-            return new SpriteSequence(info.FrameInfos.Length, false);
+            return new SpriteSequence(info, false);
         }
 
         public SpriteSequence LoadSequence()
         {
             var info = GetSequenceInfo();
-            var sequence = new SpriteSequence(info.FrameInfos.Length, true);
+            var sequence = new SpriteSequence(info, true);
             for (int i = 0; i < info.FrameInfos.Length; i++)
             {
                 var frameInfo = info.FrameInfos[i];
@@ -132,14 +132,14 @@ namespace DispelTools.GameDataModels.Sprite
             }
         }
 
-        private class SequenceInfo
+        public class SequenceInfo
         {
             public ImageInfo[] FrameInfos { get; set; }
             public long SequenceStartPosition { get; set; }
             public long SequenceEndPosition { get; set; }
         }
 
-        private class ImageInfo
+        public class ImageInfo
         {
             public int OriginX { get; set; }
             public int OriginY { get; set; }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.IO.Abstractions;
 using System.Text;
 using System.Threading.Tasks;
-using DispelTools.Common;
+using DispelTools.Common.DataProcessing;
 
 namespace DispelTools.DataPatcher
 {

@@ -1,4 +1,4 @@
-﻿namespace DispelTools.DataExtractor.ExtractionStatus
+﻿namespace DispelTools.Common.DataProcessing
 {
     public class SimpleDetail
     {

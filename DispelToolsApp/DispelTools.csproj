@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\BytesFormatter.cs" />
+    <Compile Include="Common\DataProcessing\DetailedProgressReporter.cs" />
     <Compile Include="Common\DirectBitmap.cs" />
     <Compile Include="Common\FileExtension.cs" />
     <Compile Include="Common\OpenDialogExtension.cs" />
@@ -113,7 +114,7 @@
     <Compile Include="DataExtractor\ExtractionManager.cs" />
     <Compile Include="DataExtractor\ExtractionStatus\ExtractionWorkReporter.cs" />
     <Compile Include="DataExtractor\ExtractionStatus\FileCompleted.cs" />
-    <Compile Include="DataExtractor\ExtractionStatus\SimpleDetail.cs" />
+    <Compile Include="Common\DataProcessing\SimpleDetail.cs" />
     <Compile Include="DataExtractor\Extractor.cs" />
     <Compile Include="DataExtractor\ExtractorForm.cs">
       <SubType>Form</SubType>
@@ -158,6 +159,7 @@
     <Compile Include="DataPatcher\PatcherParams.cs" />
     <Compile Include="DataPatcher\Patchers\SpritePatcher.cs" />
     <Compile Include="DataPatcher\PatchFile.cs" />
+    <Compile Include="DataPatcher\PatchingStatus\FileCompleted.cs" />
     <Compile Include="DebugTools\MetricTools\MetricDto.cs" />
     <Compile Include="DebugTools\MetricTools\MetricJsonConverter.cs" />
     <Compile Include="DebugTools\MetricTools\MetricFile.cs" />
@@ -220,7 +222,7 @@
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="GameDataModels\Map\Reader\MapReader.cs" />
-    <Compile Include="Common\WorkReporter.cs" />
+    <Compile Include="Common\DataProcessing\WorkReporter.cs" />
     <Compile Include="Viewers\MapViewer\MapViewerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -331,8 +333,6 @@
     <Content Include="Resources\select.png" />
     <Content Include="Resources\transparentPattern.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DataProcessing\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

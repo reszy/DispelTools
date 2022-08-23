@@ -1,4 +1,5 @@
-﻿using DispelTools.DataExtractor.ExtractionStatus;
+﻿using DispelTools.Common.DataProcessing;
+using DispelTools.DataExtractor.ExtractionStatus;
 using DispelTools.DebugTools.MetricTools;
 using System;
 using System.Collections.Generic;

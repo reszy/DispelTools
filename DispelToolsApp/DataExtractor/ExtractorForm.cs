@@ -1,4 +1,5 @@
 ﻿using DispelTools.Common;
+using DispelTools.Common.DataProcessing;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -99,9 +100,9 @@ namespace DispelTools.DataExtractor
             {
                 progressBar.Text = text;
             }
-            if (e.UserState is ExtractionStatus.SimpleDetail)
+            if (e.UserState is SimpleDetail)
             {
-                var detailsToAdd = e.UserState as ExtractionStatus.SimpleDetail;
+                var detailsToAdd = e.UserState as SimpleDetail;
                 details.AddDetails(detailsToAdd.Details);
             }
         }

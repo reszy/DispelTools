@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace DispelTools.Common
+namespace DispelTools.Common.DataProcessing
 {
     public class WorkReporter
     {
@@ -40,7 +40,7 @@ namespace DispelTools.Common
         }
         public void ReportProgress(int progress)
         {
-            currentProgress = ((currentStage - 1) * STAGE_MAX) + (int)((double)progress / totalInStage * STAGE_MAX);
+            currentProgress = (currentStage - 1) * STAGE_MAX + (int)((double)progress / totalInStage * STAGE_MAX);
             backgroundWorker.ReportProgress(currentProgress);
         }
     }

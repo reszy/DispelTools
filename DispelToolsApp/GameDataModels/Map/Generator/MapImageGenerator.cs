@@ -1,4 +1,5 @@
 ﻿using DispelTools.Common;
+using DispelTools.Common.DataProcessing;
 using System.Drawing;
 
 namespace DispelTools.GameDataModels.Map.Generator

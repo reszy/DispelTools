@@ -1,19 +1,23 @@
 ﻿using DispelTools.DebugTools.MetricTools;
 using System;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace DispelTools
 {
     public partial class MainForm : Form
     {
-        private static string title = "Dispel Extractor Tools";
+        private static readonly string title = "Dispel Tools";
+        private readonly string version;
         private Form currentlyEmbedded;
         public MainForm()
         {
             InitializeComponent();
-            Text = title;
             nestForm(new SettingsForm());
             FormClosed += Metrics.DumpMetrics;
+            Version version = Assembly.GetExecutingAssembly().GetName().Version;
+            this.version = $"v{version.Major}.{version.Minor}.{version.Revision}";
+            Text = $"{title}  -  {this.version}";
         }
 
         private void nestForm(Form embeddedForm)
@@ -25,7 +29,7 @@ namespace DispelTools
             embeddedForm.TopLevel = false;
             embeddedForm.FormBorderStyle = FormBorderStyle.None;
 
-            Text = $"{title} - {embeddedForm.Text}";
+            Text = $"{title} - {embeddedForm.Text}  -  {version}";
 
             contentPanel.Controls.Add(embeddedForm);
             embeddedForm.Show();

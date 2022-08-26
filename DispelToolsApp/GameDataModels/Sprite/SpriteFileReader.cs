@@ -33,7 +33,7 @@ namespace DispelTools.GameDataModels.Sprite
     }
     public static class SpriteFileReader
     {
-        public static void ProcessThroughFile(OpenedSpriteFile file)
+        public static void ProcessThroughFile(OpenedSpriteFile file, bool skipLoadingImages)
         {
             var loader = new SpriteLoader(file.File, file.Filename, file.ColorMode);
             file.File.Skip(268);
@@ -43,7 +43,7 @@ namespace DispelTools.GameDataModels.Sprite
             {
                 if (SeekNextSequence(file))
                 {
-                    var sequence = loader.LoadSequence();
+                    var sequence = loader.LoadSequence(skipLoadingImages);
 
                     file.Process(sequence, sequenceCounter);
                     sequenceCounter++;

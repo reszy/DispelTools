@@ -34,12 +34,12 @@
             this.outputSelectButton = new System.Windows.Forms.Button();
             this.outputDirectoryInfo = new System.Windows.Forms.Label();
             this.selectPatchesDialog = new System.Windows.Forms.OpenFileDialog();
-            this.progressBar = new DispelTools.Components.ProgressBarWithText();
-            this.details = new DispelTools.Components.DetailsComponent();
             this.optionsButton = new System.Windows.Forms.Button();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.selectDestinationFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.selectionTextBox = new System.Windows.Forms.RichTextBox();
+            this.progressBar = new DispelTools.Components.ProgressBarWithText();
+            this.details = new DispelTools.Components.DetailsComponent();
             this.SuspendLayout();
             // 
             // inputSelectButton
@@ -81,24 +81,6 @@
             this.outputDirectoryInfo.Size = new System.Drawing.Size(416, 13);
             this.outputDirectoryInfo.TabIndex = 6;
             // 
-            // progressBar
-            // 
-            this.progressBar.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.progressBar.Location = new System.Drawing.Point(12, 176);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(586, 45);
-            this.progressBar.TabIndex = 10;
-            // 
-            // details
-            // 
-            this.details.Header = "Details";
-            this.details.Location = new System.Drawing.Point(12, 227);
-            this.details.MinimumSize = new System.Drawing.Size(100, 25);
-            this.details.Name = "details";
-            this.details.Size = new System.Drawing.Size(586, 25);
-            this.details.TabIndex = 5;
-            this.details.UnfoldSize = 240;
-            // 
             // optionsButton
             // 
             this.optionsButton.Location = new System.Drawing.Point(513, 12);
@@ -122,12 +104,30 @@
             // selectionTextBox
             // 
             this.selectionTextBox.DetectUrls = false;
-            this.selectionTextBox.Enabled = false;
             this.selectionTextBox.Location = new System.Drawing.Point(98, 42);
             this.selectionTextBox.Name = "selectionTextBox";
+            this.selectionTextBox.ReadOnly = true;
             this.selectionTextBox.Size = new System.Drawing.Size(409, 128);
             this.selectionTextBox.TabIndex = 11;
             this.selectionTextBox.Text = "";
+            // 
+            // progressBar
+            // 
+            this.progressBar.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.progressBar.Location = new System.Drawing.Point(12, 176);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(586, 45);
+            this.progressBar.TabIndex = 10;
+            // 
+            // details
+            // 
+            this.details.Header = "Details";
+            this.details.Location = new System.Drawing.Point(12, 227);
+            this.details.MinimumSize = new System.Drawing.Size(100, 25);
+            this.details.Name = "details";
+            this.details.Size = new System.Drawing.Size(586, 25);
+            this.details.TabIndex = 5;
+            this.details.UnfoldSize = 240;
             // 
             // PatcherForm
             // 

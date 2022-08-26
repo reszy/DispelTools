@@ -8,7 +8,7 @@ namespace DispelTools.GameDataModels.Sprite
 {
     public class SpriteSequence
     {
-        public bool Animated => frames.Length > 1;
+        public bool Animated => ImagesLoaded ? frames.Length > 1 : SequenceInfo.FrameInfos.Length > 1;
         public int FrameCount => frames.Length;
 
         public SpriteLoader.SequenceInfo SequenceInfo { get; }

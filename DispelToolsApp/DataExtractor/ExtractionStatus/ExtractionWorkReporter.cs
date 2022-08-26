@@ -11,7 +11,7 @@ namespace DispelTools.DataExtractor.ExtractionStatus
         public void ReportFileCreated(ExtractionFileProcess process, string filename)
         {
             ReportProgress((int)process.Stream.Position);
-            ReportDetails(SimpleDetail.NewDetails($"Created file: {filename}"));
+            ReportDetails(new SimpleDetail($"Created file: {filename}"));
             process.FilesCreated += 1;
         }
     }

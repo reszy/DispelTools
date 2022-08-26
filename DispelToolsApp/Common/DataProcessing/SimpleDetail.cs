@@ -3,7 +3,12 @@
     public class SimpleDetail
     {
         public string Details { get; protected set; }
-        public static SimpleDetail NewDetails(params string[] results)
+
+        public SimpleDetail(string detail)
+        {
+            Details = detail;
+        }
+        public SimpleDetail (params string[] results)
         {
             string details = "";
 
@@ -11,10 +16,7 @@
             {
                 details += s + "\r\n";
             }
-            return new SimpleDetail()
-            {
-                Details = details
-            };
+            Details = details;
         }
     }
 }

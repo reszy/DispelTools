@@ -13,19 +13,25 @@ namespace DispelTools.DataPatcher
         {
             PatchesFilenames = newList;
             TargetFileName = patcherParams.TargetFileName;
-            KeepBackupFiles = patcherParams.KeepBackupFiles;
-            KeepImageSize = patcherParams.KeepImageSize;
+            options.KeepBackupFiles = patcherParams.options.KeepBackupFiles;
+            options.KeepImageSize = patcherParams.options.KeepImageSize;
+        }
+
+        public class PatcherOptions
+        {
+            public bool KeepBackupFiles { get; set; } = true;
+            public bool KeepImageSize { get; set; } = true;
         }
 
         public enum OptionNames { KeepBackupFiles = 1, KeepImageSize = 2 }
         public static OptionNames NoOptions { get; } = 0;
+        public bool HaveFilledRequiredParams => PatchesFilenames != null && PatchesFilenames.Count > 0;
         //Required
         public List<string> PatchesFilenames { get; set; }
-        public string TargetFileName { get; set; }
         //Optional
-        public bool KeepBackupFiles { get; set; } = true;
-        public bool KeepImageSize { get; set; } = true;
+        public string TargetFileName { get; set; }
 
-        public bool HaveFilledRequiredParams => PatchesFilenames != null && PatchesFilenames.Count > 0;
+        public PatcherOptions options { get; } = new PatcherOptions();
+
     }
 }

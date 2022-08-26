@@ -32,6 +32,7 @@ namespace DispelTools.DataPatcher
             selectPatchesDialog.ShowDialog(() =>
             {
                 patcherParams.PatchesFilenames = selectPatchesDialog.FileNames.ToList();
+                patcherParams.TargetFileName = string.Empty;
                 patcherManager.SetParams(patcherParams);
                 selectionTextBox.Text = patcherManager.GetPatchMaping();
             });
@@ -87,9 +88,10 @@ namespace DispelTools.DataPatcher
         {
             selectDestinationFileDialog.Multiselect = false;
             selectDestinationFileDialog.Filter = patcherFactory.OutputFileFilter;
-            selectPatchesDialog.InitialDirectory = Settings.GameRootDir;
+            selectDestinationFileDialog.InitialDirectory = Settings.GameRootDir;
             selectDestinationFileDialog.ShowDialog(() => {
-                patcherParams.TargetFileName = selectPatchesDialog.FileName;
+                patcherParams.TargetFileName = selectDestinationFileDialog.FileName;
+                patcherManager.SetParams(patcherParams);
                 selectionTextBox.Text = patcherManager.GetPatchMaping();
             });
             SetIfReady();

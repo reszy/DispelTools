@@ -79,7 +79,7 @@ namespace DispelTools.DataPatcher
                 try
                 {
                     patcher.Initialize(targetMapping.Value, targetMapping.Key, workReporter);
-                    patcher.PatchFile(patcherParams, workReporter);
+                    patcher.PatchFile(patcherParams.options, workReporter);
                 }
                 catch (Exception e)
                 {
@@ -92,7 +92,16 @@ namespace DispelTools.DataPatcher
         public void SetParams(PatcherParams patcherParams)
         {
             this.patcherParams = patcherParams;
-            MapToGameFiles();
+            if (string.IsNullOrEmpty(patcherParams.TargetFileName))
+            {
+                MapToGameFiles();
+            }
+            else
+            {
+                mappedPatches.Clear();
+                unmappedPatches.Clear();
+                mappedPatches[patcherParams.TargetFileName] = patcherParams.PatchesFilenames;
+            }
         }
 
         public void MapToGameFiles()

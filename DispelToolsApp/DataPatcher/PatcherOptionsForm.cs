@@ -23,14 +23,14 @@ namespace DispelTools.DataPatcher
 
             //Set values
             this.patcherParams = patcherParams;
-            keepBackupsCheckBox.Checked = patcherParams.KeepBackupFiles;
-            keepImageSizeCheckBox.Checked = patcherParams.KeepImageSize;
+            keepBackupsCheckBox.Checked = patcherParams.options.KeepBackupFiles;
+            keepImageSizeCheckBox.Checked = patcherParams.options.KeepImageSize;
         }
 
         private void okButton_Click(object sender, EventArgs e)
         {
-            patcherParams.KeepBackupFiles = keepBackupsCheckBox.Checked;
-            patcherParams.KeepImageSize = keepImageSizeCheckBox.Checked;
+            patcherParams.options.KeepBackupFiles = keepBackupsCheckBox.Checked;
+            patcherParams.options.KeepImageSize = keepImageSizeCheckBox.Checked;
             Close();
         }
 

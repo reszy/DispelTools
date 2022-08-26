@@ -68,7 +68,7 @@ namespace DispelTools.DataPatcher.Patchers
     {
         private readonly SortedDictionary<long, PatchMark> patchMarks = new SortedDictionary<long, PatchMark>();
         private readonly List<SpritePatchFile> patches = new List<SpritePatchFile>();
-        private readonly static int imageSizeByteSize = 4 * 3;
+        private static readonly int imageSizeByteSize = 4 * 3;
 
         private class PatchMark
         {
@@ -88,7 +88,7 @@ namespace DispelTools.DataPatcher.Patchers
 
         public override int Count => patches.Count;
 
-        public override void PatchFile(PatcherParams pacherParams, DetailedProgressReporter workReporter)
+        public override void PatchFile(PatcherParams.PatcherOptions options, DetailedProgressReporter workReporter)
         {
             ColorManagement.ColorMode colorMode = ColorManagement.ColorMode.RGB16_565;
             ColorManagement.ColorMode targetColorMode = ColorManagement.ColorMode.RGB16_565;
@@ -111,7 +111,7 @@ namespace DispelTools.DataPatcher.Patchers
                 backupFile = destinationFile + ".1bak";//for backup of not original file
             }
             string deleteAfter = string.Empty;
-            if (!fs.File.Exists(backupFile) && !pacherParams.KeepBackupFiles)
+            if (!fs.File.Exists(backupFile) && !options.KeepBackupFiles)
             {
                 deleteAfter = backupFile;
             }
@@ -125,12 +125,12 @@ namespace DispelTools.DataPatcher.Patchers
                 {
                     CopyUntil(patch.Key - imageSizeByteSize, backup, overriden); ;
                     workReporter.ReportProgress((int)backup.BaseStream.Position);
-                    var lastWritePosition = overriden.BaseStream.Position;
+                    long lastWritePosition = overriden.BaseStream.Position;
 
                     try
                     {
-                        ApplyImagePatch(overriden, patch.Value, targetColorManagement, sourceColorManagement, pacherParams.KeepImageSize);
-                        backup.Skip(patch.Value.Height * patch.Value.Width * sourceColorManagement.BytesConsumed);//skip image bytes
+                        ApplyImagePatch(overriden, patch.Value, targetColorManagement, options.KeepImageSize);
+                        backup.Skip(patch.Value.Height * patch.Value.Width * sourceColorManagement.BytesConsumed + imageSizeByteSize);//skip image bytes
                     }
                     catch (Exception e) when (e is IOException || e is ArgumentException)
                     {
@@ -171,20 +171,20 @@ namespace DispelTools.DataPatcher.Patchers
             }
         }
 
-        private void ApplyImagePatch(BinaryWriter target, PatchMark patch, ColorManagement targetColorManagement, ColorManagement sourceColorManagement, bool keepImageSize)
+        private void ApplyImagePatch(BinaryWriter target, PatchMark patch, ColorManagement targetColorManagement, bool keepImageSize)
         {
             using (System.Drawing.Bitmap image = new System.Drawing.Bitmap(patch.PatchFile.PatchFileName))
             {
-                if (image.Width != patch.Width || image.Height != patch.Height || targetColorManagement.GetType() != sourceColorManagement.GetType())
+                if (keepImageSize)
                 {
-                    if (keepImageSize)
+                    if (image.Width != patch.Width || image.Height != patch.Height)
                     {
                         throw new ArgumentException("Dimensions of image patch does not match to target image");
                     }
                 }
                 target.Write(image.Width);
                 target.Write(image.Height);
-                target.Write(image.Width * image.Height * targetColorManagement.BytesConsumed);
+                target.Write(image.Width * image.Height);
                 for (int y = 0; y < image.Height; y++)
                 {
                     for (int x = 0; x < image.Width; x++)
@@ -198,12 +198,14 @@ namespace DispelTools.DataPatcher.Patchers
 
         public override void Initialize(List<string> patchFiless, string targetFile, DetailedProgressReporter workReporter)
         {
-            foreach (var patchFileName in patchFiless) {
+            foreach (string patchFileName in patchFiless)
+            {
                 string noExtensionName = fs.Path.GetFileNameWithoutExtension(patchFileName);
                 string encodedParams = noExtensionName.Substring(noExtensionName.LastIndexOf('.') + 1);
                 int frameSeparationIndex = encodedParams.IndexOf("_");
 
-                try {
+                try
+                {
                     SpritePatchFile result;
                     if (frameSeparationIndex < 0)
                     {

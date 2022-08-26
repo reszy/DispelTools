@@ -82,9 +82,9 @@ namespace DispelTools.DataExtractor
                     createdFilesCount += resultDetails.FilesCreated;
                 }
             }
-            workReporter.ReportDetails(SimpleDetail.NewDetails(
+            workReporter.ReportDetails(
                 $"From {preparedFiles.Count} files, created {createdFilesCount} files total.",
-                $"Errors count: {errosOccured}"));
+                $"Errors count: {errosOccured}");
         }
 
         private List<ExtractionFile> PrepareListOfFilesToExtract()

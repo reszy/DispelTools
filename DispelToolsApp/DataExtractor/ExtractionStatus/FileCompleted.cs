@@ -14,7 +14,7 @@ namespace DispelTools.DataExtractor.ExtractionStatus
             }
             details.Add($"Finished extracting from file {filename}");
             details.Add($"Total files created: { filesCreated}");
-            return SimpleDetail.NewDetails(details.ToArray());
+            return new SimpleDetail(details.ToArray());
         }
     }
 }

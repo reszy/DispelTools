@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
 namespace DispelTools.Common.DataProcessing
 {
@@ -13,13 +8,15 @@ namespace DispelTools.Common.DataProcessing
         public DetailedProgressReporter(BackgroundWorker backgroundWorker, int stageCount = 1) : base(backgroundWorker, stageCount) { }
 
         protected void PrepareWorker(int totalStageProgress) => totalInStage = totalStageProgress;
+        public void ReportDetails(params string[] details) => ReportDetails(new SimpleDetail(details));
         public void ReportDetails(SimpleDetail detail) => backgroundWorker.ReportProgress(currentProgress, detail);
 
-        public void ReportFinishedStage(SimpleDetail completedDetail)
+        public void ReportFinishedStage(SimpleDetail detail)
         {
             ReportProgress(totalInStage);
-            ReportDetails(completedDetail);
+            ReportDetails(detail);
         }
+        public void ReportFinishedStage(params string[] details) => ReportFinishedStage(new SimpleDetail(details));
         public void ReportFinishedStage()
         {
             ReportProgress(totalInStage);

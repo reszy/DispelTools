@@ -85,7 +85,7 @@ namespace DispelTools.DataPatcher
                 }
                 workReporter.ReportFinishedStage();
             }
-            workReporter.ReportDetails(SimpleDetail.NewDetails($"Finished patching {targetCounter} files.", $"Errors count: {workReporter.ErrorsCount}"));
+            workReporter.ReportDetails($"Finished patching {targetCounter} files.", $"Errors count: {workReporter.ErrorsCount}");
         }
 
         public void SetParams(PatcherParams patcherParams)

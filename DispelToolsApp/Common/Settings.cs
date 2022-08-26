@@ -71,7 +71,7 @@ namespace DispelTools.Common
                 SaveSettings();
             }
         }
-        private static void SaveSettings()
+        public static void SaveSettings()
         {
             var settings = new SettingsDto()
             {

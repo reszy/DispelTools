@@ -36,6 +36,7 @@ namespace DispelTools
             this.outDirButton = new System.Windows.Forms.Button();
             this.outDirTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.saveSettingsButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -92,11 +93,22 @@ namespace DispelTools
             this.label2.TabIndex = 3;
             this.label2.Text = "Output directory: ";
             // 
+            // saveSettingsButton
+            // 
+            this.saveSettingsButton.Location = new System.Drawing.Point(188, 118);
+            this.saveSettingsButton.Name = "saveSettingsButton";
+            this.saveSettingsButton.Size = new System.Drawing.Size(75, 23);
+            this.saveSettingsButton.TabIndex = 6;
+            this.saveSettingsButton.Text = "Save";
+            this.saveSettingsButton.UseVisualStyleBackColor = true;
+            this.saveSettingsButton.Click += new System.EventHandler(this.saveSettingsButton_Click);
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(466, 189);
+            this.Controls.Add(this.saveSettingsButton);
             this.Controls.Add(this.outDirButton);
             this.Controls.Add(this.outDirTextBox);
             this.Controls.Add(this.label2);
@@ -120,5 +132,6 @@ namespace DispelTools
         private System.Windows.Forms.Button outDirButton;
         private System.Windows.Forms.TextBox outDirTextBox;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button saveSettingsButton;
     }
 }

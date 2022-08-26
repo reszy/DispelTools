@@ -69,5 +69,7 @@ namespace DispelTools
         private void outDirTextBox_TextChanged(object sender, EventArgs e) => SetOutDir(outDirTextBox.Text);
 
         private void SettingsForm_Load(object sender, EventArgs e) => ActiveControl = label1;
+
+        private void saveSettingsButton_Click(object sender, EventArgs e) => Settings.SaveSettings();
     }
 }

@@ -19,7 +19,6 @@ namespace DispelTools.DataPatcher
         private readonly Dictionary<string, List<string>> mappedPatches;
         private readonly List<string> unmappedPatches;
         private PatcherParams patcherParams;
-        private int errosOccured = 0;
 
         public int FilesToPatchCount => mappedPatches.Count;
 
@@ -72,9 +71,8 @@ namespace DispelTools.DataPatcher
             foreach (var targetMapping in mappedPatches)
             {
                 var filename = fs.Path.GetFileName(targetMapping.Key);
-                workReporter.SetText($"Applying patches to {filename}");
                 targetCounter++;
-                workReporter.StartNewStage(targetCounter, null);
+                workReporter.StartNewStage(targetCounter, $"Patching {filename}");
                 var patcher = patcherFactory.CreateInstance();
                 try
                 {
@@ -85,8 +83,9 @@ namespace DispelTools.DataPatcher
                 {
                     workReporter.ReportError(e.Message);
                 }
-                workReporter.ReportFinishedStage(SimpleDetail.NewDetails($"Patching file {filename} finished"));
+                workReporter.ReportFinishedStage();
             }
+            workReporter.ReportDetails(SimpleDetail.NewDetails($"Finished patching {targetCounter} files.", $"Errors count: {workReporter.ErrorsCount}"));
         }
 
         public void SetParams(PatcherParams patcherParams)

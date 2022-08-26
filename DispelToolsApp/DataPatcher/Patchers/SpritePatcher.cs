@@ -140,6 +140,7 @@ namespace DispelTools.DataPatcher.Patchers
                 }
                 CopyUntil(backup.BaseStream.Length, backup, overriden);
             }
+            workReporter.ReportDetails(PatchingStatus.FileCompleted.Create(destinationFile, patchMarks.Count));
 
             //delete source file
             if (!string.IsNullOrEmpty(deleteAfter))

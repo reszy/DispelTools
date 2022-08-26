@@ -21,8 +21,8 @@ namespace DispelTools.DataPatcher
         }
 
         public abstract int Count { get; }
-        public abstract void PatchFile(PatcherParams.OptionNames settings, WorkReporter workReporter);
+        public abstract void PatchFile(PatcherParams settings, DetailedProgressReporter workReporter);
 
-        public abstract void Initialize(List<string> patches, string targetFile);
+        public abstract void Initialize(List<string> patches, string targetFile, DetailedProgressReporter workReporter);
     }
 }

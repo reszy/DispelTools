@@ -28,6 +28,18 @@ namespace DispelTools.GameDataModels.Sprite
             return new SpriteSequence(info, false);
         }
 
+        public SpriteSequence LoadSequence(bool skipLoadingImages)
+        {
+            if (skipLoadingImages)
+            {
+                return SkipSequence();
+            }
+            else
+            {
+                return LoadSequence();
+            }
+        }
+
         public SpriteSequence LoadSequence()
         {
             var info = GetSequenceInfo();

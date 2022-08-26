@@ -2,7 +2,7 @@
 {
     public class SimpleDetail
     {
-        public string Details { get; private set; }
+        public string Details { get; protected set; }
         public static SimpleDetail NewDetails(params string[] results)
         {
             string details = "";

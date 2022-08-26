@@ -15,28 +15,25 @@ namespace DispelTools.DataPatcher
         private readonly IFileSystem fs;
         private readonly IPatcherFactory patcherFactory;
         private readonly BackgroundWorker backgroundWorker;
-        private readonly Patcher patcher;
-        private readonly PatcherParams.OptionNames settings;
 
-        private readonly List<string> patchFiles;
-        private string targetFile;
-        private string targetFileDirectory;
-
+        private readonly Dictionary<string, List<string>> mappedPatches;
+        private readonly List<string> unmappedPatches;
+        private PatcherParams patcherParams;
         private int errosOccured = 0;
 
-        public int FilesToPatchCount => patcher.Count;
+        public int FilesToPatchCount => mappedPatches.Count;
 
         public PatcherManager(IFileSystem fs, IPatcherFactory patcherFactory, BackgroundWorker backgroundWorker)
         {
             this.fs = fs;
             this.patcherFactory = patcherFactory;
-            patchFiles = new List<string>();
+            mappedPatches = new Dictionary<string, List<string>>();
+            unmappedPatches = new List<string>();
             this.backgroundWorker = backgroundWorker;
             if (backgroundWorker != null)
             {
                 backgroundWorker.WorkerReportsProgress = true;
             }
-            patcher = patcherFactory.CreateInstance();
         }
 
         public PatcherManager(IPatcherFactory patcherFactory, BackgroundWorker backgroundWorker)
@@ -44,80 +41,96 @@ namespace DispelTools.DataPatcher
         {
         }
 
-        private string GuessPatchedFile(string patchFileName)
-        {
-            patchFileName = fs.Path.GetFileName(patchFileName);
-            patchFileName = patchFileName.Substring(0, fs.Path.GetFileNameWithoutExtension(patchFileName).IndexOf('.'));
-            string searchPattern = patchFileName + '*';
-
-            IEnumerable<string> fileCandidates = fs.Directory.EnumerateFiles(Settings.GameRootDir, searchPattern, SearchOption.AllDirectories)
-                .Where(name => !name.EndsWith("bak"));
-            if (fileCandidates.Count() == 1)
-            {
-                return fileCandidates.First();
-            }
-            else
-            {
-                return null;
-            }
-        }
-
         public string GetPatchMaping()
         {
             var sb = new StringBuilder();
-            var targetFilename = fs.Path.GetFileName(targetFile);
-            foreach (var patch in patchFiles)
+            foreach (var unmapped in unmappedPatches)
             {
-                sb.Append(fs.Path.GetFileName(patch));
-                sb.Append(" -> ");
-                sb.Append(targetFilename);
+                sb.Append(fs.Path.GetFileName(unmapped));
+                sb.Append(" ->");
                 sb.AppendLine();
+            }
+            foreach (var patchTarget in mappedPatches)
+            {
+                foreach (var patch in patchTarget.Value)
+                {
+                    sb.Append(fs.Path.GetFileName(patch));
+                    sb.Append(" -> ");
+                    sb.Append(patchTarget.Key);
+                    sb.AppendLine();
+                }
             }
             return sb.ToString();
         }
 
         internal void Start()
         {
-            var workReporter = new WorkReporter(backgroundWorker, patcher.Count);
-            patcher.PatchFile(settings, workReporter);
-        }
+            var workReporter = new DetailedProgressReporter(backgroundWorker, mappedPatches.Count);
+            workReporter.SetText("Patching...");
 
-        public void SetPatchFiles(string[] patchFileNames)
-        {
-            patchFiles.Clear();
-            patchFiles.AddRange(patchFileNames);
-
-            targetFile = GuessPatchedFile(patchFiles[0]) ?? targetFile;
-        }
-
-        public bool IsReady()
-        {
-            return !string.IsNullOrEmpty(targetFile) && patchFiles.Count > 0;
-        }
-
-        public string TargetFileDirectory => targetFileDirectory;
-        public void SetTargetFile(string path)
-        {
-            targetFile = path;
-            targetFileDirectory = fs.Path.GetDirectoryName(targetFile);
-        }
-
-        public void Prepare(PatcherParams patcherParams)
-        {
-            try
+            int targetCounter = 0;
+            foreach (var targetMapping in mappedPatches)
             {
-                patcher.Initialize(patcherParams.PatchesFilenames, targetFile);
-            }
-            catch (Exception e)
-            {
-                backgroundWorker.ReportProgress(0, $"Error: {e.Message}");
-                errosOccured++;
+                var filename = fs.Path.GetFileName(targetMapping.Key);
+                workReporter.SetText($"Applying patches to {filename}");
+                targetCounter++;
+                workReporter.StartNewStage(targetCounter, null);
+                var patcher = patcherFactory.CreateInstance();
+                try
+                {
+                    patcher.Initialize(targetMapping.Value, targetMapping.Key, workReporter);
+                    patcher.PatchFile(patcherParams, workReporter);
+                }
+                catch (Exception e)
+                {
+                    workReporter.ReportError(e.Message);
+                }
+                workReporter.ReportFinishedStage(SimpleDetail.NewDetails($"Patching file {filename} finished"));
             }
         }
 
-        public void MapToGameFiles(PatcherParams patcherParams)
+        public void SetParams(PatcherParams patcherParams)
         {
+            this.patcherParams = patcherParams;
+            MapToGameFiles();
+        }
 
+        public void MapToGameFiles()
+        {
+            mappedPatches.Clear();
+            unmappedPatches.Clear();
+
+            var targetCache = new Dictionary<string, string>();
+            foreach (var patch in patcherParams.PatchesFilenames)
+            {
+                var patchFileName = fs.Path.GetFileName(patch);
+                patchFileName = patchFileName.Substring(0, fs.Path.GetFileNameWithoutExtension(patchFileName).IndexOf('.'));
+
+                if (targetCache.ContainsKey(patchFileName))
+                {
+                    mappedPatches[targetCache[patchFileName]].Add(patch);
+                }
+                else
+                {
+                    string searchPattern = patchFileName + patcherFactory.OutputFileExtension;
+                    IEnumerable<string> fileCandidates = fs.Directory.EnumerateFiles(Settings.GameRootDir, searchPattern, SearchOption.AllDirectories)
+                    .Where(name => !name.EndsWith("bak"));
+                    if (fileCandidates.Count() == 1)
+                    {
+                        var target = fileCandidates.First();
+                        targetCache[patchFileName] = target;
+
+                        mappedPatches[target] = new List<string>
+                        {
+                            patch
+                        };
+                    }
+                    else
+                    {
+                        unmappedPatches.Add(patch);
+                    }
+                }
+            }
         }
     }
 }

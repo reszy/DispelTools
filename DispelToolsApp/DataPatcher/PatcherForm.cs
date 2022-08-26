@@ -1,4 +1,5 @@
 ﻿using DispelTools.Common;
+using DispelTools.Common.DataProcessing;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -31,6 +32,7 @@ namespace DispelTools.DataPatcher
             selectPatchesDialog.ShowDialog(() =>
             {
                 patcherParams.PatchesFilenames = selectPatchesDialog.FileNames.ToList();
+                patcherManager.SetParams(patcherParams);
                 selectionTextBox.Text = patcherManager.GetPatchMaping();
             });
             SetIfReady();
@@ -53,7 +55,6 @@ namespace DispelTools.DataPatcher
         {
             if (!e.Cancel)
             {
-                patcherManager.Prepare(patcherParams);
                 progressBar.Maximum = patcherManager.FilesToPatchCount * 1000;
                 patcherManager.Start();
             }
@@ -66,11 +67,11 @@ namespace DispelTools.DataPatcher
             {
                 progressBar.Text = text;
             }
-            //if (e.UserState is ExtractionStatus.SimpleDetail)
-            //{
-            //    var detailsToAdd = e.UserState as ExtractionStatus.SimpleDetail;
-            //    details.AddDetails(detailsToAdd.Details);
-            //}
+            if (e.UserState is SimpleDetail)
+            {
+                var detailsToAdd = e.UserState as SimpleDetail;
+                details.AddDetails(detailsToAdd.Details);
+            }
         }
 
         private void PatchingCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -84,15 +85,11 @@ namespace DispelTools.DataPatcher
 
         private void selectPatchedFileButton_Click(object sender, EventArgs e)
         {
-            selectDestinationFileDialog.Multiselect = true;
+            selectDestinationFileDialog.Multiselect = false;
             selectDestinationFileDialog.Filter = patcherFactory.OutputFileFilter;
             selectPatchesDialog.InitialDirectory = Settings.GameRootDir;
-            if (patcherManager.TargetFileDirectory != null)
-            {
-                selectDestinationFileDialog.InitialDirectory = patcherManager.TargetFileDirectory;
-            }
             selectDestinationFileDialog.ShowDialog(() => {
-                patcherParams.TargetFileNames = selectPatchesDialog.FileNames.ToList();
+                patcherParams.TargetFileName = selectPatchesDialog.FileName;
                 selectionTextBox.Text = patcherManager.GetPatchMaping();
             });
             SetIfReady();

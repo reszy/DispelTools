@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Common\BytesFormatter.cs" />
     <Compile Include="Common\DataProcessing\DetailedProgressReporter.cs" />
+    <Compile Include="Common\DataProcessing\ErrorDetail.cs" />
     <Compile Include="Common\DirectBitmap.cs" />
     <Compile Include="Common\FileExtension.cs" />
     <Compile Include="Common\OpenDialogExtension.cs" />

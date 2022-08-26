@@ -20,6 +20,10 @@ namespace DispelTools.Common.DataProcessing
             ReportProgress(totalInStage);
             ReportDetails(completedDetail);
         }
+        public void ReportFinishedStage()
+        {
+            ReportProgress(totalInStage);
+        }
 
         public void ReportError(string message, string secondaryMessage = null)
         {

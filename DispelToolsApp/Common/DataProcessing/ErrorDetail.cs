@@ -20,7 +20,6 @@ namespace DispelTools.Common.DataProcessing
                 sb.Append("    ");
                 sb.AppendLine(secondaryMessage);
             }
-            sb.AppendLine();
             Details = sb.ToString();
         }
     }

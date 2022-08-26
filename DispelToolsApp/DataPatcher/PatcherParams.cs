@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace DispelTools.DataPatcher
 {
@@ -26,11 +22,12 @@ namespace DispelTools.DataPatcher
         public enum OptionNames { KeepBackupFiles = 1, KeepImageSize = 2 }
         public static OptionNames NoOptions { get; } = 0;
         public bool HaveFilledRequiredParams => PatchesFilenames != null && PatchesFilenames.Count > 0;
+
         //Required
         public List<string> PatchesFilenames { get; set; }
+
         //Optional
         public string TargetFileName { get; set; }
-
         public PatcherOptions options { get; } = new PatcherOptions();
 
     }

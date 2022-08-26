@@ -14,7 +14,7 @@ Dispel Tools are tools made to help extract, edit and identify data from Dispel'
 - Simple Editor - Opens most of files like **ref** or 
 **db**  *(does not open ref files that are text files)*
 - Map Viewer - Generates image of whole map
-- Patcher - Patches sprites by overriding images
+- Patcher - Patches sprites by overwriting images (requires filenames from extraction)
 - Settings - Allows to set game directory and output directory for easier file selection especially for extracor.
 
 ### Configuration file

@@ -100,6 +100,10 @@ namespace DispelTools.Common
 
         private static void SetGameDir(string gameDir)
         {
+            if (!IsValidDirectory(gameDir))
+            {
+                return;
+            }
             if (!FS.Path.IsPathRooted(gameDir))
             {
                 throw new System.ArgumentException("Cannot operate on relative paths");
@@ -120,6 +124,10 @@ namespace DispelTools.Common
 
         private static void SetOutDir(string outDir)
         {
+            if (!IsValidDirectory(outDir))
+            {
+                return;
+            }
             if (!FS.Path.IsPathRooted(outDir))
             {
                 throw new System.ArgumentException("Cannot operate on relative paths");
@@ -137,6 +145,8 @@ namespace DispelTools.Common
                 }
             }
         }
+
+        private static bool IsValidDirectory(string dir) => !string.IsNullOrEmpty(dir) && FS.Directory.Exists(dir);
 
         private static string GetSettingsFilePath()
         {

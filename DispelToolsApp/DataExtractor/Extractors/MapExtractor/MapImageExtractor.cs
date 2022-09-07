@@ -24,7 +24,7 @@ namespace DispelTools.DataExtractor.MapExtractor
                 var savedFilenames = sequence.SaveAsImage(process.OutputDirectory, $"{process.Filename}.{imageNumber}", process.Options.CreateAnimatedGifs, process.Options.BlackAsTransparent);
                 foreach (var filename in savedFilenames)
                 {
-                    process.WorkReporter.ReportFileCreated(process, filename);
+                    process.WorkReporter.ReportFileCreated(process, filename, false);
                 }
             }
         }

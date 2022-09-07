@@ -20,9 +20,12 @@ namespace DispelTools.DataExtractor.ExtractionStatus
             ReportDetails(new SimpleDetail($"Extracting from file: {process.Filename + process.Extension}"));
         }
 
-        public void ReportFileCreated(ExtractionFileProcess process, string createdFilename)
+        public void ReportFileCreated(ExtractionFileProcess process, string createdFilename, bool reportProgress = true)
         {
-            ReportProgress((int)process.Stream.Position);
+            if (reportProgress)
+            {
+                ReportProgress((int)process.Stream.Position);
+            }
             ReportDetails(new SimpleDetail($"Created file: {createdFilename}"));
             process.FilesCreated++;
             FilesCreatedCount++;

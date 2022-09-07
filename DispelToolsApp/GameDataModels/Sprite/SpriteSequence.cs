@@ -23,11 +23,14 @@ namespace DispelTools.GameDataModels.Sprite
             ImagesLoaded = imagesLoaded;
         }
 
-        public void SaveAsImage(string directory, string filename, bool createGifs, bool blackAsTransparent)
+        public string[] SaveAsImage(string directory, string filename, bool createGifs, bool blackAsTransparent)
         {
+            List<string> savedFilenames = new List<string>();
             if (!Animated)
             {
-                frames[0].RawRgb.SaveAsPng($"{directory}\\{filename}.png", blackAsTransparent);
+                var savedFilename = $"{filename}.png";
+                frames[0].RawRgb.SaveAsPng($"{directory}\\{savedFilename}", blackAsTransparent);
+                savedFilenames.Add(savedFilename);
             }
             else
             {
@@ -42,16 +45,22 @@ namespace DispelTools.GameDataModels.Sprite
                         var offset = CalculateFrameOffset(center, new Point(frames[i].OriginX, frames[i].OriginY));
                         gifFrames.Add(frames[i].RawRgb.ToFrame(offset.X, offset.Y));
                     }
-                    ImageProcessing.ImageConverter.SaveAsGif(gifFrames, size.Width, size.Height, $"{directory}\\{filename}.gif", blackAsTransparent);
+
+                    var savedFilename = $"{filename}.gif";
+                    ImageProcessing.ImageConverter.SaveAsGif(gifFrames, size.Width, size.Height, $"{directory}\\{savedFilename}", blackAsTransparent);
+                    savedFilenames.Add(savedFilename);
                 }
                 else
                 {
                     for (int i = 0; i < frames.Length; i++)
                     {
-                        frames[i].RawRgb.SaveAsPng($"{directory}\\{filename}_f{i}.png", blackAsTransparent);
+                        var savedFilename = $"{filename}_f{i}.png";
+                        frames[i].RawRgb.SaveAsPng($"{directory}\\{savedFilename}", blackAsTransparent);
+                        savedFilenames.Add(savedFilename);
                     }
                 }
             }
+            return savedFilenames.ToArray();
         }
 
         public SpriteFrame GetFrame(int i) => frames[i];

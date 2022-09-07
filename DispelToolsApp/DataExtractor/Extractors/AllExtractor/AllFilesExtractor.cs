@@ -40,7 +40,7 @@ namespace DispelTools.DataExtractor.AllExtractor
                 }
                 break;
                 default:
-                    throw new ArgumentException($"File {process.Filename}{process.Extension} cannot be processed");
+                    throw new UnsupportedFileException($"File {process.Filename}{process.Extension} cannot be processed");
             }
         }
 

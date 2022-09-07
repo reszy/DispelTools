@@ -160,6 +160,7 @@
     <Compile Include="DataExtractor\Extractors\StringExtractor\StringExtractor.cs" />
     <Compile Include="DataExtractor\Extractors\StringExtractor\StringExtractorFactory.cs" />
     <Compile Include="DataExtractor\IExtractorFactory.cs" />
+    <Compile Include="DataExtractor\UnsupportedFileException.cs" />
     <Compile Include="DataPatcher\PatcherOptionsForm.cs">
       <SubType>Form</SubType>
     </Compile>

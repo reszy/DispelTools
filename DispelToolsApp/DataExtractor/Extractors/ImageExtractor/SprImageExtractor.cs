@@ -32,12 +32,14 @@ namespace DispelTools.DataExtractor.ImageExtractor
         private void LoadAndSaveSequence(ExtractionFileProcess process, SpriteLoader loader, int imageNumber)
         {
             var sequence = loader.LoadSequence();
-            string createdFileName = $"{process.Filename}.{imageNumber}";
 
             if (!Settings.ExtractorReadOnly)
             {
-                sequence.SaveAsImage(process.OutputDirectory, createdFileName, process.Options.CreateAnimatedGifs, process.Options.BlackAsTransparent);
-                process.WorkReporter.ReportFileCreated(process, createdFileName);
+                var savedFilenames = sequence.SaveAsImage(process.OutputDirectory, $"{process.Filename}.{imageNumber}", process.Options.CreateAnimatedGifs, process.Options.BlackAsTransparent);
+                foreach (var filename in savedFilenames)
+                {
+                    process.WorkReporter.ReportFileCreated(process, filename);
+                }
             }
         }
 

@@ -19,12 +19,13 @@ namespace DispelTools.DataExtractor.MapExtractor
 
         private void SaveSequence(ExtractionFileProcess process, SpriteSequence sequence, int imageNumber)
         {
-            string createdFileName = $"{process.Filename}.{imageNumber}";
-
             if (!Settings.ExtractorReadOnly)
             {
-                sequence.SaveAsImage(process.OutputDirectory, createdFileName, process.Options.CreateAnimatedGifs, process.Options.BlackAsTransparent);
-                process.WorkReporter.ReportFileCreated(process, createdFileName);
+                var savedFilenames = sequence.SaveAsImage(process.OutputDirectory, $"{process.Filename}.{imageNumber}", process.Options.CreateAnimatedGifs, process.Options.BlackAsTransparent);
+                foreach (var filename in savedFilenames)
+                {
+                    process.WorkReporter.ReportFileCreated(process, filename);
+                }
             }
         }
     }

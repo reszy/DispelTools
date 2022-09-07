@@ -1,4 +1,6 @@
-﻿namespace DispelTools.Common.DataProcessing
+﻿using System.Text;
+
+namespace DispelTools.Common.DataProcessing
 {
     public class SimpleDetail
     {
@@ -10,13 +12,7 @@
         }
         public SimpleDetail (params string[] results)
         {
-            string details = "";
-
-            foreach (string s in results)
-            {
-                details += s + "\r\n";
-            }
-            Details = details;
+            Details = string.Join("\r\n", results);
         }
     }
 }

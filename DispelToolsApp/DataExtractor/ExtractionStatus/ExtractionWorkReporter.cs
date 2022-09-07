@@ -8,12 +8,29 @@ namespace DispelTools.DataExtractor.ExtractionStatus
         public int FilesCreatedCount { get; private set; }
         public ExtractionWorkReporter(BackgroundWorker backgroundWorker, int stageCount = 1) : base(backgroundWorker, stageCount) { }
 
-        public void PrepareWorkerForProcess(ExtractionFileProcess process) => PrepareWorker((int)process.Stream.Length); //all files are below 2GB
-        public void ReportFileCreated(ExtractionFileProcess process, string filename)
+        public void PrepareWorkerForProcess(ExtractionFileProcess process)
+        {
+            PrepareWorker((int)process.Stream.Length); //all files are below 2GB
+        }
+
+        public void ReportFileExtractionStart(ExtractionFileProcess process)
+        {
+            PrepareWorkerForProcess(process);
+            ReportProgress(0);
+            ReportDetails(new SimpleDetail($"Extracting from file: {process.Filename + process.Extension}"));
+        }
+
+        public void ReportFileCreated(ExtractionFileProcess process, string createdFilename)
         {
             ReportProgress((int)process.Stream.Position);
-            ReportDetails(new SimpleDetail($"Created file: {filename}"));
+            ReportDetails(new SimpleDetail($"Created file: {createdFilename}"));
+            process.FilesCreated++;
             FilesCreatedCount++;
+        }
+
+        public void ReportFileComplete(ExtractionFileProcess process)
+        {
+            ReportFinishedStage(new SimpleDetail($"Total files created: {process.FilesCreated}", ""));
         }
 
         /// <summary>
@@ -25,8 +42,8 @@ namespace DispelTools.DataExtractor.ExtractionStatus
         public void ReportFinishedExtraction(int fromFilesTotal)
         {
             ReportDetails(new SimpleDetail(
-                $"From {fromFilesTotal} files, created {FilesCreatedCount} files total.",
-                $"Errors count: {ErrorsCount}, Skips: {SkipCount}"
+                $"Finished extracting {fromFilesTotal} files",
+                $"Created files: {FilesCreatedCount}, Errors: {ErrorsCount}, Skips: {SkipCount}"
                 ));
         }
     }

@@ -5,6 +5,7 @@ namespace DispelTools.Common.DataProcessing
     public class DetailedProgressReporter : WorkReporter
     {
         public int ErrorsCount { get; private set; }
+        public int SkipCount { get; private set; }
         public DetailedProgressReporter(BackgroundWorker backgroundWorker, int stageCount = 1) : base(backgroundWorker, stageCount) { }
 
         protected void PrepareWorker(int totalStageProgress) => totalInStage = totalStageProgress;
@@ -26,6 +27,12 @@ namespace DispelTools.Common.DataProcessing
         {
             ErrorsCount++;
             backgroundWorker.ReportProgress(currentProgress, new ErrorDetail(message, secondaryMessage));
+        }
+
+        public void ReportSkip(string message)
+        {
+            SkipCount++;
+            backgroundWorker.ReportProgress(currentProgress, new SimpleDetail(message));
         }
 
         /// <summary>

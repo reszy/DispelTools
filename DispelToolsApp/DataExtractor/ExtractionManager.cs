@@ -15,7 +15,6 @@ namespace DispelTools.DataExtractor
         private readonly List<string> filenames;
         private readonly string outputDirectory;
         private int currentFileInProcess;
-        private int errosOccured = 0;
         private readonly Extractor extractor;
 
         private List<ExtractionFile> preparedFiles;
@@ -51,8 +50,6 @@ namespace DispelTools.DataExtractor
 
         public void Start()
         {
-            int createdFilesCount = 0;
-
             var workReporter = new ExtractionWorkReporter(backgroundWorker, preparedFiles.Count);
             workReporter.SetText("Extracting...");
             for (currentFileInProcess = 0; currentFileInProcess < preparedFiles.Count; currentFileInProcess++)
@@ -66,25 +63,21 @@ namespace DispelTools.DataExtractor
                     {
                         extractor.ExtractFile(fileProcess);
                     }
+                    catch (UnsupportedFileException e)
+                    {
+                        workReporter.ReportSkip($"Extension {fileProcess.Extension} not supported");
+                    }
                     catch (Exception e)
                     {
                         Metrics.List(MetricFile.SpriteFileMetric, $"ExtractorError.{extractor.GetType().Name}.{fileProcess.Filename}", $"{e.Message} p: {fileProcess.File.BaseStream.Position}");
-                        errorMessage = $"Error: {e.Message}";
-                        errosOccured++;
+                        workReporter.ReportError(e.Message);
                         System.Diagnostics.Debug.WriteLine(e.ToString());
                     }
                     var resultDetails = fileProcess.ResultDetails;
                     workReporter.ReportFinishedStage(FileCompleted.Create(errorMessage ?? resultDetails.ErrorMessage, fileProcess.Filename, fileProcess.FilesCreated));
-                    if (resultDetails.ErrorMessage != null && resultDetails.ErrorMessage.Length > 0)
-                    {
-                        errosOccured++;
-                    }
-                    createdFilesCount += resultDetails.FilesCreated;
                 }
             }
-            workReporter.ReportDetails(
-                $"From {preparedFiles.Count} files, created {createdFilesCount} files total.",
-                $"Errors count: {errosOccured}");
+            workReporter.ReportFinishedExtraction(preparedFiles.Count);
         }
 
         private List<ExtractionFile> PrepareListOfFilesToExtract()
@@ -96,7 +89,6 @@ namespace DispelTools.DataExtractor
             catch (Exception e)
             {
                 backgroundWorker.ReportProgress(0, $"Error: {e.Message}");
-                errosOccured++;
                 return new List<ExtractionFile>();
             }
         }

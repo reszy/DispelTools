@@ -4,9 +4,9 @@ namespace DispelTools.DataPatcher.PatchingStatus
 {
     public static class FileCompleted
     {
-        public static SimpleDetail Create(string patchedFile, int patchesApplied)
+        public static SimpleDetail Create(int patchesApplied)
         {
-            return new SimpleDetail($"Finished patching file {patchedFile}", $"Total patches applied: {patchesApplied}");
+            return new SimpleDetail($"Total patches applied: {patchesApplied}", "");
         }
     }
 }

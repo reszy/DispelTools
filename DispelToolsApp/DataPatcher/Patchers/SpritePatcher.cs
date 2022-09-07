@@ -131,6 +131,7 @@ namespace DispelTools.DataPatcher.Patchers
                     {
                         ApplyImagePatch(overriden, patch.Value, targetColorManagement, options.KeepImageSize);
                         backup.Skip(patch.Value.Height * patch.Value.Width * sourceColorManagement.BytesConsumed + imageSizeByteSize);//skip image bytes
+                        workReporter.ReportDetails($"Applied patch: {fs.Path.GetFileName(patch.Value.PatchFile.PatchFileName)}");
                     }
                     catch (Exception e) when (e is IOException || e is ArgumentException)
                     {
@@ -140,7 +141,7 @@ namespace DispelTools.DataPatcher.Patchers
                 }
                 CopyUntil(backup.BaseStream.Length, backup, overriden);
             }
-            workReporter.ReportDetails(PatchingStatus.FileCompleted.Create(destinationFile, patchMarks.Count));
+            workReporter.ReportDetails(PatchingStatus.FileCompleted.Create(patchMarks.Count));
 
             //delete source file
             if (!string.IsNullOrEmpty(deleteAfter))

@@ -8,7 +8,7 @@ using System.IO.Abstractions;
 
 namespace DispelTools.DataExtractor
 {
-    public class ExtractionManager
+    public partial class ExtractionManager
     {
         public IFileSystem fs;
         private readonly BackgroundWorker backgroundWorker;
@@ -56,9 +56,8 @@ namespace DispelTools.DataExtractor
             {
                 using (var fileProcess = preparedFiles[currentFileInProcess].CreateProcess(ExtractionParams, workReporter))
                 {
-                    string errorMessage = null;
                     workReporter.StartNewStage(currentFileInProcess + 1, null);
-                    workReporter.PrepareWorkerForProcess(fileProcess);
+                    workReporter.ReportFileExtractionStart(fileProcess);
                     try
                     {
                         extractor.ExtractFile(fileProcess);
@@ -74,7 +73,7 @@ namespace DispelTools.DataExtractor
                         System.Diagnostics.Debug.WriteLine(e.ToString());
                     }
                     var resultDetails = fileProcess.ResultDetails;
-                    workReporter.ReportFinishedStage(FileCompleted.Create(errorMessage ?? resultDetails.ErrorMessage, fileProcess.Filename, fileProcess.FilesCreated));
+                    workReporter.ReportFileComplete(fileProcess);
                 }
             }
             workReporter.ReportFinishedExtraction(preparedFiles.Count);

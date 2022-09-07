@@ -13,12 +13,13 @@ namespace DispelTools.Common.DataProcessing
         {
             var sb = new StringBuilder();
             sb.Append("Error: ");
-            sb.AppendLine(message);
+            sb.Append(message);
 
             if (!string.IsNullOrEmpty(secondaryMessage))
             {
+                sb.AppendLine();
                 sb.Append("    ");
-                sb.AppendLine(secondaryMessage);
+                sb.Append(secondaryMessage);
             }
             Details = sb.ToString();
         }

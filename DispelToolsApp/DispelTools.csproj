@@ -132,7 +132,6 @@
     <Compile Include="DataExtractor\ExtractionFileProcess.cs" />
     <Compile Include="DataExtractor\ExtractionManager.cs" />
     <Compile Include="DataExtractor\ExtractionStatus\ExtractionWorkReporter.cs" />
-    <Compile Include="DataExtractor\ExtractionStatus\FileCompleted.cs" />
     <Compile Include="Common\DataProcessing\SimpleDetail.cs" />
     <Compile Include="DataExtractor\Extractor.cs" />
     <Compile Include="DataExtractor\ExtractorForm.cs">

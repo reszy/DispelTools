@@ -32,7 +32,7 @@ namespace DispelTools.Common.DataProcessing
         public void ReportSkip(string message)
         {
             SkipCount++;
-            backgroundWorker.ReportProgress(currentProgress, new SimpleDetail(message));
+            backgroundWorker.ReportProgress(currentProgress, new SimpleDetail("Skip: " + message));
         }
 
         /// <summary>

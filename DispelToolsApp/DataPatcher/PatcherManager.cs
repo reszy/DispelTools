@@ -73,6 +73,7 @@ namespace DispelTools.DataPatcher
                 var filename = fs.Path.GetFileName(targetMapping.Key);
                 targetCounter++;
                 workReporter.StartNewStage(targetCounter, $"Patching {filename}");
+                workReporter.ReportDetails($"Patching file: {filename}");
                 var patcher = patcherFactory.CreateInstance();
                 try
                 {

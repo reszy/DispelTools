@@ -41,6 +41,10 @@ namespace DispelTools.GameDataModels.Map.Reader
 
             int width = file.ReadInt32();
             int height = file.ReadInt32();
+            if (width <= 0 || width > 30 || height <= 0 || height > 30)
+            {
+                throw new ArgumentException($"Map have incorrect size of {width}x{height}");
+            }
             map = new MapModel(width, height);
 
             ReadFirstBlock(file);

@@ -5,40 +5,50 @@ namespace DispelTools.DataExtractor.SoundExtractor
 {
     public class SnfSoundExtractor : Extractor
     {
-        private static readonly short PCMAudioFormat = 1;
-        private static readonly short NumberOfChannels = 1;
+        private class SoundHeader
+        {
+            public int DataSize { get; set; }
+            public short PCMAudioFormat { get; set; }
+            public short NumberOfChannels { get; set; }
+            public int SampleRate { get; set; }
+            public int ByteRate { get; set; }
+            public short BlockAlign { get; set; }
+            public short BitsPerSample { get; set; }
+        }
 
         public override void ExtractFile(ExtractionFileProcess process)
         {
             var file = process.File;
-            int datasize = file.ReadInt32();
-            if (datasize == file.BaseStream.Length - 22)
+            var header = new SoundHeader();
+            header.DataSize = file.ReadInt32();
+            if (header.DataSize == file.BaseStream.Length - 22)
             {
-                file.ReadInt32();
-                int sampleRate = file.ReadInt32();
-                file.ReadInt32();
-                file.ReadInt16();
-                short bitsPerSample = file.ReadInt16();
+                header.PCMAudioFormat = file.ReadInt16();
+                header.NumberOfChannels = file.ReadInt16();
+                header.SampleRate = file.ReadInt32();
+                header.ByteRate = file.ReadInt32();
+                header.BlockAlign = file.ReadInt16();
+                header.BitsPerSample = file.ReadInt16();
                 file.ReadInt16();
                 if (!Settings.ExtractorReadOnly)
                 {
-                    SaveToWaveFormat(process, file, datasize, sampleRate, bitsPerSample);
+                    SaveToWaveFormat(process, file, header);
                 }
             }
             else
             {
-                throw new ExtractException($"{process.ExceptionMessagePrefix()} expected data size of ({file.BaseStream.Length - 22}) was ({datasize})");
+                throw new ExtractException($"{process.ExceptionMessagePrefix()} expected data size of ({file.BaseStream.Length - 22}) was ({header.DataSize})");
             }
         }
 
-        private void SaveToWaveFormat(ExtractionFileProcess process, BinaryReader reader, int dataSize, int sampleRate, short bitsPerSample)
+        private void SaveToWaveFormat(ExtractionFileProcess process, BinaryReader reader, SoundHeader header)
         {
             var outputFileName = $"{process.Filename}.wav";
             using (var writer = new BinaryWriter(new FileStream($"{process.OutputDirectory}\\{outputFileName}", FileMode.Create)))
             {
-                WriteRiff(writer, dataSize);
-                WriteFmt(writer, sampleRate, bitsPerSample);
-                WriteData(writer, reader, dataSize);
+                WriteRiff(writer, header.DataSize);
+                WriteFmt(writer, header);
+                WriteData(writer, reader, header.DataSize);
             }
             process.WorkReporter.ReportFileCreated(process, outputFileName);
         }
@@ -50,16 +60,16 @@ namespace DispelTools.DataExtractor.SoundExtractor
             writer.Write(new char[4] { 'W', 'A', 'V', 'E' });
         }
 
-        private void WriteFmt(BinaryWriter writer, int sampleRate, short bitsPerSample)
+        private void WriteFmt(BinaryWriter writer, SoundHeader header)
         {
             writer.Write(new char[4] { 'f', 'm', 't', ' ' });
             writer.Write(16);
-            writer.Write(PCMAudioFormat);
-            writer.Write(NumberOfChannels);
-            writer.Write(sampleRate);
-            writer.Write(sampleRate * NumberOfChannels * (bitsPerSample / 8));
-            writer.Write((short)(NumberOfChannels * (bitsPerSample / 8)));
-            writer.Write(bitsPerSample);
+            writer.Write(header.PCMAudioFormat);
+            writer.Write(header.NumberOfChannels);
+            writer.Write(header.SampleRate);
+            writer.Write(header.ByteRate);
+            writer.Write(header.BlockAlign);
+            writer.Write(header.BitsPerSample);
         }
 
         private void WriteData(BinaryWriter writer, BinaryReader reader, int dataSize)

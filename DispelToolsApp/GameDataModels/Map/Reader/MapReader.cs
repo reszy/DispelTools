@@ -197,6 +197,7 @@ namespace DispelTools.GameDataModels.Map.Reader
             for (int i = 0; i < c3; i++)
             {
                 ids[i] = file.ReadInt16();
+                Metrics.Count(MetricFile.MapReadMetric, Path.GetFileName(filename), $"btl id:{ids[i]}");
             }
 
             map.AddTiledObject(x, y, ids);
@@ -215,9 +216,10 @@ namespace DispelTools.GameDataModels.Map.Reader
                 for (int x = 0; x < map.TiledMapSize.Width; x++)
                 {
                     int bytes = file.ReadInt32();
-                    int gtlBytes = bytes >> 10;
-                    map.SetGtl(x, y, gtlBytes);
+                    int gtlId = bytes >> 10;
+                    map.SetGtl(x, y, gtlId);
                     map.SetCollision(x, y, (bytes & 0x1) == 1);
+                    Metrics.Count(MetricFile.MapReadMetric, Path.GetFileName(filename), $"gtl id:{gtlId}");
                 }
             }
         }

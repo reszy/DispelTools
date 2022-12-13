@@ -8,15 +8,17 @@ namespace DispelTools.GameDataModels.Map.Generator
     {
         private readonly WorkReporter workReporter;
         private readonly MapContainer mapContainer;
+        private readonly TextGenerator textGenerator;
         private GeneratorOptions generatorOptions;
 
         private int progressTracker = 0;
         private MapModel Model => mapContainer?.Model;
 
-        public MapImageGenerator(WorkReporter workReporter, MapContainer mapContainer)
+        public MapImageGenerator(WorkReporter workReporter, MapContainer mapContainer, TextGenerator textGenerator)
         {
             this.workReporter = workReporter;
             this.mapContainer = mapContainer;
+            this.textGenerator = textGenerator;
         }
         public DirectBitmap GenerateMap(GeneratorOptions generatorOptions)
         {
@@ -27,10 +29,7 @@ namespace DispelTools.GameDataModels.Map.Generator
 
             workReporter.SetTotal(CalculateTotalProgress());
 
-            if (generatorOptions.GTL)
-            {
-                PlotGtlAndCollisions(mapImage);
-            }
+            PlotBase(mapImage);
             if (generatorOptions.TiledObjects)
             {
                 PlotTiledObjects(mapImage);
@@ -46,16 +45,22 @@ namespace DispelTools.GameDataModels.Map.Generator
             return mapImage;
         }
 
-        private void PlotGtlAndCollisions(DirectBitmap image)
+        private void PlotBase(DirectBitmap image)
         {
+            var defaultTile = TileSet.BlankTile;
             for (int y = 0; y < Model.TiledMapSize.Height; y++)
             {
                 for (int x = 0; x < Model.TiledMapSize.Width; x++)
                 {
-                    var tile = mapContainer.Gtl[Model.GetGtlId(x, y)];
+                    var tile = generatorOptions.GTL ? mapContainer.Gtl[Model.GetGtlId(x, y)] : defaultTile;
                     if (generatorOptions.Collisions && Model.GetCollision(x, y))
                     {
                         tile = tile.MixColor(Color.Red, 128);
+                    }
+                    var eventId = Model.GetEventId(x, y);
+                    if (generatorOptions.Events && eventId > 0)
+                    {
+                        tile = tile.MixColor(Color.Blue, 128);
                     }
                     var mapCoords = ConvertMapCoordsToImageCoords(x, y);
                     if (generatorOptions.Occlusion)
@@ -64,6 +69,11 @@ namespace DispelTools.GameDataModels.Map.Generator
                         mapCoords.Y -= Model.MapNonOccludedStart.Y;
                     }
                     tile.PlotTileOnBitmap(image, mapCoords.X, mapCoords.Y);
+
+                    if (generatorOptions.Events && eventId > 0)
+                    {
+                        textGenerator.PlotIdOnMap(image, eventId, mapCoords.X + TileSet.TILE_WIDTH_HALF, mapCoords.Y + TextGenerator.DigitHeight);
+                    }
                     workReporter.ReportProgress(++progressTracker);
                 }
             }

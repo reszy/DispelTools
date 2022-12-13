@@ -24,9 +24,11 @@ namespace DispelTools.GameDataModels.Map
 
         private readonly List<Tile> tiles;
         private static Tile unknownTile;
+        private static Tile blankTile;
         private bool disposedValue;
 
         public static Tile UnknownTile { get { if (unknownTile == null) { unknownTile = Tile.CreateTile(Color.Magenta); } return unknownTile; } }
+        public static Tile BlankTile { get { if (blankTile == null) { blankTile = Tile.CreateTile(Color.FromArgb(0, 0, 0, 0)); } return blankTile; } }
 
         public int Count => tiles.Count;
 

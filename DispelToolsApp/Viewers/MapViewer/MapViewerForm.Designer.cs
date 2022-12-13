@@ -64,6 +64,7 @@
             this.pictureBox = new DispelTools.Components.PictureDiplayer();
             this.occludeCheckBox = new System.Windows.Forms.CheckBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.eventsCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.tileShowNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tileDiplayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -190,6 +191,7 @@
             // 
             this.tileDiplayer.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.tileDiplayer.CurrentMouseMode = DispelTools.Components.PictureDiplayer.MouseMode.Pointer;
+            this.tileDiplayer.DebugText = "";
             this.tileDiplayer.Font = new System.Drawing.Font("Courier New", 10F);
             this.tileDiplayer.Image = null;
             this.tileDiplayer.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
@@ -211,15 +213,16 @@
             this.progressBar.Size = new System.Drawing.Size(882, 40);
             this.progressBar.TabIndex = 2;
             // 
-            // pictureBox1
+            // pictureBox
             // 
             this.pictureBox.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.pictureBox.CurrentMouseMode = DispelTools.Components.PictureDiplayer.MouseMode.TileSelector;
+            this.pictureBox.DebugText = "";
             this.pictureBox.Font = new System.Drawing.Font("Courier New", 10F);
             this.pictureBox.Image = null;
             this.pictureBox.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
             this.pictureBox.Location = new System.Drawing.Point(12, 32);
-            this.pictureBox.Name = "pictureBox1";
+            this.pictureBox.Name = "pictureBox";
             this.pictureBox.OffsetTileSelector = false;
             this.pictureBox.Size = new System.Drawing.Size(1019, 664);
             this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -238,11 +241,22 @@
             this.occludeCheckBox.Text = "Occlude";
             this.occludeCheckBox.UseVisualStyleBackColor = true;
             // 
+            // eventsCheckBox
+            // 
+            this.eventsCheckBox.AutoSize = true;
+            this.eventsCheckBox.Location = new System.Drawing.Point(1039, 342);
+            this.eventsCheckBox.Name = "eventsCheckBox";
+            this.eventsCheckBox.Size = new System.Drawing.Size(59, 17);
+            this.eventsCheckBox.TabIndex = 16;
+            this.eventsCheckBox.Text = "Events";
+            this.eventsCheckBox.UseVisualStyleBackColor = true;
+            // 
             // MapViewerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1173, 754);
+            this.Controls.Add(this.eventsCheckBox);
             this.Controls.Add(this.occludeCheckBox);
             this.Controls.Add(this.statsTextBox);
             this.Controls.Add(this.spritesCheckBox);
@@ -287,5 +301,6 @@
         private System.Windows.Forms.RichTextBox statsTextBox;
         private System.Windows.Forms.CheckBox occludeCheckBox;
         private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.CheckBox eventsCheckBox;
     }
 }

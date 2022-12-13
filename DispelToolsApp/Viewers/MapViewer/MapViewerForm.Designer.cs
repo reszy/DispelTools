@@ -105,7 +105,7 @@
             // collisionsCheckBox
             // 
             this.collisionsCheckBox.AutoSize = true;
-            this.collisionsCheckBox.Location = new System.Drawing.Point(1039, 248);
+            this.collisionsCheckBox.Location = new System.Drawing.Point(1038, 248);
             this.collisionsCheckBox.Name = "collisionsCheckBox";
             this.collisionsCheckBox.Size = new System.Drawing.Size(69, 17);
             this.collisionsCheckBox.TabIndex = 7;
@@ -115,7 +115,7 @@
             // btlCheckBox
             // 
             this.btlCheckBox.AutoSize = true;
-            this.btlCheckBox.Location = new System.Drawing.Point(1039, 272);
+            this.btlCheckBox.Location = new System.Drawing.Point(1038, 294);
             this.btlCheckBox.Name = "btlCheckBox";
             this.btlCheckBox.Size = new System.Drawing.Size(46, 17);
             this.btlCheckBox.TabIndex = 8;
@@ -125,7 +125,7 @@
             // roofsCheckBox
             // 
             this.roofsCheckBox.AutoSize = true;
-            this.roofsCheckBox.Location = new System.Drawing.Point(1039, 296);
+            this.roofsCheckBox.Location = new System.Drawing.Point(1038, 340);
             this.roofsCheckBox.Name = "roofsCheckBox";
             this.roofsCheckBox.Size = new System.Drawing.Size(54, 17);
             this.roofsCheckBox.TabIndex = 9;
@@ -171,7 +171,7 @@
             // spritesCheckBox
             // 
             this.spritesCheckBox.AutoSize = true;
-            this.spritesCheckBox.Location = new System.Drawing.Point(1039, 319);
+            this.spritesCheckBox.Location = new System.Drawing.Point(1038, 317);
             this.spritesCheckBox.Name = "spritesCheckBox";
             this.spritesCheckBox.Size = new System.Drawing.Size(94, 17);
             this.spritesCheckBox.TabIndex = 13;
@@ -244,7 +244,7 @@
             // eventsCheckBox
             // 
             this.eventsCheckBox.AutoSize = true;
-            this.eventsCheckBox.Location = new System.Drawing.Point(1039, 342);
+            this.eventsCheckBox.Location = new System.Drawing.Point(1038, 271);
             this.eventsCheckBox.Name = "eventsCheckBox";
             this.eventsCheckBox.Size = new System.Drawing.Size(59, 17);
             this.eventsCheckBox.TabIndex = 16;

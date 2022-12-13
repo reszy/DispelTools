@@ -62,7 +62,7 @@ namespace DispelTools.GameDataModels.Map.Reader
             ReadTiledObjectsBlock(file);
             workReporter.ReportProgress(5);
 
-            ReadEventAndBtlgBlock(file);
+            ReadEventBlock(file);
             workReporter.ReportProgress(6);
 
             ReadTilesAndAccessBlock(file);
@@ -206,7 +206,17 @@ namespace DispelTools.GameDataModels.Map.Reader
             file.Skip((c1 + c2 + c3) * 4);
         }
 
-        private void ReadEventAndBtlgBlock(BinaryReader file) => file.Skip(map.TiledMapSize.Width * map.TiledMapSize.Height * 4);//TODO event layer
+        private void ReadEventBlock(BinaryReader file)
+        {
+            for (int y = 0; y < map.TiledMapSize.Height; y++)
+            {
+                for (int x = 0; x < map.TiledMapSize.Width; x++)
+                {
+                    byte[] bytes = file.ReadBytes(4);
+                    map.SetEventId(x, y, bytes[0]);
+                }
+            }
+        }
 
         private void ReadTilesAndAccessBlock(BinaryReader file)
         {

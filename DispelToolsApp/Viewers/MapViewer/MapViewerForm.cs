@@ -9,6 +9,7 @@ using DispelTools.ImageProcessing;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -22,6 +23,7 @@ namespace DispelTools.Viewers.MapViewer
 
         private DirectBitmap mapImage;
         private DirectBitmap sidePreviewImage;
+        private readonly TextGenerator textGenerator;
 
         private string filename;
         private bool generatedOccluded;
@@ -32,6 +34,7 @@ namespace DispelTools.Viewers.MapViewer
         public MapViewerForm()
         {
             InitializeComponent();
+            textGenerator = new TextGenerator(new Font(FontFamily.GenericMonospace, 8.0f));
 
             pictureBox.PixelSelectedEvent += TileClicked;
 
@@ -105,7 +108,7 @@ namespace DispelTools.Viewers.MapViewer
             }
 
             workReporter.StartNewStage(4, "Generating map...");
-            var mapGenerator = new MapImageGenerator(workReporter, mapContainer);
+            var mapGenerator = new MapImageGenerator(workReporter, mapContainer, textGenerator);
             mapImage = mapGenerator.GenerateMap(
                 new GeneratorOptions()
                 {
@@ -114,7 +117,8 @@ namespace DispelTools.Viewers.MapViewer
                     Collisions = collisionsCheckBox.Checked,
                     TiledObjects = btlCheckBox.Checked,
                     Roofs = roofsCheckBox.Checked,
-                    Sprites = spritesCheckBox.Checked
+                    Sprites = spritesCheckBox.Checked,
+                    Events = eventsCheckBox.Checked,
                 });
         }
 

@@ -8,5 +8,6 @@
         public bool Collisions { get; set; } = false;
         public bool TiledObjects { get; set; } = false;
         public bool Roofs { get; set; } = false;
+        public bool Events { get; set; } = false;
     }
 }

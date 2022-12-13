@@ -39,6 +39,9 @@ function bumpVersion() {
     fi
 
     ((versionArray[position]+=1))
+    for ((i=position+1; i<${#versionArray[@]}; i++)); do
+        versionArray[i]=0
+    done
 
     local version="${versionArray[0]}.${versionArray[1]}.${versionArray[2]}.${versionArray[3]}"
     tag="v${versionArray[0]}.${versionArray[1]}.${versionArray[3]}"

@@ -53,14 +53,16 @@ namespace DispelTools.GameDataModels.Map.Generator
                 for (int x = 0; x < Model.TiledMapSize.Width; x++)
                 {
                     var tile = generatorOptions.GTL ? mapContainer.Gtl[Model.GetGtlId(x, y)] : defaultTile;
-                    if (generatorOptions.Collisions && Model.GetCollision(x, y))
-                    {
-                        tile = tile.MixColor(Color.Red, 128);
-                    }
+
+                    var drawCollision = generatorOptions.Collisions && Model.GetCollision(x, y);
                     var eventId = Model.GetEventId(x, y);
-                    if (generatorOptions.Events && eventId > 0)
+
+                    var drawEvent = generatorOptions.Events && eventId > 0;
+
+                    if(drawCollision || drawEvent)
                     {
-                        tile = tile.MixColor(Color.Blue, 128);
+                        var tintColor = drawEvent && drawCollision ? Color.Yellow : (drawEvent ? Color.Blue : Color.Red);
+                        tile = tile.MixColor(tintColor, 64);
                     }
                     var mapCoords = ConvertMapCoordsToImageCoords(x, y);
                     if (generatorOptions.Occlusion)
@@ -70,7 +72,7 @@ namespace DispelTools.GameDataModels.Map.Generator
                     }
                     tile.PlotTileOnBitmap(image, mapCoords.X, mapCoords.Y);
 
-                    if (generatorOptions.Events && eventId > 0)
+                    if (drawEvent)
                     {
                         textGenerator.PlotIdOnMap(image, eventId, mapCoords.X + TileSet.TILE_WIDTH_HALF, mapCoords.Y + TextGenerator.DigitHeight);
                     }

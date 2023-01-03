@@ -73,6 +73,7 @@
     <Compile Include="Common\DataProcessing\ErrorDetail.cs" />
     <Compile Include="Common\DirectBitmap.cs" />
     <Compile Include="Common\FileExtension.cs" />
+    <Compile Include="Common\MagickImageSave.cs" />
     <Compile Include="Common\OpenDialogExtension.cs" />
     <Compile Include="Common\RawRgb.cs" />
     <Compile Include="Common\Settings.cs" />
@@ -307,6 +308,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Viewers\MapViewer\MapViewerForm.resx">
       <DependentUpon>MapViewerForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

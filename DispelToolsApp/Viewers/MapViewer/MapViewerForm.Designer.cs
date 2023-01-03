@@ -56,7 +56,7 @@
             this.gtlCheckBox = new System.Windows.Forms.CheckBox();
             this.generateButton = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.button1 = new System.Windows.Forms.Button();
+            this.debugButton = new System.Windows.Forms.Button();
             this.spritesCheckBox = new System.Windows.Forms.CheckBox();
             this.statsTextBox = new System.Windows.Forms.RichTextBox();
             this.tileDiplayer = new DispelTools.Components.PictureDiplayer();
@@ -65,6 +65,8 @@
             this.occludeCheckBox = new System.Windows.Forms.CheckBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.eventsCheckBox = new System.Windows.Forms.CheckBox();
+            this.saveAsImageButton = new System.Windows.Forms.Button();
+            this.saveImageDialog = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.tileShowNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tileDiplayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -158,15 +160,15 @@
             // 
             this.openFileDialog.Filter = "Dispel map|*.map";
             // 
-            // button1
+            // debugButton
             // 
-            this.button1.Location = new System.Drawing.Point(465, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(82, 23);
-            this.button1.TabIndex = 12;
-            this.button1.Text = "debugButton";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.debugButton_Click);
+            this.debugButton.Location = new System.Drawing.Point(465, 3);
+            this.debugButton.Name = "debugButton";
+            this.debugButton.Size = new System.Drawing.Size(82, 23);
+            this.debugButton.TabIndex = 12;
+            this.debugButton.Text = "debugButton";
+            this.debugButton.UseVisualStyleBackColor = true;
+            this.debugButton.Click += new System.EventHandler(this.debugButton_Click);
             // 
             // spritesCheckBox
             // 
@@ -251,16 +253,32 @@
             this.eventsCheckBox.Text = "Events";
             this.eventsCheckBox.UseVisualStyleBackColor = true;
             // 
+            // saveAsImageButton
+            // 
+            this.saveAsImageButton.Enabled = false;
+            this.saveAsImageButton.Location = new System.Drawing.Point(1038, 702);
+            this.saveAsImageButton.Name = "saveAsImageButton";
+            this.saveAsImageButton.Size = new System.Drawing.Size(131, 40);
+            this.saveAsImageButton.TabIndex = 17;
+            this.saveAsImageButton.Text = "Save As Image";
+            this.saveAsImageButton.UseVisualStyleBackColor = true;
+            this.saveAsImageButton.Click += new System.EventHandler(this.saveAsImageButton_Click);
+            // 
+            // saveImageDialog
+            // 
+            this.saveImageDialog.Filter = "JPEG *.jpg|*.jpg;*.jpeg";
+            // 
             // MapViewerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1173, 754);
+            this.Controls.Add(this.saveAsImageButton);
             this.Controls.Add(this.eventsCheckBox);
             this.Controls.Add(this.occludeCheckBox);
             this.Controls.Add(this.statsTextBox);
             this.Controls.Add(this.spritesCheckBox);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.debugButton);
             this.Controls.Add(this.generateButton);
             this.Controls.Add(this.gtlCheckBox);
             this.Controls.Add(this.roofsCheckBox);
@@ -296,11 +314,13 @@
         private System.Windows.Forms.CheckBox gtlCheckBox;
         private System.Windows.Forms.Button generateButton;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button debugButton;
         private System.Windows.Forms.CheckBox spritesCheckBox;
         private System.Windows.Forms.RichTextBox statsTextBox;
         private System.Windows.Forms.CheckBox occludeCheckBox;
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.CheckBox eventsCheckBox;
+        private System.Windows.Forms.Button saveAsImageButton;
+        private System.Windows.Forms.SaveFileDialog saveImageDialog;
     }
 }

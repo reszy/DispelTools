@@ -44,7 +44,7 @@ namespace DispelTools.GameDataModels.Map.Generator
             return image;
         }
 
-        public void PlotIdOnMap(DirectBitmap image, byte id, int destX, int destY)
+        public void PlotIdOnMap(DirectBitmap image, short id, int destX, int destY)
         {
             if (destX + DigitWidth <= image.Width && destX >= 0 && destY >= 0 && destY + DigitHeight <= image.Height)
             {

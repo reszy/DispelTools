@@ -15,7 +15,7 @@ namespace DispelTools.GameDataModels.Map
             public int Gtl { get; set; }
             public bool Collision { get; set; }
             public int RoofBtl { get; set; }
-            public byte EventId { get; set; }
+            public short EventId { get; set; }
         }
         public Size MapSize { get; }
         public Size TiledMapSize { get; }
@@ -67,12 +67,12 @@ namespace DispelTools.GameDataModels.Map
         public void SetGtl(int x, int y, int id) => cells[x, y].Gtl = id;
         public void SetRoofBtl(int x, int y, int id) => cells[x, y].RoofBtl = id;
         public void SetCollision(int x, int y, bool collision) => cells[x, y].Collision = collision;
-        public void SetEventId(int x, int y, byte eventId) => cells[x, y].EventId = eventId;
+        public void SetEventId(int x, int y, short eventId) => cells[x, y].EventId = eventId;
 
         public int GetGtlId(int x, int y) => cells[x, y].Gtl;
         public int GetRoofBtlId(int x, int y) => cells[x, y].RoofBtl;
         public bool GetCollision(int x, int y) => cells[x, y].Collision;
-        public byte GetEventId(int x, int y) => cells[x, y].EventId;
+        public short GetEventId(int x, int y) => cells[x, y].EventId;
 
         public void AddTiledObject(int x, int y, int[] ids) => TiledObjectInfos.Add(new TiledObjectsInfo(x, y, ids));
         public void AddSriteInfo(int id, int x, int y, int bottomRightX, int bottomRightY) => InternalSpriteInfos.Add(new InternalSpriteInfo(id, new Point(x, y), new Point(bottomRightX, bottomRightY)));

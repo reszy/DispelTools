@@ -212,8 +212,9 @@ namespace DispelTools.GameDataModels.Map.Reader
             {
                 for (int x = 0; x < map.TiledMapSize.Width; x++)
                 {
-                    byte[] bytes = file.ReadBytes(4);
-                    map.SetEventId(x, y, bytes[0]);
+                    short eventId = file.ReadInt16();
+                    file.ReadInt16();
+                    map.SetEventId(x, y, eventId);
                 }
             }
         }

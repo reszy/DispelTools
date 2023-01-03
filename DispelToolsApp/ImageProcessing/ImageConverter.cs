@@ -69,7 +69,7 @@ namespace DispelTools.ImageProcessing
                 var resized = new MagickImage(blackAsTransparent ? transparent : black, width, height);
                 resized.Composite(image, frame.OffsetX, frame.OffsetY, CompositeOperator.Src);
                 resized.AnimationIterations = 0;
-                resized.AnimationDelay = 7;
+                resized.AnimationDelay = 17;
                 resized.GifDisposeMethod = GifDisposeMethod.Background;
                 collection.Add(resized);
                 image.Dispose();

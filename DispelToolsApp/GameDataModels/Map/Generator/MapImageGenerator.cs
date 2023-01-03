@@ -88,6 +88,11 @@ namespace DispelTools.GameDataModels.Map.Generator
                 occlusionOffsetX = Model.MapNonOccludedStart.X;
                 occlusionOffsetY = Model.MapNonOccludedStart.Y;
             }
+            if(generatorOptions.Cat3Fix)
+            {
+                occlusionOffsetX -= TileSet.TILE_HORIZONTAL_OFFSET_HALF;
+                occlusionOffsetY += TileSet.TILE_HEIGHT_HALF;
+            }
             foreach (var btlData in Model.TiledObjectInfos)
             {
                 for (int i = 0; i < btlData.Size; i++)
@@ -102,16 +107,22 @@ namespace DispelTools.GameDataModels.Map.Generator
         }
         private void PlotInternalSprites(DirectBitmap image)
         {
+            int occlusionOffsetX = 0, occlusionOffsetY = 0;
+            if (!generatorOptions.Occlusion)
+            {
+                occlusionOffsetX = Model.MapNonOccludedStart.X;
+                occlusionOffsetY = Model.MapNonOccludedStart.Y;
+            }
+            if (generatorOptions.Cat3Fix)
+            {
+                occlusionOffsetX -= TileSet.TILE_HORIZONTAL_OFFSET_HALF;
+                occlusionOffsetY += TileSet.TILE_HEIGHT_HALF;
+            }
             foreach (var spriteData in Model.InternalSpriteInfos)
             {
                 var sprite = mapContainer.InternalSprites[spriteData.Id];
-                int destX = spriteData.Position.X;
-                int destY = spriteData.Position.Y;
-                if (!generatorOptions.Occlusion)
-                {
-                    destX += Model.MapNonOccludedStart.X;
-                    destY += Model.MapNonOccludedStart.Y;
-                }
+                int destX = spriteData.Position.X + occlusionOffsetX;
+                int destY = spriteData.Position.Y + occlusionOffsetY;
                 PlotSpriteOnBitmap(image, sprite.GetFrame(0).RawRgb, destX, destY);
                 workReporter.ReportProgress(++progressTracker);
             }

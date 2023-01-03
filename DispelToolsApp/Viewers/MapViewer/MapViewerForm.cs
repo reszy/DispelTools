@@ -128,6 +128,7 @@ namespace DispelTools.Viewers.MapViewer
                     Roofs = roofsCheckBox.Checked,
                     Sprites = spritesCheckBox.Checked,
                     Events = eventsCheckBox.Checked,
+                    Cat3Fix = Path.GetFileName(filename) == "cat3.map"
                 });
         }
 

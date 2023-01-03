@@ -1,4 +1,5 @@
 ﻿using DispelTools.Common;
+using static DispelTools.Common.MagickImageSave;
 using DispelTools.Common.DataProcessing;
 using DispelTools.Components;
 using DispelTools.DebugTools.MetricTools;
@@ -10,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -49,6 +51,12 @@ namespace DispelTools.Viewers.MapViewer
             toolTip.SetToolTip(collisionsCheckBox, "Shows which tiles can be accessed by player");
             toolTip.SetToolTip(roofsCheckBox, "Shows which tiles are signed as bldg");
             toolTip.SetToolTip(spritesCheckBox, "Shows sprites which are included in map file");
+#if DEBUG
+            debugButton.Visible = true;
+#else
+            debugButton.Visible = false;
+#endif
+
         }
 
         private void TileClicked(object sender, PictureDiplayer.PixelSelectedArgs point)
@@ -77,6 +85,7 @@ namespace DispelTools.Viewers.MapViewer
                 sb.Append($"Memory size: {BytesFormatter.GetBytesReadable(mapImage.Bits.Length * 4)}");
             }
             statsTextBox.Text = sb.ToString();
+            saveAsImageButton.Enabled = true;
         }
 
         private void ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -127,6 +136,8 @@ namespace DispelTools.Viewers.MapViewer
             openFileDialog.ShowDialog(() =>
             {
                 filename = openFileDialog.FileName;
+                saveImageDialog.InitialDirectory = Path.GetDirectoryName(filename);
+                saveImageDialog.FileName = Path.GetFileNameWithoutExtension(filename);
                 mapContainer?.Dispose();
                 mapContainer = null;
             });
@@ -194,6 +205,9 @@ namespace DispelTools.Viewers.MapViewer
                     tileShowNumber.Maximum = 0;
                     progressBar.Maximum = 4000;
                 }
+
+                saveAsImageButton.Enabled = false;
+
                 mapImage?.Dispose();
                 pictureBox.Image?.Dispose();
                 pictureBox.Image = null;
@@ -228,6 +242,15 @@ namespace DispelTools.Viewers.MapViewer
                         }
                     }
                 }
+            }
+        }
+
+        private void saveAsImageButton_Click(object sender, EventArgs e)
+        {
+            saveImageDialog.Filter = Filter;
+            saveImageDialog.ShowDialog();
+            if (!string.IsNullOrEmpty(saveImageDialog.FileName)) {
+                mapImage.SaveAs(saveImageDialog.FileName, Encoders[saveImageDialog.FilterIndex - 1]);
             }
         }
     }

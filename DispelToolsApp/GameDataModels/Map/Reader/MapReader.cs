@@ -255,7 +255,11 @@ namespace DispelTools.GameDataModels.Map.Reader
 
         private class BtlSorter : IComparer<TiledObjectsInfo>
         {
-            public int Compare(TiledObjectsInfo a, TiledObjectsInfo b) => (a.Position.Y + a.Size * TileSet.TILE_HEIGHT) - (b.Position.Y + b.Size * TileSet.TILE_HEIGHT);
+            public int Compare(TiledObjectsInfo a, TiledObjectsInfo b)
+            {
+                var yOrder = (a.Position.Y + a.Size * TileSet.TILE_HEIGHT) - (b.Position.Y + b.Size * TileSet.TILE_HEIGHT);
+                return yOrder != 0 ? yOrder : a.Order - b.Order;
+            }
         }
     }
 }

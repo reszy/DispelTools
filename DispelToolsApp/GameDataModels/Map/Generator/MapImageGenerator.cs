@@ -76,8 +76,8 @@ namespace DispelTools.GameDataModels.Map.Generator
                     {
                         textGenerator.PlotIdOnMap(image, eventId, mapCoords.X + TileSet.TILE_WIDTH_HALF, mapCoords.Y + TextGenerator.DigitHeight);
                     }
-                    workReporter.ReportProgress(++progressTracker);
                 }
+                workReporter.ReportProgress(++progressTracker);
             }
         }
         private void PlotTiledObjects(DirectBitmap image)
@@ -135,15 +135,15 @@ namespace DispelTools.GameDataModels.Map.Generator
                         }
                         tile.PlotTileOnBitmap(image, mapCoords.X, mapCoords.Y);
                     }
-                    workReporter.ReportProgress(++progressTracker);
                 }
+                workReporter.ReportProgress(++progressTracker);
             }
         }
 
         private int CalculateTotalProgress()
         {
-            return (generatorOptions.GTL ? Model.TiledMapSize.Width * Model.TiledMapSize.Height : 0)
-                 + (generatorOptions.Roofs ? Model.TiledMapSize.Width * Model.TiledMapSize.Height : 0)
+            return ((generatorOptions.GTL || generatorOptions.Events || generatorOptions.Collisions) ? Model.TiledMapSize.Height : 0)
+                 + (generatorOptions.Roofs ? Model.TiledMapSize.Height : 0)
                  + (generatorOptions.Sprites ? Model.InternalSpriteInfos.Count : 0)
                  + (generatorOptions.TiledObjects ? Model.TiledObjectInfos.Count : 0);
         }

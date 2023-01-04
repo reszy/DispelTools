@@ -2,7 +2,7 @@
 
 namespace DispelTools.GameDataModels.Map
 {
-    public class InternalSpriteInfo
+    public class InternalSpriteInfo : IInterlacedOrderObject
     {
         public InternalSpriteInfo(int id, Point position, Point bottomRightPosition)
         {
@@ -14,5 +14,11 @@ namespace DispelTools.GameDataModels.Map
         public int Id { get; set; }
         public Point Position { get; set; }
         public Point BottomRightPosition { get; set; }
+
+        int IInterlacedOrderObject.PositionOrder => BottomRightPosition.Y;
+
+        int IInterlacedOrderObject.Order => 0;
+
+        int IInterlacedOrderObject.TypeOrder => -1;
     }
 }

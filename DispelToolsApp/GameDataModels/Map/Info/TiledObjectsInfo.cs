@@ -2,11 +2,12 @@
 
 namespace DispelTools.GameDataModels.Map
 {
-    public class TiledObjectsInfo
+    public class TiledObjectsInfo : IInterlacedOrderObject
     {
         public int Order { get; }
         public int Size { get; }
         public Point Position { get; }
+
         private readonly int[] ids;
 
         public TiledObjectsInfo(int order, int x, int y, int[] ids)
@@ -18,5 +19,10 @@ namespace DispelTools.GameDataModels.Map
         }
 
         public int GetId(int i) => ids[i];
+
+        int IInterlacedOrderObject.PositionOrder => Position.Y + Size * TileSet.TILE_HEIGHT;
+
+        int IInterlacedOrderObject.TypeOrder => 0;
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DispelTools.Common;
 using DispelTools.Common.DataProcessing;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace DispelTools.GameDataModels.Map.Generator
@@ -30,13 +31,22 @@ namespace DispelTools.GameDataModels.Map.Generator
             workReporter.SetTotal(CalculateTotalProgress());
 
             PlotBase(mapImage);
-            if (generatorOptions.TiledObjects)
+
+            var offset = CalculateOcclusionOffset();
+            if (generatorOptions.TiledObjects && generatorOptions.Sprites)
             {
-                PlotTiledObjects(mapImage);
+                PlotObjects(mapImage, offset);
             }
-            if (generatorOptions.Sprites)
+            else
             {
-                PlotInternalSprites(mapImage);
+                if (generatorOptions.TiledObjects)
+                {
+                    PlotTiledObjects(mapImage, offset);
+                }
+                if (generatorOptions.Sprites)
+                {
+                    PlotInternalSprites(mapImage, offset);
+                }
             }
             if (generatorOptions.Roofs)
             {
@@ -59,7 +69,7 @@ namespace DispelTools.GameDataModels.Map.Generator
 
                     var drawEvent = generatorOptions.Events && eventId > 0;
 
-                    if(drawCollision || drawEvent)
+                    if (drawCollision || drawEvent)
                     {
                         var tintColor = drawEvent && drawCollision ? Color.Yellow : (drawEvent ? Color.Blue : Color.Red);
                         tile = tile.MixColor(tintColor, 64);
@@ -80,32 +90,59 @@ namespace DispelTools.GameDataModels.Map.Generator
                 workReporter.ReportProgress(++progressTracker);
             }
         }
-        private void PlotTiledObjects(DirectBitmap image)
+        private void PlotTiledObjects(DirectBitmap image, Point offset)
         {
-            int occlusionOffsetX = 0, occlusionOffsetY = 0;
-            if (!generatorOptions.Occlusion)
-            {
-                occlusionOffsetX = Model.MapNonOccludedStart.X;
-                occlusionOffsetY = Model.MapNonOccludedStart.Y;
-            }
-            if(generatorOptions.Cat3Fix)
-            {
-                occlusionOffsetX -= TileSet.TILE_HORIZONTAL_OFFSET_HALF;
-                occlusionOffsetY += TileSet.TILE_HEIGHT_HALF;
-            }
             foreach (var btlData in Model.TiledObjectInfos)
             {
-                for (int i = 0; i < btlData.Size; i++)
-                {
-                    var tile = mapContainer.Btl[btlData.GetId(i)];
-                    var x = btlData.Position.X + occlusionOffsetX;
-                    var y = btlData.Position.Y + (i * TileSet.TILE_HEIGHT) + occlusionOffsetY;
-                    tile.PlotTileOnBitmap(image, x, y);
-                }
+                PlotSingleTiledObject(image, btlData, offset);
                 workReporter.ReportProgress(++progressTracker);
             }
         }
-        private void PlotInternalSprites(DirectBitmap image)
+        private void PlotInternalSprites(DirectBitmap image, Point offset)
+        {
+            foreach (var spriteData in Model.InternalSpriteInfos)
+            {
+                PlotSingleSprite(image, spriteData, offset);
+                workReporter.ReportProgress(++progressTracker);
+            }
+        }
+
+
+        private void PlotObjects(DirectBitmap image, Point offset)
+        {
+
+
+            List<IInterlacedOrderObject> interlacedObjects = new List<IInterlacedOrderObject>(Model.TiledObjectInfos);
+            interlacedObjects.AddRange(Model.InternalSpriteInfos);
+            interlacedObjects.Sort(new IInterlacedOrderObjectComparer());
+
+            foreach (var @object in interlacedObjects)
+            {
+                if (@object is InternalSpriteInfo spriteInfo)
+                    PlotSingleSprite(image, spriteInfo, offset);
+                else if (@object is TiledObjectsInfo tiledObjectsInfo)
+                    PlotSingleTiledObject(image, tiledObjectsInfo, offset);
+
+                workReporter.ReportProgress(++progressTracker);
+            }
+
+            ////debug dots
+            //foreach (var @object in interlacedObjects)
+            //{
+            //    if (@object is InternalSpriteInfo spriteInfo)
+            //    {
+            //        DrawDot(image, spriteInfo.Position, Color.Yellow, occlusionOffsetX, occlusionOffsetY);
+            //        DrawDot(image, new Point(spriteInfo.Position.X, spriteInfo.BottomRightPosition.Y), Color.Magenta, occlusionOffsetX, occlusionOffsetY);
+            //    }
+            //    else if (@object is TiledObjectsInfo tiledObjectsInfo)
+            //    {
+            //        DrawDot(image, tiledObjectsInfo.Position, Color.Blue, occlusionOffsetX, occlusionOffsetY);
+            //        DrawDot(image, new Point(tiledObjectsInfo.Position.X, tiledObjectsInfo.Position.Y + tiledObjectsInfo.Size * TileSet.TILE_HEIGHT), Color.Red, occlusionOffsetX, occlusionOffsetY);
+            //    }
+            //}
+        }
+
+        private Point CalculateOcclusionOffset()
         {
             int occlusionOffsetX = 0, occlusionOffsetY = 0;
             if (!generatorOptions.Occlusion)
@@ -118,15 +155,36 @@ namespace DispelTools.GameDataModels.Map.Generator
                 occlusionOffsetX -= TileSet.TILE_HORIZONTAL_OFFSET_HALF;
                 occlusionOffsetY += TileSet.TILE_HEIGHT_HALF;
             }
-            foreach (var spriteData in Model.InternalSpriteInfos)
+            return new Point(occlusionOffsetX, occlusionOffsetY);
+        }
+
+        private void PlotSingleSprite(DirectBitmap image, InternalSpriteInfo info, Point offset)
+        {
+            var sprite = mapContainer.InternalSprites[info.Id];
+            int destX = info.Position.X + offset.X;
+            int destY = info.Position.Y + offset.Y;
+            PlotSpriteOnBitmap(image, sprite.GetFrame(0).RawRgb, destX, destY);
+        }
+        private void PlotSingleTiledObject(DirectBitmap image, TiledObjectsInfo info, Point offset)
+        {
+            for (int i = 0; i < info.Size; i++)
             {
-                var sprite = mapContainer.InternalSprites[spriteData.Id];
-                int destX = spriteData.Position.X + occlusionOffsetX;
-                int destY = spriteData.Position.Y + occlusionOffsetY;
-                PlotSpriteOnBitmap(image, sprite.GetFrame(0).RawRgb, destX, destY);
-                workReporter.ReportProgress(++progressTracker);
+                var tile = mapContainer.Btl[info.GetId(i)];
+                var x = info.Position.X + offset.X;
+                var y = info.Position.Y + (i * TileSet.TILE_HEIGHT) + offset.Y;
+                tile.PlotTileOnBitmap(image, x, y);
             }
         }
+        private class IInterlacedOrderObjectComparer : IComparer<IInterlacedOrderObject>
+        {
+            public int Compare(IInterlacedOrderObject a, IInterlacedOrderObject b)
+            {
+                var position = a.PositionOrder - b.PositionOrder;
+                var type = a.TypeOrder - b.TypeOrder;
+                return position != 0 ? position : (type != 0 ? type : a.Order - b.Order);
+            }
+        }
+
 
         private void PlotRoofs(DirectBitmap image)
         {
@@ -165,6 +223,14 @@ namespace DispelTools.GameDataModels.Map.Generator
                    (x + y) * TileSet.TILE_HORIZONTAL_OFFSET_HALF,
                    (-x + y) * TileSet.TILE_HEIGHT_HALF + (Model.MapDiagonalTiles / 2 * TileSet.TILE_HEIGHT_HALF));
         }
+
+        //Debug draw
+        //private void DrawDot(DirectBitmap parent, Point point, Color color, Point offset)
+        //{
+        //    for (int x = point.X - 1; x < point.X + 2; x++)
+        //        for (int y = point.Y - 1; y < point.Y + 2; y++)
+        //            parent.SetPixel(x + offset.X, y + offset.Y, color);
+        //}
 
         private void PlotSpriteOnBitmap(DirectBitmap parent, RawRgb sprite, int destX, int destY)
         {

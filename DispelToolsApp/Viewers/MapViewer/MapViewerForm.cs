@@ -249,8 +249,8 @@ namespace DispelTools.Viewers.MapViewer
         private void saveAsImageButton_Click(object sender, EventArgs e)
         {
             saveImageDialog.Filter = Filter;
-            saveImageDialog.ShowDialog();
-            if (!string.IsNullOrEmpty(saveImageDialog.FileName)) {
+            var result = saveImageDialog.ShowDialog();
+            if (result == DialogResult.OK && !string.IsNullOrEmpty(saveImageDialog.FileName)) {
                 mapImage.SaveAs(saveImageDialog.FileName, Encoders[saveImageDialog.FilterIndex - 1]);
             }
         }

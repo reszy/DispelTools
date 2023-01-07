@@ -42,8 +42,8 @@ namespace DispelTools.GameDataModels.Map
             double xAspect = 0.3;
             double yAspect = 0.2;
 
-            int compensateX = (width % 2 == 0) ? TileSet.TILE_HORIZONTAL_OFFSET_HALF : 0;
-            int compensateY = (width % 2 == 0) ? 0 : TileSet.TILE_HEIGHT_HALF;
+            int compensateX = TileSet.TILE_HORIZONTAL_OFFSET_HALF;
+            int compensateY = 0;
             MapNonOccludedStart = new Point(
                 (int)(xAspect * MapSizeInPixels.Width - compensateX),
                 (int)(yAspect * MapSizeInPixels.Height - compensateY));

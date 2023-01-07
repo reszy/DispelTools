@@ -9,7 +9,6 @@
         public bool TiledObjects { get; set; } = false;
         public bool Roofs { get; set; } = false;
         public bool Events { get; set; } = false;
-        public bool Cat3Fix { get; set; } = false;
 
     }
 }

@@ -62,6 +62,8 @@ namespace DispelTools.GameDataModels.Map.Reader
             ReadTiledObjectsBlock(file);
             workReporter.ReportProgress(5);
 
+            file.SetPosition(file.BaseStream.Length - map.TiledMapSize.Height * map.TiledMapSize.Width * 4 * 3);
+
             ReadEventBlock(file);
             workReporter.ReportProgress(6);
 

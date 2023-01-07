@@ -142,21 +142,7 @@ namespace DispelTools.GameDataModels.Map.Generator
             //}
         }
 
-        private Point CalculateOcclusionOffset()
-        {
-            int occlusionOffsetX = 0, occlusionOffsetY = 0;
-            if (!generatorOptions.Occlusion)
-            {
-                occlusionOffsetX = Model.MapNonOccludedStart.X;
-                occlusionOffsetY = Model.MapNonOccludedStart.Y;
-            }
-            if (generatorOptions.Cat3Fix)
-            {
-                occlusionOffsetX -= TileSet.TILE_HORIZONTAL_OFFSET_HALF;
-                occlusionOffsetY += TileSet.TILE_HEIGHT_HALF;
-            }
-            return new Point(occlusionOffsetX, occlusionOffsetY);
-        }
+        private Point CalculateOcclusionOffset() => (!generatorOptions.Occlusion) ? new Point(Model.MapNonOccludedStart.X, Model.MapNonOccludedStart.Y) : new Point();
 
         private void PlotSingleSprite(DirectBitmap image, InternalSpriteInfo info, Point offset)
         {

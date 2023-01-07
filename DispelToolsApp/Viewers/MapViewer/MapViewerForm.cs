@@ -127,8 +127,7 @@ namespace DispelTools.Viewers.MapViewer
                     TiledObjects = btlCheckBox.Checked,
                     Roofs = roofsCheckBox.Checked,
                     Sprites = spritesCheckBox.Checked,
-                    Events = eventsCheckBox.Checked,
-                    Cat3Fix = Path.GetFileName(filename) == "cat3.map"
+                    Events = eventsCheckBox.Checked
                 });
         }
 
@@ -228,19 +227,6 @@ namespace DispelTools.Viewers.MapViewer
                     var reader = new MapReader(file, new WorkReporter(worker));
                     using (var map = reader.ReadMap(true))
                     {
-                        var spriteList = new SortedSet<int>();
-                        for (int i = 0; i < map.InternalSprites.Count; i++)
-                        {
-                            spriteList.Add(i);
-                        }
-                        foreach (var spriteInfo in map.Model.InternalSpriteInfos)
-                        {
-                            spriteList.Remove(spriteInfo.Id);
-                        }
-                        foreach (int id in spriteList)
-                        {
-                            Metrics.List(MetricFile.MapReadMetric, Path.GetFileNameWithoutExtension(file), id.ToString());
-                        }
                     }
                 }
             }

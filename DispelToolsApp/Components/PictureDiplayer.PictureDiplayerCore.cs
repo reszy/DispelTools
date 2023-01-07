@@ -30,6 +30,9 @@ namespace DispelTools.Components
             private Point highlight;
             private readonly Pen highlightPen;
 
+            //TILE
+            private bool evenTiles;
+
             //DATA TIP
             private readonly Pen dataTipPen;
             private readonly Brush dataTipBrush;
@@ -95,6 +98,7 @@ namespace DispelTools.Components
 
                 double defaultZoom = (double)fitSize.Width / imageSize.Width;
                 InitZoom(defaultZoom);
+                evenTiles = Math.Floor((double)pictureDisplayer.Image.Height / TILE_HEIGHT / 2) % 2 != 0;
             }
 
             public void MouseDownAction(object sender, MouseEventArgs e)
@@ -113,22 +117,22 @@ namespace DispelTools.Components
                         {
                             case MouseMode.RectSelector:
                             case MouseMode.RowSelector:
-                            {
-                                selectStart = selectEnd = ConvertToImageCoords(pointingAt);
-                                selecting = true;
-                            }
-                            break;
+                                {
+                                    selectStart = selectEnd = ConvertToImageCoords(pointingAt);
+                                    selecting = true;
+                                }
+                                break;
                             case MouseMode.Pointer:
                             case MouseMode.TileSelector:
                             default:
-                            {
-                                selectedPixel = Image.GetPixel(highlight.X, highlight.Y);
-                                selectedPixelData = DataAnalyzedBitamp?.GetPixel(highlight.X, highlight.Y);
-                                showHex = ModifierKeys == Keys.Shift;
-                                selectedPixelCoords = highlight;
-                                pictureDisplayer.PixelSelectedEvent?.Invoke(this, new PictureDiplayer.PixelSelectedArgs(selectedPixelCoords, selectedPixel));
-                            }
-                            break;
+                                {
+                                    selectedPixel = Image.GetPixel(highlight.X, highlight.Y);
+                                    selectedPixelData = DataAnalyzedBitamp?.GetPixel(highlight.X, highlight.Y);
+                                    showHex = ModifierKeys == Keys.Shift;
+                                    selectedPixelCoords = highlight;
+                                    pictureDisplayer.PixelSelectedEvent?.Invoke(this, new PictureDiplayer.PixelSelectedArgs(selectedPixelCoords, selectedPixel));
+                                }
+                                break;
                         }
                     }
                 }
@@ -258,12 +262,16 @@ namespace DispelTools.Components
                 e.Graphics.DrawLines(highlightPen, points);
             }
 
-            private bool IsCenterOfTile(Point point) => ((point.X & 1) == (point.Y & 1)) ^ pictureDisplayer.OffsetTileSelector ;
+            private bool IsCenterOfTile(Point point) => ((point.X & 1) == (point.Y & 1)) ^ pictureDisplayer.OffsetTileSelector;
 
             private Point GetClosestTileCenter(Point pointerCoords)
             {
                 double yTileDistance = pointerCoords.Y / (double)TILE_HEIGHT_HALF;
                 double xTileDistance = pointerCoords.X / (double)TILE_HORIZONTAL_OFFSET_HALF;
+
+
+                bool flipToCorners = evenTiles;
+
                 int top = (int)Math.Floor(yTileDistance);
                 int bottom = (int)Math.Ceiling(yTileDistance);
                 int left = (int)Math.Floor(xTileDistance);
@@ -279,7 +287,7 @@ namespace DispelTools.Components
                 var possibleCoords = new HashSet<Point>();
                 foreach (var corner in corners)
                 {
-                    if (IsCenterOfTile(corner))
+                    if (IsCenterOfTile(corner) ^ flipToCorners)
                     {
                         possibleCoords.Add(new Point(corner.X * TILE_HORIZONTAL_OFFSET_HALF, corner.Y * TILE_HEIGHT_HALF));
                     }

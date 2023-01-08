@@ -1,5 +1,6 @@
 ﻿using DispelTools.Common;
 using DispelTools.Common.DataProcessing;
+using DispelTools.GameDataModels.Map.External;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -12,6 +13,8 @@ namespace DispelTools.GameDataModels.Map.Generator
         private readonly TextGenerator textGenerator;
         private GeneratorOptions generatorOptions;
 
+        private List<(Point point, Color color)> debugDots;
+
         private int progressTracker = 0;
         private MapModel Model => mapContainer?.Model;
 
@@ -20,9 +23,11 @@ namespace DispelTools.GameDataModels.Map.Generator
             this.workReporter = workReporter;
             this.mapContainer = mapContainer;
             this.textGenerator = textGenerator;
+            debugDots = new List<(Point point, Color color)>();
         }
         public DirectBitmap GenerateMap(GeneratorOptions generatorOptions)
         {
+            debugDots.Clear();
             this.generatorOptions = generatorOptions;
             int imageWidth = generatorOptions.Occlusion ? Model.OccludedMapSizeInPixels.Width : Model.MapSizeInPixels.Width;
             int imageHeight = generatorOptions.Occlusion ? Model.OccludedMapSizeInPixels.Height : Model.MapSizeInPixels.Height;
@@ -52,6 +57,7 @@ namespace DispelTools.GameDataModels.Map.Generator
             {
                 PlotRoofs(mapImage);
             }
+            foreach (var dot in debugDots) DrawDot(mapImage, dot.point, dot.color);
             return mapImage;
         }
 
@@ -110,9 +116,8 @@ namespace DispelTools.GameDataModels.Map.Generator
 
         private void PlotObjects(DirectBitmap image, Point offset)
         {
-
-
             List<IInterlacedOrderObject> interlacedObjects = new List<IInterlacedOrderObject>(Model.TiledObjectInfos);
+            interlacedObjects.AddRange(mapContainer.Entities);
             interlacedObjects.AddRange(Model.InternalSpriteInfos);
             interlacedObjects.Sort(new IInterlacedOrderObjectComparer());
 
@@ -122,24 +127,11 @@ namespace DispelTools.GameDataModels.Map.Generator
                     PlotSingleSprite(image, spriteInfo, offset);
                 else if (@object is TiledObjectsInfo tiledObjectsInfo)
                     PlotSingleTiledObject(image, tiledObjectsInfo, offset);
+                else if (@object is MapExternalObject externalObject)
+                    PlotSingleSpriteByTile(image, externalObject);
 
                 workReporter.ReportProgress(++progressTracker);
             }
-
-            ////debug dots
-            //foreach (var @object in interlacedObjects)
-            //{
-            //    if (@object is InternalSpriteInfo spriteInfo)
-            //    {
-            //        DrawDot(image, spriteInfo.Position, Color.Yellow, occlusionOffsetX, occlusionOffsetY);
-            //        DrawDot(image, new Point(spriteInfo.Position.X, spriteInfo.BottomRightPosition.Y), Color.Magenta, occlusionOffsetX, occlusionOffsetY);
-            //    }
-            //    else if (@object is TiledObjectsInfo tiledObjectsInfo)
-            //    {
-            //        DrawDot(image, tiledObjectsInfo.Position, Color.Blue, occlusionOffsetX, occlusionOffsetY);
-            //        DrawDot(image, new Point(tiledObjectsInfo.Position.X, tiledObjectsInfo.Position.Y + tiledObjectsInfo.Size * TileSet.TILE_HEIGHT), Color.Red, occlusionOffsetX, occlusionOffsetY);
-            //    }
-            //}
         }
 
         private Point CalculateOcclusionOffset() => (!generatorOptions.Occlusion) ? new Point(Model.MapNonOccludedStart.X, Model.MapNonOccludedStart.Y) : new Point();
@@ -150,6 +142,24 @@ namespace DispelTools.GameDataModels.Map.Generator
             int destX = info.Position.X + offset.X;
             int destY = info.Position.Y + offset.Y;
             PlotSpriteOnBitmap(image, sprite.GetFrame(0).RawRgb, destX, destY);
+            DebugDot(new Point(destX, info.PositionOrder), Color.Red);
+        }
+        private void PlotSingleSpriteByTile(DirectBitmap image, MapExternalObject info)
+        {
+            var mapCoords = ConvertMapCoordsToImageCoords(info.X, info.Y);
+            if (generatorOptions.Occlusion)
+            {
+                mapCoords.X -= Model.MapNonOccludedStart.X;
+                mapCoords.Y -= Model.MapNonOccludedStart.Y;
+            }
+            DebugDot(new Point(mapCoords.X + TileSet.TILE_WIDTH_HALF, info.PositionOrder), Color.Green);
+            mapCoords.X += TileSet.TILE_WIDTH_HALF;
+            mapCoords.Y += TileSet.TILE_HEIGHT_HALF;
+            if (info.Flip)
+                PlotFilippedSpriteOnBitmap(image, info.Graphic.RawRgb, mapCoords.X - (info.Graphic.RawRgb.Width - info.Graphic.OriginX), mapCoords.Y - info.Graphic.OriginY);
+            else
+                PlotSpriteOnBitmap(image, info.Graphic.RawRgb, mapCoords.X - info.Graphic.OriginX, mapCoords.Y - info.Graphic.OriginY);
+
         }
         private void PlotSingleTiledObject(DirectBitmap image, TiledObjectsInfo info, Point offset)
         {
@@ -159,15 +169,16 @@ namespace DispelTools.GameDataModels.Map.Generator
                 var x = info.Position.X + offset.X;
                 var y = info.Position.Y + (i * TileSet.TILE_HEIGHT) + offset.Y;
                 tile.PlotTileOnBitmap(image, x, y);
+                DebugDot(new Point(x + TileSet.TILE_WIDTH_HALF, info.PositionOrder), Color.Blue);
             }
         }
         private class IInterlacedOrderObjectComparer : IComparer<IInterlacedOrderObject>
         {
             public int Compare(IInterlacedOrderObject a, IInterlacedOrderObject b)
             {
-                var position = a.PositionOrder - b.PositionOrder;
-                var type = a.TypeOrder - b.TypeOrder;
-                return position != 0 ? position : (type != 0 ? type : a.Order - b.Order);
+                var positionDiff = a.PositionOrder - b.PositionOrder;
+                var typDiff = a.TypeOrder - b.TypeOrder;
+                return positionDiff != 0 ? positionDiff : (typDiff != 0 ? typDiff : a.Order - b.Order);
             }
         }
 
@@ -210,13 +221,19 @@ namespace DispelTools.GameDataModels.Map.Generator
                    (-x + y) * TileSet.TILE_HEIGHT_HALF + (Model.MapDiagonalTiles / 2 * TileSet.TILE_HEIGHT_HALF));
         }
 
-        //Debug draw
-        //private void DrawDot(DirectBitmap parent, Point point, Color color, Point offset)
-        //{
-        //    for (int x = point.X - 1; x < point.X + 2; x++)
-        //        for (int y = point.Y - 1; y < point.Y + 2; y++)
-        //            parent.SetPixel(x + offset.X, y + offset.Y, color);
-        //}
+        private void DebugDot(Point point, Color color)
+        {
+            debugDots.Add((point, color));
+        }
+        private void DrawDot(DirectBitmap parent, Point point, Color color)
+        {
+            for (int x = point.X - 1; x < point.X + 2; x++)
+                for (int y = point.Y - 1; y < point.Y + 2; y++)
+                {
+                    if (x >= 0 && x < parent.Width && y >= 0 && y < parent.Height)
+                        parent.SetPixel(x, y, color);
+                }
+        }
 
         private void PlotSpriteOnBitmap(DirectBitmap parent, RawRgb sprite, int destX, int destY)
         {
@@ -246,6 +263,25 @@ namespace DispelTools.GameDataModels.Map.Generator
                     for (int x = 0; x < sprite.Width; x++)
                     {
                         var color = sprite.GetPixel(x, y);
+                        if (color.A != 0)
+                        {
+                            int finalX = destX + x;
+                            int finalY = destY + y;
+                            parent.SetPixel(finalX, finalY, color);
+                        }
+                    }
+                }
+            }
+        }
+        private void PlotFilippedSpriteOnBitmap(DirectBitmap parent, RawRgb sprite, int destX, int destY)
+        {
+            if (destX + sprite.Width <= parent.Width && destX >= 0 && destY >= 0 && destY + sprite.Height <= parent.Height)
+            {
+                for (int y = 0; y < sprite.Height; y++)
+                {
+                    for (int x = 0; x < sprite.Width; x++)
+                    {
+                        var color = sprite.GetPixel(sprite.Width - x - 1, y);
                         if (color.A != 0)
                         {
                             int finalX = destX + x;

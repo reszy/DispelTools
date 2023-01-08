@@ -15,10 +15,10 @@ namespace DispelTools.GameDataModels.Map
         public Point Position { get; set; }
         public Point BottomRightPosition { get; set; }
 
-        int IInterlacedOrderObject.PositionOrder => BottomRightPosition.Y;
+        public int PositionOrder => BottomRightPosition.Y;
 
-        int IInterlacedOrderObject.Order => 0;
+        public int Order => 0;
 
-        int IInterlacedOrderObject.TypeOrder => -1;
+        public int TypeOrder => -1;
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace DispelTools.DataEditor
@@ -57,6 +58,8 @@ namespace DispelTools.DataEditor
                 WriteElement(writer, element);
             }
         }
+
+        public Mapping CreateMapping(params string[] fieldNames) => new Mapping(this, fieldNames);
         protected abstract int PropertyItemSize { get; }
 
         protected virtual bool HaveCounterOnBeginning { get; } = true;
@@ -86,6 +89,26 @@ namespace DispelTools.DataEditor
                 var descriptor = descriptorList[i];
                 var field = propertyitem[i];
                 descriptor.ItemFieldDescriptorType.Write(writer, field.IsText ? field.ByteArrayValue : field.Value);
+            }
+        }
+
+        public class Mapping
+        {
+            private int[] mapping;
+
+            public Mapping(Mapper mapper, params string[] fieldNames)
+            {
+                mapping = fieldNames
+                    .Select(name => mapper.descriptorList.Find(descriptor => descriptor.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
+                    .Select(descriptor => mapper.descriptorList.IndexOf(descriptor))
+                    .ToArray();
+            }
+
+            public object[] Convert(PropertyItem item)
+            {
+                return mapping
+                    .Select(fieldId => item[fieldId].Value)
+                    .ToArray();
             }
         }
     }

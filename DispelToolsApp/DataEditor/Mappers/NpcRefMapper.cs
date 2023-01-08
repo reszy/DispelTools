@@ -15,7 +15,7 @@ namespace DispelTools.DataEditor.Mappers
         {
             var builder = new FileDescriptorBuilder();
             builder.Add("id", ItemFieldDescriptor.AsInt32(), true);
-            builder.Add("ncpId", ItemFieldDescriptor.AsInt32());
+            builder.Add("npcId", ItemFieldDescriptor.AsInt32());
             builder.Add("name", ItemFieldDescriptor.AsFixedString(STRING_MAX_LENGTH, FILLER));
             builder.Add("text", ItemFieldDescriptor.AsFixedString(STRING_MAX_LENGTH, FILLER));
 

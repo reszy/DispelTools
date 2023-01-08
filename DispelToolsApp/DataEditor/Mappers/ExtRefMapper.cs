@@ -22,10 +22,13 @@ namespace DispelTools.DataEditor.Mappers
             builder.Add("xPos", AsInt32());
             builder.Add("yPos", AsInt32());
 
-            builder.Add(AsByteArray(4));
+            builder.Add("rotation", AsByte());
+            builder.Add(AsByte());
+            builder.Add(AsByte());
+            builder.Add(AsByte());
 
             builder.Add(AsInt32());
-            builder.Add(AsInt32());
+            builder.Add("closed", AsInt32(), "chest 0-open, 1-closed");
 
             builder.Add("required item id", AsByte(), "lower bound");
             builder.Add("required item type id", AsByte());

@@ -20,9 +20,9 @@ namespace DispelTools.GameDataModels.Map
 
         public int GetId(int i) => ids[i];
 
-        int IInterlacedOrderObject.PositionOrder => Position.Y + Size * TileSet.TILE_HEIGHT;
+        public int PositionOrder => Position.Y + Size * TileSet.TILE_HEIGHT;
 
-        int IInterlacedOrderObject.TypeOrder => 0;
+        public int TypeOrder => 1;
 
     }
 }

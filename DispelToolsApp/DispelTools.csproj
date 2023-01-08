@@ -76,6 +76,7 @@
     <Compile Include="Common\MagickImageSave.cs" />
     <Compile Include="Common\OpenDialogExtension.cs" />
     <Compile Include="Common\RawRgb.cs" />
+    <Compile Include="Common\ReadFileException.cs" />
     <Compile Include="Common\Settings.cs" />
     <Compile Include="Common\Settings.SettingsDto.cs" />
     <Compile Include="Components\CustomPropertyGridControl\CustomPropertyGrid.cs">
@@ -187,11 +188,17 @@
     <Compile Include="DebugTools\MetricTools\Metric.cs" />
     <Compile Include="DebugTools\MetricTools\MetricsContainer.cs" />
     <Compile Include="DebugTools\MetricTools\MetricType.cs" />
+    <Compile Include="GameDataModels\Map\External\Extra\MapExtraReader.cs" />
+    <Compile Include="GameDataModels\Map\External\Monster\MapMonsterReader.cs" />
+    <Compile Include="GameDataModels\Map\External\Npc\MapNpcReader.cs" />
+    <Compile Include="GameDataModels\Map\External\ReferenceFileReader.cs" />
     <Compile Include="GameDataModels\Map\Generator\GeneratorOptions.cs" />
     <Compile Include="GameDataModels\Map\Generator\MapImageGenerator.cs" />
     <Compile Include="GameDataModels\Map\Generator\TextGenerator.cs" />
+    <Compile Include="GameDataModels\Map\External\MapExternalObject.cs" />
     <Compile Include="GameDataModels\Map\Info\IInterlacedOrderObject.cs" />
     <Compile Include="GameDataModels\Map\MapContainer.cs" />
+    <Compile Include="GameDataModels\Map\External\MapExternalSpriteCache.cs" />
     <Compile Include="GameDataModels\Sprite\SpriteFileReader.cs" />
     <Compile Include="ImageAnalyzer\DataAnalyzedBitmap.cs" />
     <Compile Include="ImageAnalyzer\ImageAlignControls.cs">
@@ -373,5 +380,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -15,6 +15,9 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using DispelTools.GameDataModels.Map.External.Extra;
+using DispelTools.GameDataModels.Map.External.Monster;
+using DispelTools.GameDataModels.Map.External.Npc;
 
 namespace DispelTools.Viewers.MapViewer
 {
@@ -102,7 +105,7 @@ namespace DispelTools.Viewers.MapViewer
 
         private void LoadMap(object sender, DoWorkEventArgs e)
         {
-            var workReporter = new WorkReporter(backgroundWorker, 4);
+            var workReporter = new WorkReporter(backgroundWorker, 5);
             var mapReader = new MapReader(filename, workReporter);
             if (mapContainer == null)
             {
@@ -116,7 +119,13 @@ namespace DispelTools.Viewers.MapViewer
                 mapContainer.Btl = TileSet.LoadTileSet(filename.Replace(".map", ".btl"), workReporter);
             }
 
-            workReporter.StartNewStage(4, "Generating map...");
+            workReporter.StartNewStage(4, "Loading Extras...");
+            mapContainer.Entities.AddRange(new MapExtraReader().GetObjects(Settings.GameRootDir, Path.GetFileNameWithoutExtension(filename), mapContainer));
+            mapContainer.Entities.AddRange(new MapMonsterReader().GetObjects(Settings.GameRootDir, Path.GetFileNameWithoutExtension(filename), mapContainer));
+            mapContainer.Entities.AddRange(new MapNpcReader().GetObjects(Settings.GameRootDir, Path.GetFileNameWithoutExtension(filename), mapContainer));
+
+
+            workReporter.StartNewStage(5, "Generating map...");
             var mapGenerator = new MapImageGenerator(workReporter, mapContainer, textGenerator);
             mapImage = mapGenerator.GenerateMap(
                 new GeneratorOptions()

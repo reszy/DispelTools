@@ -98,7 +98,7 @@ namespace DispelTools.Components
 
                 double defaultZoom = (double)fitSize.Width / imageSize.Width;
                 InitZoom(defaultZoom);
-                evenTiles = Math.Floor((double)pictureDisplayer.Image.Height / TILE_HEIGHT / 2) % 2 != 0;
+                evenTiles = Math.Floor((double)pictureDisplayer.Image.Height / TILE_HEIGHT) % 2 != 0;
             }
 
             public void MouseDownAction(object sender, MouseEventArgs e)

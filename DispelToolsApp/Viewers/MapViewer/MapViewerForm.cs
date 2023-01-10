@@ -55,11 +55,23 @@ namespace DispelTools.Viewers.MapViewer
             toolTip.SetToolTip(roofsCheckBox, "Shows which tiles are signed as bldg");
             toolTip.SetToolTip(spritesCheckBox, "Shows sprites which are included in map file");
 #if DEBUG
-            debugButton.Visible = true;
+            debugButton.Visible = debugDotsCheckBox.Visible = true;
 #else
-            debugButton.Visible = false;
+            debugButton.Visible = debugDotsCheckBox.Visible = false;
 #endif
 
+            var setting = Settings.MapGenerationOptions;
+            occludeCheckBox.Checked = generatedOccluded = setting.Occlusion;
+            gtlCheckBox.Checked = setting.GTL;
+            collisionsCheckBox.Checked = setting.Collisions;
+            btlCheckBox.Checked = setting.TiledObjects;
+            roofsCheckBox.Checked = setting.Roofs;
+            spritesCheckBox.Checked = setting.Sprites;
+            eventsCheckBox.Checked = setting.Events;
+            extraCheckBox.Checked = setting.ExternalExtra;
+            monsterCheckBox.Checked = setting.ExternalMonster;
+            npcCheckBox.Checked = setting.ExternalNpc;
+            debugDotsCheckBox.Checked = setting.DebugDots;
         }
 
         private void TileClicked(object sender, PictureDiplayer.PixelSelectedArgs point)
@@ -87,6 +99,7 @@ namespace DispelTools.Viewers.MapViewer
                 sb.AppendLine($"Image size: {mapImage.Width}x{mapImage.Height}");
                 sb.Append($"Memory size: {BytesFormatter.GetBytesReadable(mapImage.Bits.Length * 4)}");
             }
+            progressBar.Text = "Completed";
             statsTextBox.Text = sb.ToString();
             saveAsImageButton.Enabled = true;
         }
@@ -106,6 +119,7 @@ namespace DispelTools.Viewers.MapViewer
         private void LoadMap(object sender, DoWorkEventArgs e)
         {
             var workReporter = new WorkReporter(backgroundWorker, 5);
+            progressBar.Maximum = workReporter.StagesLeft * 1000;
             var mapReader = new MapReader(filename, workReporter);
             if (mapContainer == null)
             {
@@ -117,27 +131,45 @@ namespace DispelTools.Viewers.MapViewer
 
                 workReporter.StartNewStage(3, "Loading BTL...");
                 mapContainer.Btl = TileSet.LoadTileSet(filename.Replace(".map", ".btl"), workReporter);
+
+                workReporter.StartNewStage(4, "Loading external extra, monster, npc...");
+                LoadExternal(workReporter);
             }
-
-            workReporter.StartNewStage(4, "Loading Extras...");
-            mapContainer.Entities.AddRange(new MapExtraReader().GetObjects(Settings.GameRootDir, Path.GetFileNameWithoutExtension(filename), mapContainer));
-            mapContainer.Entities.AddRange(new MapMonsterReader().GetObjects(Settings.GameRootDir, Path.GetFileNameWithoutExtension(filename), mapContainer));
-            mapContainer.Entities.AddRange(new MapNpcReader().GetObjects(Settings.GameRootDir, Path.GetFileNameWithoutExtension(filename), mapContainer));
-
 
             workReporter.StartNewStage(5, "Generating map...");
             var mapGenerator = new MapImageGenerator(workReporter, mapContainer, textGenerator);
-            mapImage = mapGenerator.GenerateMap(
-                new GeneratorOptions()
-                {
-                    Occlusion = generatedOccluded,
-                    GTL = gtlCheckBox.Checked,
-                    Collisions = collisionsCheckBox.Checked,
-                    TiledObjects = btlCheckBox.Checked,
-                    Roofs = roofsCheckBox.Checked,
-                    Sprites = spritesCheckBox.Checked,
-                    Events = eventsCheckBox.Checked
-                });
+
+            mapImage = mapGenerator.GenerateMap(CheckBoxesToGenerationOptions());
+        }
+
+        private void LoadExternal(WorkReporter workReporter)
+        {
+            var mapName = Path.GetFileNameWithoutExtension(filename);
+            workReporter.SetTotal(4);
+            mapContainer.ExtraEntities.AddRange(new MapExtraReader().GetObjects(Settings.GameRootDir, mapName, mapContainer));
+            workReporter.ReportProgress(1);
+            mapContainer.MonsterEntities.AddRange(new MapMonsterReader().GetObjects(Settings.GameRootDir, mapName, mapContainer));
+            workReporter.ReportProgress(2);
+            mapContainer.NpcEntities.AddRange(new MapNpcReader().GetObjects(Settings.GameRootDir, mapName, mapContainer));
+            workReporter.ReportProgress(3);
+        }
+
+        private GeneratorOptions CheckBoxesToGenerationOptions()
+        {
+            return new GeneratorOptions
+               (
+                   generatedOccluded,
+                   gtlCheckBox.Checked,
+                   spritesCheckBox.Checked,
+                   collisionsCheckBox.Checked,
+                   btlCheckBox.Checked,
+                   roofsCheckBox.Checked,
+                   eventsCheckBox.Checked,
+                   extraCheckBox.Checked,
+                   monsterCheckBox.Checked,
+                   npcCheckBox.Checked,
+                   debugDotsCheckBox.Checked
+               );
         }
 
         private void openButton_Click(object sender, EventArgs e)
@@ -212,7 +244,6 @@ namespace DispelTools.Viewers.MapViewer
                 {
                     tileShowNumber.Value = 0;
                     tileShowNumber.Maximum = 0;
-                    progressBar.Maximum = 4000;
                 }
 
                 saveAsImageButton.Enabled = false;
@@ -245,9 +276,16 @@ namespace DispelTools.Viewers.MapViewer
         {
             saveImageDialog.Filter = Filter;
             var result = saveImageDialog.ShowDialog();
-            if (result == DialogResult.OK && !string.IsNullOrEmpty(saveImageDialog.FileName)) {
+            if (result == DialogResult.OK && !string.IsNullOrEmpty(saveImageDialog.FileName))
+            {
                 mapImage.SaveAs(saveImageDialog.FileName, Encoders[saveImageDialog.FilterIndex - 1]);
             }
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            if (mapContainer != null) Settings.MapGenerationOptions = CheckBoxesToGenerationOptions();
+            base.OnClosed(e);
         }
     }
 }

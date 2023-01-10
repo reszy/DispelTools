@@ -19,6 +19,6 @@ namespace DispelTools.GameDataModels.Map
 
         public int Order => 0;
 
-        public int TypeOrder => -1;
+        public int TypeOrder => 1;
     }
 }

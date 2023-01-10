@@ -59,14 +59,22 @@
             this.debugButton = new System.Windows.Forms.Button();
             this.spritesCheckBox = new System.Windows.Forms.CheckBox();
             this.statsTextBox = new System.Windows.Forms.RichTextBox();
-            this.tileDiplayer = new DispelTools.Components.PictureDiplayer();
-            this.progressBar = new DispelTools.Components.ProgressBarWithText();
-            this.pictureBox = new DispelTools.Components.PictureDiplayer();
             this.occludeCheckBox = new System.Windows.Forms.CheckBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.eventsCheckBox = new System.Windows.Forms.CheckBox();
             this.saveAsImageButton = new System.Windows.Forms.Button();
             this.saveImageDialog = new System.Windows.Forms.SaveFileDialog();
+            this.labeledSeparator1 = new DispelTools.Components.LabeledSeparator();
+            this.tileDiplayer = new DispelTools.Components.PictureDiplayer();
+            this.progressBar = new DispelTools.Components.ProgressBarWithText();
+            this.pictureBox = new DispelTools.Components.PictureDiplayer();
+            this.labeledSeparator2 = new DispelTools.Components.LabeledSeparator();
+            this.labeledSeparator3 = new DispelTools.Components.LabeledSeparator();
+            this.labeledSeparator4 = new DispelTools.Components.LabeledSeparator();
+            this.npcCheckBox = new System.Windows.Forms.CheckBox();
+            this.monsterCheckBox = new System.Windows.Forms.CheckBox();
+            this.extraCheckBox = new System.Windows.Forms.CheckBox();
+            this.debugDotsCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.tileShowNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tileDiplayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -84,9 +92,9 @@
             // 
             // tileShowNumber
             // 
-            this.tileShowNumber.Location = new System.Drawing.Point(1038, 59);
+            this.tileShowNumber.Location = new System.Drawing.Point(1037, 59);
             this.tileShowNumber.Name = "tileShowNumber";
-            this.tileShowNumber.Size = new System.Drawing.Size(124, 20);
+            this.tileShowNumber.Size = new System.Drawing.Size(132, 20);
             this.tileShowNumber.TabIndex = 3;
             this.tileShowNumber.ValueChanged += new System.EventHandler(this.tileShowNumber_ValueChanged);
             // 
@@ -98,16 +106,16 @@
             "GTL",
             "BTL",
             "Sprite"});
-            this.tileSetCombo.Location = new System.Drawing.Point(1038, 32);
+            this.tileSetCombo.Location = new System.Drawing.Point(1037, 32);
             this.tileSetCombo.Name = "tileSetCombo";
-            this.tileSetCombo.Size = new System.Drawing.Size(124, 21);
+            this.tileSetCombo.Size = new System.Drawing.Size(132, 21);
             this.tileSetCombo.TabIndex = 6;
             this.tileSetCombo.SelectedIndexChanged += new System.EventHandler(this.tileSetCombo_SelectedIndexChanged);
             // 
             // collisionsCheckBox
             // 
             this.collisionsCheckBox.AutoSize = true;
-            this.collisionsCheckBox.Location = new System.Drawing.Point(1038, 248);
+            this.collisionsCheckBox.Location = new System.Drawing.Point(1037, 267);
             this.collisionsCheckBox.Name = "collisionsCheckBox";
             this.collisionsCheckBox.Size = new System.Drawing.Size(69, 17);
             this.collisionsCheckBox.TabIndex = 7;
@@ -117,7 +125,7 @@
             // btlCheckBox
             // 
             this.btlCheckBox.AutoSize = true;
-            this.btlCheckBox.Location = new System.Drawing.Point(1038, 294);
+            this.btlCheckBox.Location = new System.Drawing.Point(1037, 332);
             this.btlCheckBox.Name = "btlCheckBox";
             this.btlCheckBox.Size = new System.Drawing.Size(46, 17);
             this.btlCheckBox.TabIndex = 8;
@@ -127,7 +135,7 @@
             // roofsCheckBox
             // 
             this.roofsCheckBox.AutoSize = true;
-            this.roofsCheckBox.Location = new System.Drawing.Point(1038, 340);
+            this.roofsCheckBox.Location = new System.Drawing.Point(1037, 486);
             this.roofsCheckBox.Name = "roofsCheckBox";
             this.roofsCheckBox.Size = new System.Drawing.Size(54, 17);
             this.roofsCheckBox.TabIndex = 9;
@@ -139,7 +147,7 @@
             this.gtlCheckBox.AutoSize = true;
             this.gtlCheckBox.Checked = true;
             this.gtlCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.gtlCheckBox.Location = new System.Drawing.Point(1038, 225);
+            this.gtlCheckBox.Location = new System.Drawing.Point(1037, 244);
             this.gtlCheckBox.Name = "gtlCheckBox";
             this.gtlCheckBox.Size = new System.Drawing.Size(47, 17);
             this.gtlCheckBox.TabIndex = 10;
@@ -173,21 +181,66 @@
             // spritesCheckBox
             // 
             this.spritesCheckBox.AutoSize = true;
-            this.spritesCheckBox.Location = new System.Drawing.Point(1038, 317);
+            this.spritesCheckBox.Location = new System.Drawing.Point(1037, 355);
             this.spritesCheckBox.Name = "spritesCheckBox";
-            this.spritesCheckBox.Size = new System.Drawing.Size(94, 17);
+            this.spritesCheckBox.Size = new System.Drawing.Size(58, 17);
             this.spritesCheckBox.TabIndex = 13;
-            this.spritesCheckBox.Text = "Internal sprites";
+            this.spritesCheckBox.Text = "Sprites";
             this.spritesCheckBox.UseVisualStyleBackColor = true;
             // 
             // statsTextBox
             // 
-            this.statsTextBox.Location = new System.Drawing.Point(1038, 368);
+            this.statsTextBox.Location = new System.Drawing.Point(1037, 509);
             this.statsTextBox.Name = "statsTextBox";
             this.statsTextBox.ReadOnly = true;
-            this.statsTextBox.Size = new System.Drawing.Size(131, 328);
+            this.statsTextBox.Size = new System.Drawing.Size(132, 187);
             this.statsTextBox.TabIndex = 14;
             this.statsTextBox.Text = "";
+            // 
+            // occludeCheckBox
+            // 
+            this.occludeCheckBox.AutoSize = true;
+            this.occludeCheckBox.Checked = true;
+            this.occludeCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.occludeCheckBox.Location = new System.Drawing.Point(1037, 202);
+            this.occludeCheckBox.Name = "occludeCheckBox";
+            this.occludeCheckBox.Size = new System.Drawing.Size(66, 17);
+            this.occludeCheckBox.TabIndex = 15;
+            this.occludeCheckBox.Text = "Occlude";
+            this.occludeCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // eventsCheckBox
+            // 
+            this.eventsCheckBox.AutoSize = true;
+            this.eventsCheckBox.Location = new System.Drawing.Point(1037, 290);
+            this.eventsCheckBox.Name = "eventsCheckBox";
+            this.eventsCheckBox.Size = new System.Drawing.Size(59, 17);
+            this.eventsCheckBox.TabIndex = 16;
+            this.eventsCheckBox.Text = "Events";
+            this.eventsCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // saveAsImageButton
+            // 
+            this.saveAsImageButton.Enabled = false;
+            this.saveAsImageButton.Location = new System.Drawing.Point(1037, 702);
+            this.saveAsImageButton.Name = "saveAsImageButton";
+            this.saveAsImageButton.Size = new System.Drawing.Size(132, 40);
+            this.saveAsImageButton.TabIndex = 17;
+            this.saveAsImageButton.Text = "Save As Image";
+            this.saveAsImageButton.UseVisualStyleBackColor = true;
+            this.saveAsImageButton.Click += new System.EventHandler(this.saveAsImageButton_Click);
+            // 
+            // saveImageDialog
+            // 
+            this.saveImageDialog.Filter = "JPEG *.jpg|*.jpg;*.jpeg";
+            // 
+            // labeledSeparator1
+            // 
+            this.labeledSeparator1.Label = "Base Layer";
+            this.labeledSeparator1.Location = new System.Drawing.Point(1037, 225);
+            this.labeledSeparator1.Name = "labeledSeparator1";
+            this.labeledSeparator1.Size = new System.Drawing.Size(132, 13);
+            this.labeledSeparator1.TabIndex = 18;
             // 
             // tileDiplayer
             // 
@@ -197,10 +250,10 @@
             this.tileDiplayer.Font = new System.Drawing.Font("Courier New", 10F);
             this.tileDiplayer.Image = null;
             this.tileDiplayer.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-            this.tileDiplayer.Location = new System.Drawing.Point(1038, 85);
+            this.tileDiplayer.Location = new System.Drawing.Point(1037, 85);
             this.tileDiplayer.Name = "tileDiplayer";
             this.tileDiplayer.OffsetTileSelector = false;
-            this.tileDiplayer.Size = new System.Drawing.Size(124, 110);
+            this.tileDiplayer.Size = new System.Drawing.Size(132, 110);
             this.tileDiplayer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.tileDiplayer.TabIndex = 5;
             this.tileDiplayer.TabStop = false;
@@ -231,48 +284,83 @@
             this.pictureBox.TabIndex = 0;
             this.pictureBox.TabStop = false;
             // 
-            // occludeCheckBox
+            // labeledSeparator2
             // 
-            this.occludeCheckBox.AutoSize = true;
-            this.occludeCheckBox.Checked = true;
-            this.occludeCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.occludeCheckBox.Location = new System.Drawing.Point(1038, 202);
-            this.occludeCheckBox.Name = "occludeCheckBox";
-            this.occludeCheckBox.Size = new System.Drawing.Size(66, 17);
-            this.occludeCheckBox.TabIndex = 15;
-            this.occludeCheckBox.Text = "Occlude";
-            this.occludeCheckBox.UseVisualStyleBackColor = true;
+            this.labeledSeparator2.Label = "Internal objects";
+            this.labeledSeparator2.Location = new System.Drawing.Point(1037, 313);
+            this.labeledSeparator2.Name = "labeledSeparator2";
+            this.labeledSeparator2.Size = new System.Drawing.Size(132, 13);
+            this.labeledSeparator2.TabIndex = 19;
             // 
-            // eventsCheckBox
+            // labeledSeparator3
             // 
-            this.eventsCheckBox.AutoSize = true;
-            this.eventsCheckBox.Location = new System.Drawing.Point(1038, 271);
-            this.eventsCheckBox.Name = "eventsCheckBox";
-            this.eventsCheckBox.Size = new System.Drawing.Size(59, 17);
-            this.eventsCheckBox.TabIndex = 16;
-            this.eventsCheckBox.Text = "Events";
-            this.eventsCheckBox.UseVisualStyleBackColor = true;
+            this.labeledSeparator3.Label = "External ebjects";
+            this.labeledSeparator3.Location = new System.Drawing.Point(1038, 379);
+            this.labeledSeparator3.Name = "labeledSeparator3";
+            this.labeledSeparator3.Size = new System.Drawing.Size(132, 13);
+            this.labeledSeparator3.TabIndex = 20;
             // 
-            // saveAsImageButton
+            // labeledSeparator4
             // 
-            this.saveAsImageButton.Enabled = false;
-            this.saveAsImageButton.Location = new System.Drawing.Point(1038, 702);
-            this.saveAsImageButton.Name = "saveAsImageButton";
-            this.saveAsImageButton.Size = new System.Drawing.Size(131, 40);
-            this.saveAsImageButton.TabIndex = 17;
-            this.saveAsImageButton.Text = "Save As Image";
-            this.saveAsImageButton.UseVisualStyleBackColor = true;
-            this.saveAsImageButton.Click += new System.EventHandler(this.saveAsImageButton_Click);
+            this.labeledSeparator4.Label = "Last layer";
+            this.labeledSeparator4.Location = new System.Drawing.Point(1037, 467);
+            this.labeledSeparator4.Name = "labeledSeparator4";
+            this.labeledSeparator4.Size = new System.Drawing.Size(132, 13);
+            this.labeledSeparator4.TabIndex = 21;
             // 
-            // saveImageDialog
+            // npcCheckBox
             // 
-            this.saveImageDialog.Filter = "JPEG *.jpg|*.jpg;*.jpeg";
+            this.npcCheckBox.AutoSize = true;
+            this.npcCheckBox.Location = new System.Drawing.Point(1037, 444);
+            this.npcCheckBox.Name = "npcCheckBox";
+            this.npcCheckBox.Size = new System.Drawing.Size(53, 17);
+            this.npcCheckBox.TabIndex = 22;
+            this.npcCheckBox.Text = "NPCs";
+            this.npcCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // monsterCheckBox
+            // 
+            this.monsterCheckBox.AutoSize = true;
+            this.monsterCheckBox.Location = new System.Drawing.Point(1037, 421);
+            this.monsterCheckBox.Name = "monsterCheckBox";
+            this.monsterCheckBox.Size = new System.Drawing.Size(69, 17);
+            this.monsterCheckBox.TabIndex = 23;
+            this.monsterCheckBox.Text = "Monsters";
+            this.monsterCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // extraCheckBox
+            // 
+            this.extraCheckBox.AutoSize = true;
+            this.extraCheckBox.Location = new System.Drawing.Point(1037, 398);
+            this.extraCheckBox.Name = "extraCheckBox";
+            this.extraCheckBox.Size = new System.Drawing.Size(55, 17);
+            this.extraCheckBox.TabIndex = 24;
+            this.extraCheckBox.Text = "Extras";
+            this.extraCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // debugDotsCheckBox
+            // 
+            this.debugDotsCheckBox.AutoSize = true;
+            this.debugDotsCheckBox.Location = new System.Drawing.Point(653, 9);
+            this.debugDotsCheckBox.Name = "debugDotsCheckBox";
+            this.debugDotsCheckBox.Size = new System.Drawing.Size(80, 17);
+            this.debugDotsCheckBox.TabIndex = 25;
+            this.debugDotsCheckBox.Text = "DebugDots";
+            this.debugDotsCheckBox.UseVisualStyleBackColor = true;
             // 
             // MapViewerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1173, 754);
+            this.Controls.Add(this.debugDotsCheckBox);
+            this.Controls.Add(this.extraCheckBox);
+            this.Controls.Add(this.monsterCheckBox);
+            this.Controls.Add(this.npcCheckBox);
+            this.Controls.Add(this.labeledSeparator4);
+            this.Controls.Add(this.labeledSeparator3);
+            this.Controls.Add(this.labeledSeparator2);
+            this.Controls.Add(this.labeledSeparator1);
             this.Controls.Add(this.saveAsImageButton);
             this.Controls.Add(this.eventsCheckBox);
             this.Controls.Add(this.occludeCheckBox);
@@ -322,5 +410,13 @@
         private System.Windows.Forms.CheckBox eventsCheckBox;
         private System.Windows.Forms.Button saveAsImageButton;
         private System.Windows.Forms.SaveFileDialog saveImageDialog;
+        private Components.LabeledSeparator labeledSeparator1;
+        private Components.LabeledSeparator labeledSeparator2;
+        private Components.LabeledSeparator labeledSeparator3;
+        private Components.LabeledSeparator labeledSeparator4;
+        private System.Windows.Forms.CheckBox npcCheckBox;
+        private System.Windows.Forms.CheckBox monsterCheckBox;
+        private System.Windows.Forms.CheckBox extraCheckBox;
+        private System.Windows.Forms.CheckBox debugDotsCheckBox;
     }
 }

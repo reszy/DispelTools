@@ -127,5 +127,11 @@ namespace DispelTools
             selectMenuButton(sender);
             nestForm(new DataPatcher.PatcherForm(new DataPatcher.Patchers.SpritePatcherFactory()));
         }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            currentlyEmbedded?.Close();
+            base.OnClosed(e);
+        }
     }
 }

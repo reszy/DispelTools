@@ -94,6 +94,12 @@
     <Compile Include="Components\DetailsComponent.Designer.cs">
       <DependentUpon>DetailsComponent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\LabeledSeparator.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\LabeledSeparator.Designer.cs">
+      <DependentUpon>LabeledSeparator.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\PictureDiplayer.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -267,6 +273,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Components\DetailsComponent.resx">
       <DependentUpon>DetailsComponent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\LabeledSeparator.resx">
+      <DependentUpon>LabeledSeparator.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Components\ProgressBarWithText.resx">
       <DependentUpon>ProgressBarWithText.cs</DependentUpon>

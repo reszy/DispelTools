@@ -34,30 +34,22 @@ namespace DispelTools.GameDataModels.Map.Generator
             var mapImage = new DirectBitmap(imageWidth, imageHeight);
 
             workReporter.SetTotal(CalculateTotalProgress());
-
-            PlotBase(mapImage);
-
             var offset = CalculateOcclusionOffset();
-            if (generatorOptions.TiledObjects && generatorOptions.Sprites)
+
+            if (generatorOptions.GTL || generatorOptions.Events || generatorOptions.Collisions)
             {
-                PlotObjects(mapImage, offset);
+                PlotBase(mapImage);
             }
-            else
-            {
-                if (generatorOptions.TiledObjects)
-                {
-                    PlotTiledObjects(mapImage, offset);
-                }
-                if (generatorOptions.Sprites)
-                {
-                    PlotInternalSprites(mapImage, offset);
-                }
-            }
+            PlotObjects(mapImage, offset);
             if (generatorOptions.Roofs)
             {
                 PlotRoofs(mapImage);
             }
-            foreach (var dot in debugDots) DrawDot(mapImage, dot.point, dot.color);
+            if (generatorOptions.DebugDots)
+            {
+                if (debugDots.Count > 0) workReporter.SetText("Printing debug dots...");
+                foreach (var (point, color) in debugDots) DrawDot(mapImage, point, color);
+            }
             return mapImage;
         }
 
@@ -116,9 +108,12 @@ namespace DispelTools.GameDataModels.Map.Generator
 
         private void PlotObjects(DirectBitmap image, Point offset)
         {
-            List<IInterlacedOrderObject> interlacedObjects = new List<IInterlacedOrderObject>(Model.TiledObjectInfos);
-            interlacedObjects.AddRange(mapContainer.Entities);
-            interlacedObjects.AddRange(Model.InternalSpriteInfos);
+            List<IInterlacedOrderObject> interlacedObjects = new List<IInterlacedOrderObject>();
+            if (generatorOptions.ExternalExtra) interlacedObjects.AddRange(mapContainer.ExtraEntities);
+            if (generatorOptions.ExternalMonster) interlacedObjects.AddRange(mapContainer.MonsterEntities);
+            if (generatorOptions.ExternalNpc) interlacedObjects.AddRange(mapContainer.NpcEntities);
+            if (generatorOptions.Sprites) interlacedObjects.AddRange(Model.InternalSpriteInfos);
+            if (generatorOptions.TiledObjects) interlacedObjects.AddRange(Model.TiledObjectInfos);
             interlacedObjects.Sort(new IInterlacedOrderObjectComparer());
 
             foreach (var @object in interlacedObjects)
@@ -211,7 +206,10 @@ namespace DispelTools.GameDataModels.Map.Generator
             return ((generatorOptions.GTL || generatorOptions.Events || generatorOptions.Collisions) ? Model.TiledMapSize.Height : 0)
                  + (generatorOptions.Roofs ? Model.TiledMapSize.Height : 0)
                  + (generatorOptions.Sprites ? Model.InternalSpriteInfos.Count : 0)
-                 + (generatorOptions.TiledObjects ? Model.TiledObjectInfos.Count : 0);
+                 + (generatorOptions.TiledObjects ? Model.TiledObjectInfos.Count : 0)
+                 + (generatorOptions.ExternalExtra ? mapContainer.ExtraEntities.Count : 0)
+                 + (generatorOptions.ExternalMonster ? mapContainer.MonsterEntities.Count : 0)
+                 + (generatorOptions.ExternalNpc ? mapContainer.NpcEntities.Count : 0);
         }
 
         private Point ConvertMapCoordsToImageCoords(int x, int y)

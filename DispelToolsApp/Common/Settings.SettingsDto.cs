@@ -16,6 +16,8 @@ namespace DispelTools.Common
             public string OutRootDir { get; set; }
 
             [DebugIgnore]
+            public string MapGenerationOptions { get; set; }
+            [DebugIgnore]
             public bool DebugFileMetrics { get; set; }
             [DebugIgnore]
             public bool DebugReadOnlyExtractor { get; set; }
@@ -24,8 +26,9 @@ namespace DispelTools.Common
             {
                 return new SettingsDto()
                 {
-                    GameRootDir = "",
-                    OutRootDir = "",
+                    GameRootDir = string.Empty,
+                    OutRootDir = string.Empty,
+                    MapGenerationOptions = new GameDataModels.Map.Generator.GeneratorOptions().ToSetting(),
                     DebugFileMetrics = false,
                     DebugReadOnlyExtractor = false,
                 };

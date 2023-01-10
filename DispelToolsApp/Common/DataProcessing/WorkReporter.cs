@@ -43,5 +43,9 @@ namespace DispelTools.Common.DataProcessing
             currentProgress = (currentStage - 1) * STAGE_MAX + (int)((double)progress / totalInStage * STAGE_MAX);
             backgroundWorker.ReportProgress(currentProgress);
         }
+        public void SetText(string text)
+        {
+            backgroundWorker.ReportProgress(currentProgress, text);
+        }
     }
 }

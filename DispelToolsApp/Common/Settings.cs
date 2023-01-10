@@ -1,4 +1,5 @@
 ﻿using DispelTools.DebugTools.MetricTools;
+using DispelTools.GameDataModels.Map.Generator;
 using System.IO;
 using System.IO.Abstractions;
 
@@ -10,10 +11,12 @@ namespace DispelTools.Common
         private static string gameRootDir = "";
         private static string outRootDir = "";
         private static IFileSystem fs;
+        private static GeneratorOptions mapGenerationOptions = new GeneratorOptions();
 
         public static bool ExtractorReadOnly => debugReadOnlyExtractor;
         public static string GameRootDir { get { LoadSettings(); return gameRootDir; } set => SetGameDir(value); }
         public static string OutRootDir { get { LoadSettings(); return outRootDir; } set => SetOutDir(value); }
+        public static GeneratorOptions MapGenerationOptions { get => mapGenerationOptions; set { if (value != mapGenerationOptions) { mapGenerationOptions = value; SaveSettings(); } } }
 
         public static bool RootsValid { get; private set; }
         private static bool Loaded { get; set; }
@@ -77,6 +80,7 @@ namespace DispelTools.Common
             {
                 GameRootDir = gameRootDir,
                 OutRootDir = outRootDir,
+                MapGenerationOptions = MapGenerationOptions.ToSetting(),
                 DebugFileMetrics = Metrics.Enabled,
                 DebugReadOnlyExtractor = debugReadOnlyExtractor,
             }.SerializeToMap();
@@ -160,6 +164,7 @@ namespace DispelTools.Common
             SetOutDir(settings.OutRootDir);
             Metrics.Enabled = settings.DebugFileMetrics;
             debugReadOnlyExtractor = settings.DebugReadOnlyExtractor;
+            mapGenerationOptions = GeneratorOptions.LoadSetting(settings.MapGenerationOptions);
         }
     }
 }

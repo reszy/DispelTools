@@ -14,14 +14,18 @@ namespace DispelTools.GameDataModels.Map
         public List<SpriteSequence> InternalSprites { get; }
         public TileSet Gtl { get; set; }
         public TileSet Btl { get; set; }
-        public List<External.MapExternalObject> Entities { get; }
+        public List<External.MapExternalObject> ExtraEntities { get; }
+        public List<External.MapExternalObject> MonsterEntities { get; }
+        public List<External.MapExternalObject> NpcEntities { get; }
 
         public MapContainer(string mapName, MapModel model, List<SpriteSequence> sprites)
         {
             MapName = mapName;
             Model = model;
             InternalSprites = sprites;
-            Entities = new List<External.MapExternalObject>();
+            ExtraEntities = new List<External.MapExternalObject>();
+            MonsterEntities = new List<External.MapExternalObject>();
+            NpcEntities = new List<External.MapExternalObject>();
         }
 
         public string GetStats()

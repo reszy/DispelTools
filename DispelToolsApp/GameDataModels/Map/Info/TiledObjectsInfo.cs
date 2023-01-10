@@ -22,7 +22,7 @@ namespace DispelTools.GameDataModels.Map
 
         public int PositionOrder => Position.Y + Size * TileSet.TILE_HEIGHT;
 
-        public int TypeOrder => 1;
+        public int TypeOrder => 0;
 
     }
 }

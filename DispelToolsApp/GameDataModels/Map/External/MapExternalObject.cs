@@ -22,6 +22,6 @@ namespace DispelTools.GameDataModels.Map.External
 
         public int Order => X;
 
-        public int TypeOrder => 0;
+        public int TypeOrder => 2;
     }
 }

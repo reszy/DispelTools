@@ -1,10 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.IO.Abstractions;
 
 namespace DispelTools.DataEditor.Mappers
 {
     internal class MonRefMapper : Mapper
     {
-        protected override int PropertyItemSize => 14 * 4;
+        public MonRefMapper() { }
+
+        public MonRefMapper(IFileSystem fs) : base(fs) { }
+
+        internal override int PropertyItemSize => 14 * 4;
 
         protected override List<ItemFieldDescriptor> CreateDescriptors()
         {

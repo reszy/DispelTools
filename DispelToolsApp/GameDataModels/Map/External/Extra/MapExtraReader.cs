@@ -10,9 +10,9 @@
 
         protected override string ReferencePrefix { get; } = "Ext";
 
-        protected override DataEditor.Mapper Mapper { get; } = new DataEditor.Mappers.ExtRefMapper();
+        internal override DataEditor.Mapper Mapper { get; } = new DataEditor.Mappers.ExtRefMapper();
 
-        protected override string[] ValuesMapping { get; } = { "xPos", "yPos", "ExtId", "rotation", "type", "closed" };
+        internal override string[] ValuesMapping { get; } = { "xPos", "yPos", "ExtId", "rotation", "type", "closed" };
 
         protected override OnMapSpriteInfo ProcessItem(Components.CustomPropertyGridControl.PropertyItem item, object[] values)
         {

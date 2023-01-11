@@ -1,12 +1,18 @@
 ﻿using DispelTools.Components.CustomPropertyGridControl;
 using System.Collections.Generic;
+using System.IO.Abstractions;
 
 namespace DispelTools.DataEditor.Mappers
 {
     internal class MonsterDbMapper : Mapper
     {
+        public MonsterDbMapper(IFileSystem fs) : base(fs) { }
+
+        public MonsterDbMapper() { }
+
         private const byte FILLER = 0x0;
-        protected override int PropertyItemSize => 40 * 4;
+
+        internal override int PropertyItemSize => 40 * 4;
 
         protected override bool HaveCounterOnBeginning => false;
 

@@ -60,7 +60,7 @@ namespace DispelTools.DataEditor
         }
 
         public Mapping CreateMapping(params string[] fieldNames) => new Mapping(this, fieldNames);
-        protected abstract int PropertyItemSize { get; }
+        internal abstract int PropertyItemSize { get; }
 
         protected virtual bool HaveCounterOnBeginning { get; } = true;
         protected abstract List<ItemFieldDescriptor> CreateDescriptors();

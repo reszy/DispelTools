@@ -53,6 +53,7 @@
     <Compile Include="DataEditor\ItemFieldDescriptorTests.cs" />
     <Compile Include="DataEditor\SimpleEditorTests.cs" />
     <Compile Include="DataExtractor\Extractors\AllExtractor\AllFilesExtractorTests.cs" />
+    <Compile Include="GameDataModels\Map\External\ExternalObjectMappingTests.cs" />
     <Compile Include="ImageAnalyzer\DataPixelTests.cs" />
     <Compile Include="ImageProcessing\ColorManagementTests.cs" />
     <Compile Include="ImageProcessing\Filters\ChannelFilterTests.cs" />

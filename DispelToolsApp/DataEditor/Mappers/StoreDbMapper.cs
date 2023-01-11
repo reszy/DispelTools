@@ -5,7 +5,7 @@ namespace DispelTools.DataEditor.Mappers
     internal class StoreDbMapper : Mapper
     {
         private const byte FILLER = 0x0;
-        protected override int PropertyItemSize => 237 * 4;
+        internal override int PropertyItemSize => 237 * 4;
         protected override List<ItemFieldDescriptor> CreateDescriptors()
         {
             var builder = new FileDescriptorBuilder();

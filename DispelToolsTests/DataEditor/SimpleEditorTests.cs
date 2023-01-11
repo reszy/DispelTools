@@ -33,7 +33,7 @@ namespace DispelTools.DataEditor.Tests
             {
             }
 
-            protected override int PropertyItemSize => PROPERTY_ITEM_SIZE;
+            internal override int PropertyItemSize => PROPERTY_ITEM_SIZE;
 
             protected override List<ItemFieldDescriptor> CreateDescriptors()
             {

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO.Abstractions;
 
 namespace DispelTools.DataEditor.Mappers
 {
@@ -9,7 +10,11 @@ namespace DispelTools.DataEditor.Mappers
 
         private readonly int elementStep = 0x2a0;
 
-        protected override int PropertyItemSize => elementStep;
+        public NpcRefMapper() { }
+
+        public NpcRefMapper(IFileSystem fs) : base(fs) { }
+
+        internal override int PropertyItemSize => elementStep;
 
         protected override List<ItemFieldDescriptor> CreateDescriptors()
         {

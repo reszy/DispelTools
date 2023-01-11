@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO.Abstractions;
 using static DispelTools.DataEditor.ItemFieldDescriptor;
 
 namespace DispelTools.DataEditor.Mappers
@@ -7,7 +8,12 @@ namespace DispelTools.DataEditor.Mappers
     {
         private const byte FILLER = 0xcd;
         private const int NAME_STRING_MAX_LENGTH = 32;
-        protected override int PropertyItemSize => 46 * 4;
+
+        public ExtRefMapper() { }
+
+        public ExtRefMapper(IFileSystem fs) : base(fs) { }
+
+        internal override int PropertyItemSize => 46 * 4;
 
         protected override List<ItemFieldDescriptor> CreateDescriptors()
         {
@@ -53,8 +59,8 @@ namespace DispelTools.DataEditor.Mappers
 
             builder.Fill(10, AsInt32());
 
-            builder.Add("event id",AsInt32(), "id from event.ini");
-            builder.Add("message id",AsInt32(), "id from message.scr for signs");
+            builder.Add("event id", AsInt32(), "id from event.ini");
+            builder.Add("message id", AsInt32(), "id from message.scr for signs");
             builder.Add(AsInt32());
             builder.Add(AsInt32());
 

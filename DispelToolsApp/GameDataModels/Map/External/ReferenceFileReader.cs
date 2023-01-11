@@ -14,8 +14,8 @@ namespace DispelTools.GameDataModels.Map.External
         protected abstract int InfoSpriteNameColumnIndex { get; }
         protected abstract string SpriteDirectoryName { get; }
         protected abstract string ReferencePrefix { get; }
-        protected abstract DataEditor.Mapper Mapper { get; }
-        protected abstract string[] ValuesMapping { get; }
+        internal abstract DataEditor.Mapper Mapper { get; }
+        internal abstract string[] ValuesMapping { get; }
 
         public List<MapExternalObject> GetObjects(string gamePath, string mapName, MapContainer mapContainer)
         {

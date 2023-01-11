@@ -10,9 +10,9 @@
 
         protected override string ReferencePrefix { get; } = "Mon";
 
-        protected override DataEditor.Mapper Mapper { get; } = new DataEditor.Mappers.MonRefMapper();
+        internal override DataEditor.Mapper Mapper { get; } = new DataEditor.Mappers.MonRefMapper();
 
-        protected override string[] ValuesMapping { get; } = { "posX", "posY", "monId" };
+        internal override string[] ValuesMapping { get; } = { "posX", "posY", "monId" };
 
         protected override OnMapSpriteInfo ProcessItem(Components.CustomPropertyGridControl.PropertyItem item, object[] values)
         {

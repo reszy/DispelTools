@@ -4,17 +4,17 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
-namespace DispelTools.Components
+namespace DispelTools.Components.PictureDisplay
 {
-    public partial class PictureDiplayer : PictureBox
+    public partial class PictureDisplayer : PictureBox
     {
-        private readonly PictureDiplayerCore pictureDiplayerCore;
+        private readonly PictureDisplayerCore pictureDisplayerCore;
         private Image image;
         public enum MouseMode { Pointer, RectSelector, RowSelector };
         public MouseMode CurrentMouseMode { get; set; }
 
         [DefaultValue(true)]
-        public bool ToolTip { get => pictureDiplayerCore.ShowDataTip; set => pictureDiplayerCore.ShowDataTip = value; }
+        public bool ToolTip { get => pictureDisplayerCore.ShowDataTip; set => pictureDisplayerCore.ShowDataTip = value; }
 
         public InterpolationMode InterpolationMode { get; set; } = InterpolationMode.NearestNeighbor;
         public bool OffsetTileSelector { get; set; }
@@ -26,16 +26,16 @@ namespace DispelTools.Components
 
         public string DebugText { get; set; } = "";
 
-        public PictureDiplayer()
+        public PictureDisplayer()
         {
             Font = new Font(FontFamily.GenericMonospace, 10.0f);
-            pictureDiplayerCore = new PictureDiplayerCore(this);
+            pictureDisplayerCore = new PictureDisplayerCore(this);
 
-            MouseDown += pictureDiplayerCore.MouseDownAction;
-            MouseUp += pictureDiplayerCore.MouseUpAction;
-            MouseMove += pictureDiplayerCore.MouseMoveAction;
-            MouseWheel += pictureDiplayerCore.MouseWheelAction;
-            Paint += pictureDiplayerCore.PaintAction;
+            MouseDown += pictureDisplayerCore.MouseDownAction;
+            MouseUp += pictureDisplayerCore.MouseUpAction;
+            MouseMove += pictureDisplayerCore.MouseMoveAction;
+            MouseWheel += pictureDisplayerCore.MouseWheelAction;
+            Paint += pictureDisplayerCore.PaintAction;
         }
 
         public void SetImage(Bitmap bitmap, bool reset, ImageAnalyzer.DataAnalyzedBitmap data = null)
@@ -43,9 +43,9 @@ namespace DispelTools.Components
             image = bitmap;
             if (reset)
             {
-                pictureDiplayerCore.ResetImage();
-                pictureDiplayerCore.InitImageInContainer();
-                pictureDiplayerCore.DataAnalyzedBitamp = data;
+                pictureDisplayerCore.ResetImage();
+                pictureDisplayerCore.InitImageInContainer();
+                pictureDisplayerCore.DataAnalyzedBitamp = data;
             }
             Invalidate();
         }
@@ -57,9 +57,9 @@ namespace DispelTools.Components
             base.OnPaint(paintEventArgs);
         }
 
-        internal void SetController(PictureDisplayer.IPictureDisplayerController displayerController)
+        internal void SetController(IPictureDisplayerController displayerController)
         {
-            pictureDiplayerCore.SetController(displayerController);
+            pictureDisplayerCore.SetController(displayerController);
         }
     }
 }

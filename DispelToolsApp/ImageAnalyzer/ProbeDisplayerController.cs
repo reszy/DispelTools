@@ -1,4 +1,4 @@
-﻿using DispelTools.Components;
+﻿using DispelTools.Components.PictureDisplay;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace DispelTools.ImageAnalyzer
 {
-    class ProbeDisplayerController : Components.PictureDisplayer.IPictureDisplayerController
+    class ProbeDisplayerController : IPictureDisplayerController
     {
         private bool showHex;
         private DispelTools.ImageAnalyzer.DataAnalyzedBitmap.DataPixel selectedPixelData;
@@ -17,7 +17,7 @@ namespace DispelTools.ImageAnalyzer
 
         public int RequiredTipWidth => 150;
 
-        public void DrawHighlight(PictureDiplayer.ICoordsConverter sender, Graphics g, Point position, Pen highlightPen, float zoom)
+        public void DrawHighlight(ICoordsConverter sender, Graphics g, Point position, Pen highlightPen, float zoom)
         {
             throw new NotImplementedException();
         }
@@ -57,7 +57,7 @@ namespace DispelTools.ImageAnalyzer
         }
 
 
-        public void PixelSelected(PictureDiplayer.ICoordsConverter sender, PictureDiplayer.PixelSelectedArgs args)
+        public void PixelSelected(ICoordsConverter sender, PixelSelectedArgs args)
         {
             selectedPixelCoords = args.Position;
             showHex = args.ModifierKeys == Keys.Shift;

@@ -1,5 +1,5 @@
 ﻿using DispelTools.Common;
-using DispelTools.Components;
+using DispelTools.Components.PictureDisplay;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -83,24 +83,24 @@ namespace DispelTools.ImageAnalyzer
             switch (imageEditControls.CurrentEditTool)
             {
                 case ImageEditControls.EditTool.ROW_SELECTOR:
-                    if (pictureDisplayer.CurrentMouseMode != PictureDiplayer.MouseMode.RectSelector)
+                    if (pictureDisplayer.CurrentMouseMode != PictureDisplayer.MouseMode.RectSelector)
                     {
-                        pictureDisplayer.CurrentMouseMode = PictureDiplayer.MouseMode.RectSelector;
+                        pictureDisplayer.CurrentMouseMode = PictureDisplayer.MouseMode.RectSelector;
                     }
                     break;
                 case ImageEditControls.EditTool.RECT_SELECTOR:
-                    if (pictureDisplayer.CurrentMouseMode != PictureDiplayer.MouseMode.RowSelector)
+                    if (pictureDisplayer.CurrentMouseMode != PictureDisplayer.MouseMode.RowSelector)
                     {
-                        pictureDisplayer.CurrentMouseMode = PictureDiplayer.MouseMode.RowSelector;
+                        pictureDisplayer.CurrentMouseMode = PictureDisplayer.MouseMode.RowSelector;
                     }
                     break;
                 case ImageEditControls.EditTool.NONE:
                 case ImageEditControls.EditTool.COLOR_PICKER:
                 case ImageEditControls.EditTool.PENCIL:
                 default:
-                    if (pictureDisplayer.CurrentMouseMode != PictureDiplayer.MouseMode.Pointer)
+                    if (pictureDisplayer.CurrentMouseMode != PictureDisplayer.MouseMode.Pointer)
                     {
-                        pictureDisplayer.CurrentMouseMode = PictureDiplayer.MouseMode.Pointer;
+                        pictureDisplayer.CurrentMouseMode = PictureDisplayer.MouseMode.Pointer;
                     }
                     break;
             }

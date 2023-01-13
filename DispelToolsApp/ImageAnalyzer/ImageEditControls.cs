@@ -1,4 +1,5 @@
-﻿using DispelTools.ImageProcessing;
+﻿using DispelTools.Components.PictureDisplay;
+using DispelTools.ImageProcessing;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -122,7 +123,7 @@ namespace DispelTools.ImageAnalyzer
             EditToolChangedEvent?.Invoke(sender, EventArgs.Empty);
         }
 
-        public void PixelSelected(object sender, Components.PictureDiplayer.PixelSelectedArgs pixelSelectedArgs)
+        public void PixelSelected(object sender, PixelSelectedArgs pixelSelectedArgs)
         {
             if (CurrentEditTool == EditTool.COLOR_PICKER)
             {

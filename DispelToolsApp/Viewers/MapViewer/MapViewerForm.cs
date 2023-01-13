@@ -1,7 +1,7 @@
 ﻿using DispelTools.Common;
 using static DispelTools.Common.MagickImageSave;
 using DispelTools.Common.DataProcessing;
-using DispelTools.Components;
+using DispelTools.Components.PictureDisplay;
 using DispelTools.DebugTools.MetricTools;
 using DispelTools.GameDataModels.Map;
 using DispelTools.GameDataModels.Map.Generator;
@@ -100,7 +100,7 @@ namespace DispelTools.Viewers.MapViewer
                 .Select(e => new MapDisplayerController.TileInfo(type, e.DbId, e.SpriteName));
         }
 
-        private void TileClicked(object sender, PictureDiplayer.PixelSelectedArgs point)
+        private void TileClicked(object sender, PixelSelectedArgs point)
         {
             if (MapLoaded)
             {
@@ -229,7 +229,7 @@ namespace DispelTools.Viewers.MapViewer
                 {
                     sidePreviewImage?.Dispose();
                     sidePreviewImage = mapContainer.InternalSprites[(int)tileShowNumber.Value].GetFrame(0).RawRgb.ToDirectBitmap();
-                    tileDiplayer.SetImage(sidePreviewImage.Bitmap, true);
+                    tileDisplayer.SetImage(sidePreviewImage.Bitmap, true);
                 }
             }
         }
@@ -239,7 +239,7 @@ namespace DispelTools.Viewers.MapViewer
             sidePreviewImage?.Dispose();
             sidePreviewImage = new DirectBitmap(TileSet.TILE_WIDTH, TileSet.TILE_HEIGHT);
             tile.PlotTileOnBitmap(sidePreviewImage, 0, 0);
-            tileDiplayer.SetImage(sidePreviewImage.Bitmap, true);
+            tileDisplayer.SetImage(sidePreviewImage.Bitmap, true);
         }
 
         private void tileSetCombo_SelectedIndexChanged(object sender, EventArgs e)

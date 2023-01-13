@@ -27,8 +27,8 @@
             pictureBox.Image?.Dispose();
             pictureBox.Image = null;
 
-            tileDiplayer.Image?.Dispose();
-            tileDiplayer.Image = null;
+            tileDisplayer.Image?.Dispose();
+            tileDisplayer.Image = null;
             backgroundWorker?.Dispose();
             mapContainer?.Dispose();
             mapContainer = null;
@@ -65,9 +65,9 @@
             this.saveAsImageButton = new System.Windows.Forms.Button();
             this.saveImageDialog = new System.Windows.Forms.SaveFileDialog();
             this.labeledSeparator1 = new DispelTools.Components.LabeledSeparator();
-            this.tileDiplayer = new DispelTools.Components.PictureDiplayer();
+            this.tileDisplayer = new DispelTools.Components.PictureDisplay.PictureDisplayer();
             this.progressBar = new DispelTools.Components.ProgressBarWithText();
-            this.pictureBox = new DispelTools.Components.PictureDiplayer();
+            this.pictureBox = new DispelTools.Components.PictureDisplay.PictureDisplayer();
             this.labeledSeparator2 = new DispelTools.Components.LabeledSeparator();
             this.labeledSeparator3 = new DispelTools.Components.LabeledSeparator();
             this.labeledSeparator4 = new DispelTools.Components.LabeledSeparator();
@@ -76,7 +76,7 @@
             this.extraCheckBox = new System.Windows.Forms.CheckBox();
             this.debugDotsCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.tileShowNumber)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tileDiplayer)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tileDisplayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -244,20 +244,20 @@
             // 
             // tileDiplayer
             // 
-            this.tileDiplayer.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.tileDiplayer.CurrentMouseMode = DispelTools.Components.PictureDiplayer.MouseMode.Pointer;
-            this.tileDiplayer.DebugText = "";
-            this.tileDiplayer.Font = new System.Drawing.Font("Courier New", 10F);
-            this.tileDiplayer.Image = null;
-            this.tileDiplayer.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-            this.tileDiplayer.Location = new System.Drawing.Point(1037, 85);
-            this.tileDiplayer.Name = "tileDiplayer";
-            this.tileDiplayer.OffsetTileSelector = false;
-            this.tileDiplayer.Size = new System.Drawing.Size(132, 110);
-            this.tileDiplayer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.tileDiplayer.TabIndex = 5;
-            this.tileDiplayer.TabStop = false;
-            this.tileDiplayer.ToolTip = false;
+            this.tileDisplayer.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.tileDisplayer.CurrentMouseMode = DispelTools.Components.PictureDisplay.PictureDisplayer.MouseMode.Pointer;
+            this.tileDisplayer.DebugText = "";
+            this.tileDisplayer.Font = new System.Drawing.Font("Courier New", 10F);
+            this.tileDisplayer.Image = null;
+            this.tileDisplayer.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            this.tileDisplayer.Location = new System.Drawing.Point(1037, 85);
+            this.tileDisplayer.Name = "tileDiplayer";
+            this.tileDisplayer.OffsetTileSelector = false;
+            this.tileDisplayer.Size = new System.Drawing.Size(132, 110);
+            this.tileDisplayer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.tileDisplayer.TabIndex = 5;
+            this.tileDisplayer.TabStop = false;
+            this.tileDisplayer.ToolTip = false;
             // 
             // progressBar
             // 
@@ -271,7 +271,7 @@
             // pictureBox
             // 
             this.pictureBox.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.pictureBox.CurrentMouseMode = DispelTools.Components.PictureDiplayer.MouseMode.Pointer;
+            this.pictureBox.CurrentMouseMode = DispelTools.Components.PictureDisplay.PictureDisplayer.MouseMode.Pointer;
             this.pictureBox.DebugText = "";
             this.pictureBox.Font = new System.Drawing.Font("Courier New", 10F);
             this.pictureBox.Image = null;
@@ -373,7 +373,7 @@
             this.Controls.Add(this.btlCheckBox);
             this.Controls.Add(this.collisionsCheckBox);
             this.Controls.Add(this.tileSetCombo);
-            this.Controls.Add(this.tileDiplayer);
+            this.Controls.Add(this.tileDisplayer);
             this.Controls.Add(this.tileShowNumber);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.openButton);
@@ -381,7 +381,7 @@
             this.Name = "MapViewerForm";
             this.Text = "MapViewerForm";
             ((System.ComponentModel.ISupportInitialize)(this.tileShowNumber)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tileDiplayer)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tileDisplayer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -390,11 +390,11 @@
 
         #endregion
 
-        private Components.PictureDiplayer pictureBox;
+        private Components.PictureDisplay.PictureDisplayer pictureBox;
         private System.Windows.Forms.Button openButton;
         private Components.ProgressBarWithText progressBar;
         private System.Windows.Forms.NumericUpDown tileShowNumber;
-        private Components.PictureDiplayer tileDiplayer;
+        private Components.PictureDisplay.PictureDisplayer tileDisplayer;
         private System.Windows.Forms.ComboBox tileSetCombo;
         private System.Windows.Forms.CheckBox collisionsCheckBox;
         private System.Windows.Forms.CheckBox btlCheckBox;

@@ -1,24 +1,16 @@
-﻿using DispelTools.Viewers.MapViewer;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using static DispelTools.GameDataModels.Map.TileSet;
 
-namespace DispelTools.Components
+namespace DispelTools.Components.PictureDisplay
 {
-    public partial class PictureDiplayer
+    public partial class PictureDisplayer
     {
-        public interface ICoordsConverter
+        private class PictureDisplayerCore : ICoordsConverter
         {
-            Point ConvertToImageCoords(Point point);
-            PointF ConvertToPictureBoxCoords(Point point);
-        }
-
-        private class PictureDiplayerCore : ICoordsConverter
-        {
-            private readonly PictureDiplayer pictureDisplayer;
+            private readonly PictureDisplayer pictureDisplayer;
 
             //VIEWPORT
             private Point startingPoint;
@@ -51,19 +43,19 @@ namespace DispelTools.Components
             private Point selectEnd;
 
             private ImageAnalyzer.DataAnalyzedBitmap.DataPixel selectedPixelData;
-            private PictureDisplayer.IPictureDisplayerController subComponent;
+            private IPictureDisplayerController subComponent;
 
 
             public bool ShowDataTip { get; internal set; } = true;
             public ImageAnalyzer.DataAnalyzedBitmap DataAnalyzedBitamp { private get; set; }
             private Bitmap Image => ((Bitmap)pictureDisplayer.Image);
 
-            internal void SetController(PictureDisplayer.IPictureDisplayerController displayerController)
+            internal void SetController(IPictureDisplayerController displayerController)
             {
                 subComponent = displayerController;
             }
 
-            public PictureDiplayerCore(PictureDiplayer pictureDisplayer)
+            public PictureDisplayerCore(PictureDisplayer pictureDisplayer)
             {
                 this.pictureDisplayer = pictureDisplayer;
                 zoomStep = 0.005;
@@ -123,7 +115,7 @@ namespace DispelTools.Components
                     }
                     else
                     {
-                        subComponent?.PixelSelected(this, new PictureDiplayer.PixelSelectedArgs(highlight, Image.GetPixel(highlight.X, highlight.Y), ModifierKeys));
+                        subComponent?.PixelSelected(this, new PixelSelectedArgs(highlight, Image.GetPixel(highlight.X, highlight.Y), ModifierKeys));
                         switch (pictureDisplayer.CurrentMouseMode)
                         {
                             case MouseMode.RectSelector:
@@ -138,7 +130,7 @@ namespace DispelTools.Components
                                 {
                                     selectedPixel = Image.GetPixel(highlight.X, highlight.Y);
                                     selectedPixelCoords = highlight;
-                                    pictureDisplayer.PixelSelectedEvent?.Invoke(this, new PictureDiplayer.PixelSelectedArgs(highlight, selectedPixel, ModifierKeys));
+                                    pictureDisplayer.PixelSelectedEvent?.Invoke(this, new PixelSelectedArgs(highlight, selectedPixel, ModifierKeys));
                                 }
                                 break;
                         }

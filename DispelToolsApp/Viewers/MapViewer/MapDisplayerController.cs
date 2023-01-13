@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DispelTools.Components;
-using DispelTools.Components.PictureDisplayer;
+using DispelTools.Components.PictureDisplay;
 using DispelTools.GameDataModels.Map;
 
 namespace DispelTools.Viewers.MapViewer
@@ -41,7 +41,7 @@ namespace DispelTools.Viewers.MapViewer
 
         }
 
-        public void PixelSelected(PictureDiplayer.ICoordsConverter sender, PictureDiplayer.PixelSelectedArgs args)
+        public void PixelSelected(ICoordsConverter sender, PixelSelectedArgs args)
         {
             info.Clear();
             InfoRequestedEvent?.Invoke(args.Position, info);
@@ -106,7 +106,7 @@ namespace DispelTools.Viewers.MapViewer
             }
         }
 
-        public void DrawHighlight(PictureDiplayer.ICoordsConverter sender, Graphics g, Point position, Pen highlightPen, float zoom)
+        public void DrawHighlight(ICoordsConverter sender, Graphics g, Point position, Pen highlightPen, float zoom)
         {
             var tileCoords = sender.ConvertToPictureBoxCoords(GetClosestTileCenter(position));
             var points = new PointF[]

@@ -100,16 +100,15 @@
     <Compile Include="Components\LabeledSeparator.Designer.cs">
       <DependentUpon>LabeledSeparator.cs</DependentUpon>
     </Compile>
-    <Compile Include="Components\PictureDiplayer.cs">
+    <Compile Include="Components\PictureDisplay\ICoordsConverter.cs" />
+    <Compile Include="Components\PictureDisplay\PictureDiplayer.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Components\PictureDiplayer.PictureDiplayerCore.cs">
+    <Compile Include="Components\PictureDisplay\PictureDiplayer.PictureDiplayerCore.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Components\PictureDiplayer.PixelSelectedArgs.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Components\PictureDisplayer\IPictureDisplayerController.cs" />
+    <Compile Include="Components\PictureDisplay\PictureDiplayer.PixelSelectedArgs.cs" />
+    <Compile Include="Components\PictureDisplay\IPictureDisplayerController.cs" />
     <Compile Include="Components\ProgressBarWithText.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -392,8 +391,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Components\PictureDisplayerSubcomponents\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

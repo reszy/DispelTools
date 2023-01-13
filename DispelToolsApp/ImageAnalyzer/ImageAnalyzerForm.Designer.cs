@@ -40,7 +40,7 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.imageAnalyzeControls = new DispelTools.ImageAnalyzer.ImageAnalyzeControls();
             this.overwriteButton = new System.Windows.Forms.Button();
-            this.pictureDisplayer = new DispelTools.Components.PictureDiplayer();
+            this.pictureDisplayer = new DispelTools.Components.PictureDisplay.PictureDisplayer();
             this.reloadButton = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.tabControl.SuspendLayout();
@@ -169,7 +169,7 @@
             // pictureDisplayer
             // 
             this.pictureDisplayer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureDisplayer.CurrentMouseMode = DispelTools.Components.PictureDiplayer.MouseMode.Pointer;
+            this.pictureDisplayer.CurrentMouseMode = DispelTools.Components.PictureDisplay.PictureDisplayer.MouseMode.Pointer;
             this.pictureDisplayer.Font = new System.Drawing.Font("Courier New", 10F);
             this.pictureDisplayer.Image = null;
             this.pictureDisplayer.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
@@ -219,7 +219,7 @@
 
         #endregion
 
-        private Components.PictureDiplayer pictureDisplayer;
+        private Components.PictureDisplay.PictureDisplayer pictureDisplayer;
         private System.Windows.Forms.Button previewButton;
         private System.Windows.Forms.Button openButton;
         private System.Windows.Forms.Label filenameLabel;

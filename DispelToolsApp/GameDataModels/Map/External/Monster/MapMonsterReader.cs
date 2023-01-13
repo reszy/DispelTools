@@ -12,13 +12,14 @@
 
         internal override DataEditor.Mapper Mapper { get; } = new DataEditor.Mappers.MonRefMapper();
 
-        internal override string[] ValuesMapping { get; } = { "posX", "posY", "monId" };
+        internal override string[] ValuesMapping { get; } = { "posX", "posY", "monId", "fileId" };
 
         protected override OnMapSpriteInfo ProcessItem(Components.CustomPropertyGridControl.PropertyItem item, object[] values)
         {
             return new OnMapSpriteInfo(
                 (int)values[0],
                 (int)values[1],
+                (int)values[3],
                 (int)values[2],
                 3,
                 false

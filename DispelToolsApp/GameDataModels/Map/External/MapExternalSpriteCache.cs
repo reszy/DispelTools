@@ -39,6 +39,8 @@ namespace DispelTools.GameDataModels.Map.External
             return cached[spriteSequence];
         }
 
+        public string GetSpriteName(int spriteId) => nameCache[spriteId];
+
         private class CachedDirectionalSprite
         {
             public SpriteFrame[] sprites;

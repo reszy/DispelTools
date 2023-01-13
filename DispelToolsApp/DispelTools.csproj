@@ -372,6 +372,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\clipboard.png" />
     <Content Include="Resources\colorPicker.png" />
     <Content Include="Resources\DispelTools.ico" />
     <Content Include="Resources\pencil.png" />

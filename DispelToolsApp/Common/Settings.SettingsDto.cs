@@ -21,6 +21,8 @@ namespace DispelTools.Common
             public bool DebugFileMetrics { get; set; }
             [DebugIgnore]
             public bool DebugReadOnlyExtractor { get; set; }
+            [DebugIgnore]
+            public bool CopyCommandToClipboard { get; set; }
 
             public static SettingsDto Default()
             {
@@ -31,6 +33,7 @@ namespace DispelTools.Common
                     MapGenerationOptions = new GameDataModels.Map.Generator.GeneratorOptions().ToSetting(),
                     DebugFileMetrics = false,
                     DebugReadOnlyExtractor = false,
+                    CopyCommandToClipboard = false,
                 };
             }
 

@@ -8,12 +8,14 @@ namespace DispelTools.Common
     public static partial class Settings
     {
         private static bool debugReadOnlyExtractor = false;
+        private static bool copyCommandToClipboard = false;
         private static string gameRootDir = "";
         private static string outRootDir = "";
         private static IFileSystem fs;
         private static GeneratorOptions mapGenerationOptions = new GeneratorOptions();
 
         public static bool ExtractorReadOnly => debugReadOnlyExtractor;
+        public static bool CopyCommandToClipboard { get => copyCommandToClipboard; set { if (value != copyCommandToClipboard) { copyCommandToClipboard = value; SaveSettings(); } } }
         public static string GameRootDir { get { LoadSettings(); return gameRootDir; } set => SetGameDir(value); }
         public static string OutRootDir { get { LoadSettings(); return outRootDir; } set => SetOutDir(value); }
         public static GeneratorOptions MapGenerationOptions { get => mapGenerationOptions; set { if (value != mapGenerationOptions) { mapGenerationOptions = value; SaveSettings(); } } }
@@ -83,6 +85,7 @@ namespace DispelTools.Common
                 MapGenerationOptions = MapGenerationOptions.ToSetting(),
                 DebugFileMetrics = Metrics.Enabled,
                 DebugReadOnlyExtractor = debugReadOnlyExtractor,
+                CopyCommandToClipboard = copyCommandToClipboard,
             }.SerializeToMap();
 
             try
@@ -165,6 +168,7 @@ namespace DispelTools.Common
             Metrics.Enabled = settings.DebugFileMetrics;
             debugReadOnlyExtractor = settings.DebugReadOnlyExtractor;
             mapGenerationOptions = GeneratorOptions.LoadSetting(settings.MapGenerationOptions);
+            copyCommandToClipboard = settings.CopyCommandToClipboard;
         }
     }
 }

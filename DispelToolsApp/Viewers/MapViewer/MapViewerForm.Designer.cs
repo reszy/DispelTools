@@ -75,6 +75,8 @@
             this.monsterCheckBox = new System.Windows.Forms.CheckBox();
             this.extraCheckBox = new System.Windows.Forms.CheckBox();
             this.debugDotsCheckBox = new System.Windows.Forms.CheckBox();
+            this.toggleClipBoard = new System.Windows.Forms.CheckBox();
+            this.selectedMapLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.tileShowNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tileDisplayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -242,7 +244,7 @@
             this.labeledSeparator1.Size = new System.Drawing.Size(132, 13);
             this.labeledSeparator1.TabIndex = 18;
             // 
-            // tileDiplayer
+            // tileDisplayer
             // 
             this.tileDisplayer.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.tileDisplayer.CurrentMouseMode = DispelTools.Components.PictureDisplay.PictureDisplayer.MouseMode.Pointer;
@@ -251,7 +253,7 @@
             this.tileDisplayer.Image = null;
             this.tileDisplayer.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
             this.tileDisplayer.Location = new System.Drawing.Point(1037, 85);
-            this.tileDisplayer.Name = "tileDiplayer";
+            this.tileDisplayer.Name = "tileDisplayer";
             this.tileDisplayer.OffsetTileSelector = false;
             this.tileDisplayer.Size = new System.Drawing.Size(132, 110);
             this.tileDisplayer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -348,11 +350,36 @@
             this.debugDotsCheckBox.Text = "DebugDots";
             this.debugDotsCheckBox.UseVisualStyleBackColor = true;
             // 
+            // toggleClipBoard
+            // 
+            this.toggleClipBoard.Appearance = System.Windows.Forms.Appearance.Button;
+            this.toggleClipBoard.AutoSize = true;
+            this.toggleClipBoard.Image = global::DispelTools.Properties.Resources.clipboard;
+            this.toggleClipBoard.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.toggleClipBoard.Location = new System.Drawing.Point(257, 3);
+            this.toggleClipBoard.Name = "toggleClipBoard";
+            this.toggleClipBoard.Size = new System.Drawing.Size(26, 26);
+            this.toggleClipBoard.TabIndex = 26;
+            this.toolTip.SetToolTip(this.toggleClipBoard, "Copy teleport command to clipboard");
+            this.toggleClipBoard.UseVisualStyleBackColor = true;
+            this.toggleClipBoard.CheckedChanged += new System.EventHandler(this.toggleClipBoard_CheckedChanged);
+            // 
+            // selectedMapLabel
+            // 
+            this.selectedMapLabel.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.selectedMapLabel.Location = new System.Drawing.Point(94, 3);
+            this.selectedMapLabel.Name = "selectedMapLabel";
+            this.selectedMapLabel.Size = new System.Drawing.Size(157, 23);
+            this.selectedMapLabel.TabIndex = 27;
+            this.selectedMapLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // MapViewerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1173, 754);
+            this.Controls.Add(this.selectedMapLabel);
+            this.Controls.Add(this.toggleClipBoard);
             this.Controls.Add(this.debugDotsCheckBox);
             this.Controls.Add(this.extraCheckBox);
             this.Controls.Add(this.monsterCheckBox);
@@ -418,5 +445,7 @@
         private System.Windows.Forms.CheckBox monsterCheckBox;
         private System.Windows.Forms.CheckBox extraCheckBox;
         private System.Windows.Forms.CheckBox debugDotsCheckBox;
+        private System.Windows.Forms.CheckBox toggleClipBoard;
+        private System.Windows.Forms.Label selectedMapLabel;
     }
 }

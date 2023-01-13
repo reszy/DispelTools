@@ -76,6 +76,8 @@ namespace DispelTools.Viewers.MapViewer
             npcCheckBox.Checked = setting.ExternalNpc;
             debugDotsCheckBox.Checked = setting.DebugDots;
 
+            toggleClipBoard.Checked = Settings.CopyCommandToClipboard;
+
             mapDisplayerController = new MapDisplayerController();
             mapDisplayerController.InfoRequestedEvent += CreateTileInfo;
             pictureBox.SetController(mapDisplayerController);
@@ -83,7 +85,7 @@ namespace DispelTools.Viewers.MapViewer
 
         private void CreateTileInfo(Point point, List<MapDisplayerController.TileInfo> info)
         {
-            if(MapLoaded)
+            if (MapLoaded)
             {
                 var mapPosition = mapContainer.TranslateImageToMapCoords(point.X, point.Y, generatedOccluded);
 
@@ -106,7 +108,7 @@ namespace DispelTools.Viewers.MapViewer
             {
                 var mapPosition = mapContainer.TranslateImageToMapCoords(point.Position.X, point.Position.Y, generatedOccluded);
                 pictureBox.DebugText = $"Tile({mapPosition.X}, {mapPosition.Y})";
-                Clipboard.SetText($"TELEPORT({mapPosition.X},{mapPosition.Y})");
+                if (toggleClipBoard.Checked) Clipboard.SetText($"TELEPORT({mapPosition.X},{mapPosition.Y})");
             }
         }
 
@@ -208,6 +210,7 @@ namespace DispelTools.Viewers.MapViewer
                 saveImageDialog.FileName = Path.GetFileNameWithoutExtension(filename);
                 mapContainer?.Dispose();
                 mapContainer = null;
+                selectedMapLabel.Text = Path.GetFileName(filename);
             });
         }
 
@@ -335,7 +338,13 @@ namespace DispelTools.Viewers.MapViewer
         protected override void OnClosed(EventArgs e)
         {
             if (mapContainer != null) Settings.MapGenerationOptions = CheckBoxesToGenerationOptions();
+            Settings.CopyCommandToClipboard = toggleClipBoard.Checked;
             base.OnClosed(e);
+        }
+
+        private void toggleClipBoard_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

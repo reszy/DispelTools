@@ -17,7 +17,7 @@ namespace DispelTools.GameDataModels.Map.External.Npc
 
         internal override DataEditor.Mapper Mapper { get; } = new DataEditor.Mappers.NpcRefMapper();
 
-        internal override string[] ValuesMapping { get; } = { "goto1X", "goto1Y", "npcId", "lookingDirection" };
+        internal override string[] ValuesMapping { get; } = { "goto1X", "goto1Y", "npcId", "lookingDirection", "id" };
 
         protected override OnMapSpriteInfo ProcessItem(Components.CustomPropertyGridControl.PropertyItem item, object[] values)
         {
@@ -25,6 +25,7 @@ namespace DispelTools.GameDataModels.Map.External.Npc
             return new OnMapSpriteInfo(
                 (int)values[0],
                 (int)values[1],
+                (int)values[4],
                 (int)values[2],
                 direction > 4 ? 8 - direction : direction,
                 direction > 4

@@ -40,7 +40,12 @@ namespace DispelTools.GameDataModels.Map.External
                 var values = fieldMapping.Convert(item);
                 var processed = ProcessItem(item, values);
 
-                objects.Add(new MapExternalObject(processed, spriteCache.GetSpriteFrame(processed.SpriteId, processed.SpriteSequence), mapPixelHeight, mapNonOccludedStartY));
+                objects.Add(new MapExternalObject(
+                    processed,
+                    spriteCache.GetSpriteName(processed.SpriteId),
+                    spriteCache.GetSpriteFrame(processed.SpriteId, processed.SpriteSequence),
+                    mapPixelHeight,
+                    mapNonOccludedStartY));
             }
 
             return objects;
@@ -50,16 +55,18 @@ namespace DispelTools.GameDataModels.Map.External
 
         public class OnMapSpriteInfo
         {
-            public OnMapSpriteInfo(int x, int y, int spriteId, int spriteSequence, bool flip)
+            public OnMapSpriteInfo(int x, int y, int dbId, int spriteId, int spriteSequence, bool flip)
             {
                 X = x;
                 Y = y;
+                DbId = dbId;
                 SpriteId = spriteId;
                 SpriteSequence = spriteSequence;
                 Flip = flip;
             }
             public int X { get; }
             public int Y { get; }
+            public int DbId { get; }
             public int SpriteId { get; }
             public int SpriteSequence { get; }
             public bool Flip { get; }

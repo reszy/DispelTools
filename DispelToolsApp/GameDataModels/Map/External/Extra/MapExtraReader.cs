@@ -12,7 +12,7 @@
 
         internal override DataEditor.Mapper Mapper { get; } = new DataEditor.Mappers.ExtRefMapper();
 
-        internal override string[] ValuesMapping { get; } = { "xPos", "yPos", "ExtId", "rotation", "type", "closed" };
+        internal override string[] ValuesMapping { get; } = { "xPos", "yPos", "ExtId", "rotation", "type", "closed", "number in file" };
 
         protected override OnMapSpriteInfo ProcessItem(Components.CustomPropertyGridControl.PropertyItem item, object[] values)
         {
@@ -26,6 +26,7 @@
             return new OnMapSpriteInfo(
                 (int)values[0],
                 (int)values[1],
+                (byte)values[6],
                 (byte)values[2],
                 sequence,
                 false

@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -29,6 +30,8 @@ namespace DispelTools.Viewers.MapViewer
         private DirectBitmap mapImage;
         private DirectBitmap sidePreviewImage;
         private readonly TextGenerator textGenerator;
+
+        private MapDisplayerController mapDisplayerController;
 
         private string filename;
         private bool generatedOccluded;
@@ -72,6 +75,29 @@ namespace DispelTools.Viewers.MapViewer
             monsterCheckBox.Checked = setting.ExternalMonster;
             npcCheckBox.Checked = setting.ExternalNpc;
             debugDotsCheckBox.Checked = setting.DebugDots;
+
+            mapDisplayerController = new MapDisplayerController();
+            mapDisplayerController.InfoRequestedEvent += CreateTileInfo;
+            pictureBox.SetController(mapDisplayerController);
+        }
+
+        private void CreateTileInfo(Point point, List<MapDisplayerController.TileInfo> info)
+        {
+            if(MapLoaded)
+            {
+                var mapPosition = mapContainer.TranslateImageToMapCoords(point.X, point.Y, generatedOccluded);
+
+                info.AddRange(SearchForTile(mapContainer.ExtraEntities, mapPosition, "Extra"));
+                info.AddRange(SearchForTile(mapContainer.MonsterEntities, mapPosition, "Monster"));
+                info.AddRange(SearchForTile(mapContainer.NpcEntities, mapPosition, "Npc"));
+            }
+        }
+
+        private IEnumerable<MapDisplayerController.TileInfo> SearchForTile(List<GameDataModels.Map.External.MapExternalObject> objects, Point mapPosition, string type)
+        {
+            return objects
+                .Where(e => e.X == mapPosition.X && e.Y == mapPosition.Y)
+                .Select(e => new MapDisplayerController.TileInfo(type, e.DbId, e.SpriteName));
         }
 
         private void TileClicked(object sender, PictureDiplayer.PixelSelectedArgs point)
@@ -102,6 +128,7 @@ namespace DispelTools.Viewers.MapViewer
             progressBar.Text = "Completed";
             statsTextBox.Text = sb.ToString();
             saveAsImageButton.Enabled = true;
+            mapDisplayerController.EvenTiles = mapContainer.Model.TiledMapSize.Height % 2 == 0;
         }
 
         private void ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -262,13 +289,36 @@ namespace DispelTools.Viewers.MapViewer
             string[] files = Directory.GetFiles(Settings.GameRootDir + @"\Map", "*.map");
             using (var worker = new BackgroundWorker())
             {
+                var doubled = new Dictionary<string, List<GameDataModels.Map.External.MapExternalObject>>();
                 foreach (string file in files)
                 {
+                    if (file.Contains("map4.map")) continue;
                     var reader = new MapReader(file, new WorkReporter(worker));
                     using (var map = reader.ReadMap(true))
                     {
+                        map.ExtraEntities.AddRange(new MapExtraReader().GetObjects(Settings.GameRootDir, map.MapName, map));
+                        map.MonsterEntities.AddRange(new MapMonsterReader().GetObjects(Settings.GameRootDir, map.MapName, map));
+                        map.NpcEntities.AddRange(new MapNpcReader().GetObjects(Settings.GameRootDir, map.MapName, map));
+
+                        var all = new List<GameDataModels.Map.External.MapExternalObject>(map.MonsterEntities);
+                        all.AddRange(map.ExtraEntities);
+                        all.AddRange(map.NpcEntities);
+
+                        doubled[map.MapName] = all.GroupBy(entity => new Point(entity.X, entity.Y))
+                                       .Where(grouped => grouped.Count() > 1)
+                                       .SelectMany(group => group.ToList())
+                                       .ToList();
                     }
                 }
+                var maps = doubled.Where(entry => entry.Value.Count > 0)
+                    .Select(entry =>
+                    {
+                        var objects = entry.Value.Select(x => $"{{\"X\": {x.X}, \"Y\": {x.Y}}}").ToArray();
+                        var listElements = string.Join(", ", objects);
+                        return $"\"{entry.Key}\": {{ \"duplicates\": [{listElements}] }}";
+                    }
+                    ).ToArray();
+                var mapsStr = $"{{{string.Join(", ", maps)}}}";
             }
         }
 

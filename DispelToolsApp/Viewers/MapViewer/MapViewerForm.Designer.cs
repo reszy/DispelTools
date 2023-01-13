@@ -271,7 +271,7 @@
             // pictureBox
             // 
             this.pictureBox.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.pictureBox.CurrentMouseMode = DispelTools.Components.PictureDiplayer.MouseMode.TileSelector;
+            this.pictureBox.CurrentMouseMode = DispelTools.Components.PictureDiplayer.MouseMode.Pointer;
             this.pictureBox.DebugText = "";
             this.pictureBox.Font = new System.Drawing.Font("Courier New", 10F);
             this.pictureBox.Image = null;

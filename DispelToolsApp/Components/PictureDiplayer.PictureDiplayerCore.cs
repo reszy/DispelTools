@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DispelTools.Viewers.MapViewer;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -9,7 +10,13 @@ namespace DispelTools.Components
 {
     public partial class PictureDiplayer
     {
-        private class PictureDiplayerCore
+        public interface ICoordsConverter
+        {
+            Point ConvertToImageCoords(Point point);
+            PointF ConvertToPictureBoxCoords(Point point);
+        }
+
+        private class PictureDiplayerCore : ICoordsConverter
         {
             private readonly PictureDiplayer pictureDisplayer;
 
@@ -30,9 +37,6 @@ namespace DispelTools.Components
             private Point highlight;
             private readonly Pen highlightPen;
 
-            //TILE
-            private bool evenTiles;
-
             //DATA TIP
             private readonly Pen dataTipPen;
             private readonly Brush dataTipBrush;
@@ -47,11 +51,17 @@ namespace DispelTools.Components
             private Point selectEnd;
 
             private ImageAnalyzer.DataAnalyzedBitmap.DataPixel selectedPixelData;
+            private PictureDisplayer.IPictureDisplayerController subComponent;
 
 
             public bool ShowDataTip { get; internal set; } = true;
             public ImageAnalyzer.DataAnalyzedBitmap DataAnalyzedBitamp { private get; set; }
             private Bitmap Image => ((Bitmap)pictureDisplayer.Image);
+
+            internal void SetController(PictureDisplayer.IPictureDisplayerController displayerController)
+            {
+                subComponent = displayerController;
+            }
 
             public PictureDiplayerCore(PictureDiplayer pictureDisplayer)
             {
@@ -98,7 +108,7 @@ namespace DispelTools.Components
 
                 double defaultZoom = (double)fitSize.Width / imageSize.Width;
                 InitZoom(defaultZoom);
-                evenTiles = Math.Floor((double)pictureDisplayer.Image.Height / TILE_HEIGHT) % 2 != 0;
+                subComponent?.ImageReloaded(pictureDisplayer.Image);
             }
 
             public void MouseDownAction(object sender, MouseEventArgs e)
@@ -113,6 +123,7 @@ namespace DispelTools.Components
                     }
                     else
                     {
+                        subComponent?.PixelSelected(this, new PictureDiplayer.PixelSelectedArgs(highlight, Image.GetPixel(highlight.X, highlight.Y), ModifierKeys));
                         switch (pictureDisplayer.CurrentMouseMode)
                         {
                             case MouseMode.RectSelector:
@@ -123,14 +134,11 @@ namespace DispelTools.Components
                                 }
                                 break;
                             case MouseMode.Pointer:
-                            case MouseMode.TileSelector:
                             default:
                                 {
                                     selectedPixel = Image.GetPixel(highlight.X, highlight.Y);
-                                    selectedPixelData = DataAnalyzedBitamp?.GetPixel(highlight.X, highlight.Y);
-                                    showHex = ModifierKeys == Keys.Shift;
                                     selectedPixelCoords = highlight;
-                                    pictureDisplayer.PixelSelectedEvent?.Invoke(this, new PictureDiplayer.PixelSelectedArgs(selectedPixelCoords, selectedPixel));
+                                    pictureDisplayer.PixelSelectedEvent?.Invoke(this, new PictureDiplayer.PixelSelectedArgs(highlight, selectedPixel, ModifierKeys));
                                 }
                                 break;
                         }
@@ -216,21 +224,22 @@ namespace DispelTools.Components
                     if (highlight != null)
                     {
                         float zoom = (float)zoomStepsTable[currentZoomStepNumber];
-                        if (pictureDisplayer.CurrentMouseMode == MouseMode.TileSelector)
-                        {
-                            DrawTileSelector(e, zoom);
-                        }
-                        else
-                        {
-                            var coords = ConvertToPictureBoxCoords(highlight);
-                            e.Graphics.DrawRectangle(highlightPen, coords.X, coords.Y, zoom, zoom);
-                        }
+                        subComponent?.DrawHighlight(this, e.Graphics, highlight, highlightPen, zoom);
+                        //if (pictureDisplayer.CurrentMouseMode == MouseMode.TileSelector)
+                        //{
+                        //    DrawTileSelector(e, zoom);
+                        //}
+                        //else
+                        //{
+                        //    var coords = ConvertToPictureBoxCoords(highlight);
+                        //    e.Graphics.DrawRectangle(highlightPen, coords.X, coords.Y, zoom, zoom);
+                        //}
                     }
                     if (pictureDisplayer.CurrentMouseMode != MouseMode.Pointer && selectStart != Point.Empty && selectEnd != Point.Empty)
                     {
                         DisplaySelection(e.Graphics);
                     }
-                    if (ShowDataTip && (pictureDisplayer.CurrentMouseMode == MouseMode.Pointer || pictureDisplayer.CurrentMouseMode == MouseMode.TileSelector))
+                    if (ShowDataTip && (pictureDisplayer.CurrentMouseMode == MouseMode.Pointer))
                     {
                         DisplayDataTip(e.Graphics);
                     }
@@ -247,67 +256,6 @@ namespace DispelTools.Components
                 g.DrawString(pictureDisplayer.DebugText, pictureDisplayer.Font, Brushes.White, rect);
             }
 
-            private void DrawTileSelector(PaintEventArgs e, float zoom)
-            {
-                var tileCoords = ConvertToPictureBoxCoords(GetClosestTileCenter(highlight));
-                var points = new PointF[]
-                {
-                    new PointF(tileCoords.X - (32*zoom), tileCoords.Y),
-                    new PointF(tileCoords.X, tileCoords.Y - (16*zoom)),
-                    new PointF(tileCoords.X + (32*zoom), tileCoords.Y),
-                    new PointF(tileCoords.X, tileCoords.Y + (16*zoom)),
-                    new PointF(tileCoords.X - (32*zoom), tileCoords.Y),
-
-                };
-                e.Graphics.DrawLines(highlightPen, points);
-            }
-
-            private bool IsCenterOfTile(Point point) => ((point.X & 1) == (point.Y & 1)) ^ pictureDisplayer.OffsetTileSelector;
-
-            private Point GetClosestTileCenter(Point pointerCoords)
-            {
-                double yTileDistance = pointerCoords.Y / (double)TILE_HEIGHT_HALF;
-                double xTileDistance = pointerCoords.X / (double)TILE_HORIZONTAL_OFFSET_HALF;
-
-
-                bool flipToCorners = evenTiles;
-
-                int top = (int)Math.Floor(yTileDistance);
-                int bottom = (int)Math.Ceiling(yTileDistance);
-                int left = (int)Math.Floor(xTileDistance);
-                int right = (int)Math.Ceiling(xTileDistance);
-
-                var corners = new Point[]
-                {
-                    new Point(left, top),
-                    new Point(right, top),
-                    new Point(left, bottom),
-                    new Point(right, bottom)
-                };
-                var possibleCoords = new HashSet<Point>();
-                foreach (var corner in corners)
-                {
-                    if (IsCenterOfTile(corner) ^ flipToCorners)
-                    {
-                        possibleCoords.Add(new Point(corner.X * TILE_HORIZONTAL_OFFSET_HALF, corner.Y * TILE_HEIGHT_HALF));
-                    }
-                }
-                var bestCoords = Point.Empty;
-                double? bestDistance = null;
-                foreach (var coords in possibleCoords)
-                {
-                    float xPow = (coords.X - pointerCoords.X) * (coords.X - pointerCoords.X);
-                    float yPow = (coords.Y - pointerCoords.Y) * (coords.Y - pointerCoords.Y);
-                    double distance = Math.Sqrt(xPow + yPow);
-                    if (bestDistance == null || distance < bestDistance)
-                    {
-                        bestDistance = distance;
-                        bestCoords = coords;
-                    }
-                }
-                return bestCoords;
-            }
-
             private void DisplaySelection(Graphics g)
             {
                 var start = Point.Round(ConvertToPictureBoxCoords(selectStart));
@@ -321,8 +269,10 @@ namespace DispelTools.Components
                 var dataTipSize = new Point(DataAnalyzedBitamp != null ? (showHex ? 400 : 350) : 250, 60);
                 int yPosition = pointingAt.Y > pictureDisplayer.Size.Height / 2 ? 20 : pictureDisplayer.Size.Height - 20 - dataTipSize.Y;
 
-                g.FillRectangle(dataTipBrush, 20, yPosition, dataTipSize.X, dataTipSize.Y);
-                g.DrawRectangle(dataTipPen, 20, yPosition, dataTipSize.X, dataTipSize.Y);
+                var totalTipWidth = dataTipSize.X + (subComponent?.RequiredTipWidth ?? 0);
+
+                g.FillRectangle(dataTipBrush, 20, yPosition, totalTipWidth, dataTipSize.Y);
+                g.DrawRectangle(dataTipPen, 20, yPosition, totalTipWidth, dataTipSize.Y);
 
                 g.DrawString($"Zoom x{zoomStepsTable[currentZoomStepNumber]:0.####}", pictureDisplayer.Font, Brushes.White, new PointF(22F, yPosition + 5F));
                 var pointingPosition = ConvertToImageCoords(pointingAt);
@@ -337,32 +287,7 @@ namespace DispelTools.Components
                     g.DrawString($"Ch 3:{selectedPixel.B}", pictureDisplayer.Font, Brushes.White, new PointF(xPos, yPosition + 29F));
                     g.DrawString($"Ch 4:{selectedPixel.A}", pictureDisplayer.Font, Brushes.White, new PointF(xPos, yPosition + 42F));
                 }
-                if (selectedPixelData != null)
-                {
-                    int xPos = 250;
-                    string b;
-                    string w;
-                    string d;
-                    string q;
-                    if (showHex)
-                    {
-                        b = selectedPixelData.Byte.ToString("X");
-                        w = selectedPixelData.Word.ToString("X");
-                        d = selectedPixelData.DWord.ToString("X");
-                        q = selectedPixelData.QWord.ToString("X");
-                    }
-                    else
-                    {
-                        b = selectedPixelData.Byte.ToString();
-                        w = selectedPixelData.Word.ToString();
-                        d = selectedPixelData.DWord.ToString();
-                        q = selectedPixelData.QWord.ToString();
-                    }
-                    g.DrawString($"B: {b}", pictureDisplayer.Font, Brushes.White, new PointF(xPos, yPosition + 3F));
-                    g.DrawString($"W: {w}", pictureDisplayer.Font, Brushes.White, new PointF(xPos, yPosition + 16F));
-                    g.DrawString($"DW:{d}", pictureDisplayer.Font, Brushes.White, new PointF(xPos, yPosition + 29F));
-                    g.DrawString($"QW:{q}", pictureDisplayer.Font, Brushes.White, new PointF(xPos, yPosition + 42F));
-                }
+                subComponent?.DrawTip(g, pictureDisplayer.Font, new Rectangle(250, yPosition, dataTipSize.X, dataTipSize.Y));
             }
 
             public void MouseUpAction(object sender, MouseEventArgs e)

@@ -109,6 +109,7 @@
     <Compile Include="Components\PictureDiplayer.PixelSelectedArgs.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Components\PictureDisplayer\IPictureDisplayerController.cs" />
     <Compile Include="Components\ProgressBarWithText.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -232,6 +233,7 @@
     <Compile Include="ImageAnalyzer\ImageEditControls.Designer.cs">
       <DependentUpon>ImageEditControls.cs</DependentUpon>
     </Compile>
+    <Compile Include="ImageAnalyzer\ProbeDisplayerController.cs" />
     <Compile Include="ImageProcessing\ImageConverter.cs" />
     <Compile Include="ImageProcessing\Filters\ChannelFilter.cs" />
     <Compile Include="ImageProcessing\Filters\ColorLevelFilter.cs" />
@@ -258,6 +260,7 @@
     </Compile>
     <Compile Include="GameDataModels\Map\Reader\MapReader.cs" />
     <Compile Include="Common\DataProcessing\WorkReporter.cs" />
+    <Compile Include="Viewers\MapViewer\MapDisplayerController.cs" />
     <Compile Include="Viewers\MapViewer\MapViewerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -389,6 +392,8 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Components\PictureDisplayerSubcomponents\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -9,7 +10,7 @@ namespace DispelTools.Components
     {
         private readonly PictureDiplayerCore pictureDiplayerCore;
         private Image image;
-        public enum MouseMode { Pointer, RectSelector, RowSelector, TileSelector };
+        public enum MouseMode { Pointer, RectSelector, RowSelector };
         public MouseMode CurrentMouseMode { get; set; }
 
         [DefaultValue(true)]
@@ -54,6 +55,11 @@ namespace DispelTools.Components
             paintEventArgs.Graphics.InterpolationMode = InterpolationMode;
             paintEventArgs.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
             base.OnPaint(paintEventArgs);
+        }
+
+        internal void SetController(PictureDisplayer.IPictureDisplayerController displayerController)
+        {
+            pictureDiplayerCore.SetController(displayerController);
         }
     }
 }

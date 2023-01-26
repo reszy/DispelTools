@@ -88,8 +88,12 @@ namespace DispelTools.DataExtractor
                 extractionParams.Filename = filenames;
                 extractionParams.OutputDirectory = outputDirectory;
                 var extractor = new ExtractionManager(extractorFactory.CreateInstance(), extractionParams, worker);
-                progressBar.Maximum = extractor.Prepare() * 1000;
-                extractor.Start();
+                int fileCount = extractor.Prepare();
+                if (fileCount > 0)
+                {
+                    progressBar.Maximum = fileCount * 1000;
+                    extractor.Start();
+                }
             }
         }
 

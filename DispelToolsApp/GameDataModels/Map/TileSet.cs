@@ -38,7 +38,7 @@ namespace DispelTools.GameDataModels.Map
         {
             using (var file = new BinaryReader(new FileStream(filename, FileMode.Open, FileAccess.Read)))
             {
-                int tileNumber = (int)(file.BaseStream.Length / (32 * 32 * 2)) - 2;
+                int tileNumber = (int)(file.BaseStream.Length / (32 * 32 * 2));
                 tiles = new List<Tile>(tileNumber);
                 workReporter.SetTotal(tileNumber);
                 for (int i = 0; i < tileNumber || file.BaseStream.Length > file.BaseStream.Position; i++)

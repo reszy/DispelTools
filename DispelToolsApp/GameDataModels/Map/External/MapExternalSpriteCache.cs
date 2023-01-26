@@ -1,9 +1,12 @@
-﻿using DispelTools.GameDataModels.Sprite;
+﻿using DispelTools.Common;
+using DispelTools.GameDataModels.Sprite;
 using DispelTools.ImageProcessing;
+using ImageMagick;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,6 +17,22 @@ namespace DispelTools.GameDataModels.Map.External
         private readonly string spriteDirectory;
         private readonly Dictionary<int, string> nameCache;
         private readonly Dictionary<int, CachedDirectionalSprite> spriteCache;
+
+        private static SpriteFrame Unknown { get => unknown ?? CreateUnknownSprite();  }
+
+        private static SpriteFrame unknown;
+        private static SpriteFrame CreateUnknownSprite()
+        {
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("DispelTools.Resources.unknown.png"))
+            {
+                var image = new MagickImage(stream);
+                var rawRgbImage = new RawRgb(image.Width, image.Height);
+                using (var memory = new MemoryStream(rawRgbImage.Bytes, true))
+                    image.Write(memory, MagickFormat.Rgb);
+                unknown = new SpriteFrame(10, 58, rawRgbImage);
+                return unknown;
+            }
+        }
 
         public MapExternalSpriteCache(string spriteDirectory, Dictionary<int, string> nameCache)
         {
@@ -27,19 +46,29 @@ namespace DispelTools.GameDataModels.Map.External
             var haveValue = spriteCache.TryGetValue(spriteId, out var cached);
             if (!haveValue)
             {
+                if (!nameCache.ContainsKey(spriteId)) return Unknown;
+
                 var filename = nameCache[spriteId];
-                using (var file = new BinaryReader(File.OpenRead($"{spriteDirectory}\\{filename}")))
+                var filePath = $"{spriteDirectory}\\{filename}";
+                if (File.Exists(filePath))
                 {
-                    var processor = new SpriteProcessor(file, filename);
-                    SpriteFileReader.ProcessThroughFile(processor, false);
-                    spriteCache[spriteId] = cached = new CachedDirectionalSprite(processor.Sequences.ToArray());
+                    using (var file = new BinaryReader(File.OpenRead(filePath)))
+                    {
+                        var processor = new SpriteProcessor(file, filename);
+                        SpriteFileReader.ProcessThroughFile(processor, false);
+                        spriteCache[spriteId] = cached = new CachedDirectionalSprite(processor.Sequences.ToArray());
+                    }
+                }
+                else
+                {
+                    return Unknown;
                 }
             }
 
             return cached[spriteSequence];
         }
 
-        public string GetSpriteName(int spriteId) => nameCache[spriteId];
+        public string GetSpriteName(int spriteId) => nameCache.ContainsKey(spriteId) ? nameCache[spriteId] : "NotFound";
 
         private class CachedDirectionalSprite
         {

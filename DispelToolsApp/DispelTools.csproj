@@ -196,7 +196,9 @@
     <Compile Include="DebugTools\MetricTools\MetricsContainer.cs" />
     <Compile Include="DebugTools\MetricTools\MetricType.cs" />
     <Compile Include="GameDataModels\Map\External\Extra\MapExtraReader.cs" />
+    <Compile Include="GameDataModels\Map\External\IExternalEntitiesReader.cs" />
     <Compile Include="GameDataModels\Map\External\Monster\MapMonsterReader.cs" />
+    <Compile Include="GameDataModels\Map\External\Monster\MultiplayerMapMonsterReader.cs" />
     <Compile Include="GameDataModels\Map\External\Npc\MapNpcReader.cs" />
     <Compile Include="GameDataModels\Map\External\ReferenceFileReader.cs" />
     <Compile Include="GameDataModels\Map\Generator\GeneratorOptions.cs" />

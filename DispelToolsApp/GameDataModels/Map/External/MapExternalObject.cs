@@ -9,6 +9,7 @@ namespace DispelTools.GameDataModels.Map.External
             SpriteName = spriteName;
             Graphic = graphic;
             DbId = info.DbId;
+            SpriteId = info.SpriteId;
             X = info.X;
             Y = info.Y;
             PositionOrder = -(X * TileSet.TILE_HEIGHT_HALF) + (Y * TileSet.TILE_HEIGHT_HALF) + (mapPixelHeight / 2) - mapNonOccludedStartY + TileSet.TILE_HEIGHT_HALF;
@@ -18,6 +19,7 @@ namespace DispelTools.GameDataModels.Map.External
         public string SpriteName { get; }
         public SpriteFrame Graphic { get; }
         public int DbId { get; }
+        public int SpriteId { get; }
         public int X { get; }
         public int Y { get; }
         public bool Flip { get; }

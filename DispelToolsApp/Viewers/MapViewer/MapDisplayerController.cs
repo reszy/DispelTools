@@ -21,16 +21,18 @@ namespace DispelTools.Viewers.MapViewer
 
         public class TileInfo
         {
-            public TileInfo(string type, int id, string spriteName)
+            public TileInfo(string type, int id, string spriteName, int spriteId)
             {
                 Type = type;
                 Id = id;
-                this.spriteName = spriteName;
+                this.SpriteName = spriteName;
+                SpriteId = spriteId;
             }
 
             public string Type { get; }
             public int Id { get; }
-            public string spriteName { get; }
+            public string SpriteName { get; }
+            public int SpriteId { get; }
         }
 
         public delegate void InfoRequestedHandler(Point imagePosition, List<TileInfo> info);
@@ -102,7 +104,8 @@ namespace DispelTools.Viewers.MapViewer
             {
                 g.DrawString($"{info[i].Type}", font, Brushes.White, new PointF(xPos, tipRectangle.Y + 3F));
                 g.DrawString($"ID: {info[i].Id}", font, Brushes.White, new PointF(xPos, tipRectangle.Y + 16F));
-                g.DrawString($"SPR:{info[i].spriteName}", font, Brushes.White, new PointF(xPos, tipRectangle.Y + 29F));
+                g.DrawString($"SPR:{info[i].SpriteName}", font, Brushes.White, new PointF(xPos, tipRectangle.Y + 29F));
+                g.DrawString($"SprId:{info[i].SpriteId}", font, Brushes.White, new PointF(xPos, tipRectangle.Y + 42F));
             }
         }
 

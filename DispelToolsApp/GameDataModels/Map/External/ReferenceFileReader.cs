@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DispelTools.GameDataModels.Map.External
 {
-    internal abstract class ReferenceFileReader
+    internal abstract class ReferenceFileReader : IExternalEntitiesReader
     {
         protected abstract string InfoRelativePath { get; }
         protected abstract int InfoSpriteNameColumnIndex { get; }
@@ -17,18 +17,19 @@ namespace DispelTools.GameDataModels.Map.External
         internal abstract DataEditor.Mapper Mapper { get; }
         internal abstract string[] ValuesMapping { get; }
 
-        public List<MapExternalObject> GetObjects(string gamePath, string mapName, MapContainer mapContainer)
+        public List<MapExternalObject> GetObjects(string gamePath, string mapFilePath, MapContainer mapContainer)
         {
+            var mapName = Path.GetFileNameWithoutExtension(mapFilePath);
             int mapPixelHeight = mapContainer.Model.MapSizeInPixels.Height;
             int mapNonOccludedStartY = mapContainer.Model.MapNonOccludedStart.Y;
-
-            var names = LoadInfo($"{gamePath}{InfoRelativePath}", InfoSpriteNameColumnIndex);
 
             List<MapExternalObject> objects = new List<MapExternalObject>();
             var directory = $"{gamePath}\\{SpriteDirectoryName}";
             var mapRefPath = $"{directory}\\{ReferencePrefix}{mapName}.ref";
 
             if (!File.Exists(mapRefPath)) return objects;
+
+            var names = LoadInfo($"{gamePath}{InfoRelativePath}", InfoSpriteNameColumnIndex);
 
             MapExternalSpriteCache spriteCache = new MapExternalSpriteCache(directory, names);
 

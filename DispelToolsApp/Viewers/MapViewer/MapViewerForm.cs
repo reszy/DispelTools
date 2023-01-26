@@ -99,7 +99,7 @@ namespace DispelTools.Viewers.MapViewer
         {
             return objects
                 .Where(e => e.X == mapPosition.X && e.Y == mapPosition.Y)
-                .Select(e => new MapDisplayerController.TileInfo(type, e.DbId, e.SpriteName));
+                .Select(e => new MapDisplayerController.TileInfo(type, e.DbId, e.SpriteName, e.SpriteId));
         }
 
         private void TileClicked(object sender, PixelSelectedArgs point)
@@ -173,14 +173,26 @@ namespace DispelTools.Viewers.MapViewer
 
         private void LoadExternal(WorkReporter workReporter)
         {
-            var mapName = Path.GetFileNameWithoutExtension(filename);
             workReporter.SetTotal(4);
-            mapContainer.ExtraEntities.AddRange(new MapExtraReader().GetObjects(Settings.GameRootDir, mapName, mapContainer));
+            AddEntities(mapContainer.ExtraEntities, new MapExtraReader());
             workReporter.ReportProgress(1);
-            mapContainer.MonsterEntities.AddRange(new MapMonsterReader().GetObjects(Settings.GameRootDir, mapName, mapContainer));
+            AddEntities(mapContainer.MonsterEntities, new MapMonsterReader());
+            AddEntities(mapContainer.MonsterEntities, new MultiplayerMapMonsterReader());
             workReporter.ReportProgress(2);
-            mapContainer.NpcEntities.AddRange(new MapNpcReader().GetObjects(Settings.GameRootDir, mapName, mapContainer));
+            AddEntities(mapContainer.NpcEntities, new MapNpcReader());
             workReporter.ReportProgress(3);
+        }
+
+        private void AddEntities(List<GameDataModels.Map.External.MapExternalObject> target, GameDataModels.Map.External.IExternalEntitiesReader reader)
+        {
+            try
+            {
+                target.AddRange(reader.GetObjects(Settings.GameRootDir, filename, mapContainer));
+            }
+            catch (ReadFileException e)
+            {
+                MessageBox.Show(e.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private GeneratorOptions CheckBoxesToGenerationOptions()
@@ -289,39 +301,27 @@ namespace DispelTools.Viewers.MapViewer
         // Debug function
         private void debugButton_Click(object sender, EventArgs e)
         {
-            string[] files = Directory.GetFiles(Settings.GameRootDir + @"\Map", "*.map");
+            string[] files = Directory.GetFiles(Settings.GameRootDir + @"\Map\Multi", "*.mon");
             using (var worker = new BackgroundWorker())
             {
-                var doubled = new Dictionary<string, List<GameDataModels.Map.External.MapExternalObject>>();
+                var results = new Dictionary<string, List<(int id, int count)>>();
                 foreach (string file in files)
                 {
-                    if (file.Contains("map4.map")) continue;
-                    var reader = new MapReader(file, new WorkReporter(worker));
-                    using (var map = reader.ReadMap(true))
+                    var fileFingings = new List<int>();
+                    var lines = File.ReadAllLines(file);
+                    foreach (var line in lines)
                     {
-                        map.ExtraEntities.AddRange(new MapExtraReader().GetObjects(Settings.GameRootDir, map.MapName, map));
-                        map.MonsterEntities.AddRange(new MapMonsterReader().GetObjects(Settings.GameRootDir, map.MapName, map));
-                        map.NpcEntities.AddRange(new MapNpcReader().GetObjects(Settings.GameRootDir, map.MapName, map));
-
-                        var all = new List<GameDataModels.Map.External.MapExternalObject>(map.MonsterEntities);
-                        all.AddRange(map.ExtraEntities);
-                        all.AddRange(map.NpcEntities);
-
-                        doubled[map.MapName] = all.GroupBy(entity => new Point(entity.X, entity.Y))
-                                       .Where(grouped => grouped.Count() > 1)
-                                       .SelectMany(group => group.ToList())
-                                       .ToList();
+                        if (!line.StartsWith(";"))
+                        {
+                            var id = int.Parse(line.Split(',')[1]);
+                            if (id > 36) fileFingings.Add(id);
+                        }
                     }
+                    if(fileFingings.Count>0)
+                    results[Path.GetFileNameWithoutExtension(file)] = fileFingings.GroupBy(x => x)
+                        .Select(g => (g.Key, g.Count())).ToList();
                 }
-                var maps = doubled.Where(entry => entry.Value.Count > 0)
-                    .Select(entry =>
-                    {
-                        var objects = entry.Value.Select(x => $"{{\"X\": {x.X}, \"Y\": {x.Y}}}").ToArray();
-                        var listElements = string.Join(", ", objects);
-                        return $"\"{entry.Key}\": {{ \"duplicates\": [{listElements}] }}";
-                    }
-                    ).ToArray();
-                var mapsStr = $"{{{string.Join(", ", maps)}}}";
+                var json = string.Join(",", results.Select(entry => $"\"{entry.Key}\" : [{string.Join(",", entry.Value.Select(g => $"{{ \"id\":{g.id}, \"count\":{g.count}}}").ToArray())}]").ToArray());
             }
         }
 

@@ -30,10 +30,13 @@ namespace DispelTools.DataEditor
             using (var reader = new BinaryReader(fs.FileStream.Create(filename, FileMode.Open, FileAccess.Read)))
             {
                 int expectedElements = 0;
-                int spaceForElements = (int)Math.Floor((decimal)((reader.BaseStream.Length - GetSkipBytesCount()) / elementStep));
-                if (HaveCounterOnBeginning)
+                int spaceForElements = (int)Math.Floor((decimal)((reader.BaseStream.Length - CounterSize) / elementStep));
+                if (CounterSize > 0)
                 {
-                    expectedElements = reader.ReadInt32();
+                    byte[] fullCount = new byte[] { 0, 0, 0, 0 };
+                    var count = reader.ReadBytes(CounterSize);
+                    count.CopyTo(fullCount, 0);
+                    expectedElements = BitConverter.ToInt32(fullCount, 0);
                 }
                 else
                 {
@@ -43,7 +46,7 @@ namespace DispelTools.DataEditor
                 {
                     MessageBox.Show($"In file count = {expectedElements}, counted {spaceForElements}");
                 }
-                for (int i = 0; i < expectedElements; i++)
+                for (int i = 0; i < spaceForElements; i++)
                 {
                     list.Add(ReadElement(reader));
                 }
@@ -54,7 +57,7 @@ namespace DispelTools.DataEditor
         {
             using (var writer = new BinaryWriter(fs.FileStream.Create(filename, FileMode.Open, FileAccess.Write)))
             {
-                writer.BaseStream.Position = elementNumber * PropertyItemSize + GetSkipBytesCount();
+                writer.BaseStream.Position = elementNumber * PropertyItemSize + CounterSize;
                 WriteElement(writer, element);
             }
         }
@@ -62,10 +65,8 @@ namespace DispelTools.DataEditor
         public Mapping CreateMapping(params string[] fieldNames) => new Mapping(this, fieldNames);
         internal abstract int PropertyItemSize { get; }
 
-        protected virtual bool HaveCounterOnBeginning { get; } = true;
+        protected virtual byte CounterSize { get; } = 4;
         protected abstract List<ItemFieldDescriptor> CreateDescriptors();
-
-        private int GetSkipBytesCount() => HaveCounterOnBeginning ? 4 : 0;
 
         private PropertyItem ReadElement(BinaryReader reader)
         {

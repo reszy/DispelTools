@@ -48,7 +48,15 @@ namespace DispelTools.DataExtractor.AllExtractor
         {
             string gameDirectory = filenames[0];
             string[] fileExtensions = new string[] { ".spr", ".snf", ".map", ".btl", ".gtl" };
-            if (IsDispelDirectory(gameDirectory))
+            bool abort = false;
+            if (!IsDispelDirectory(gameDirectory))
+            {
+                var result = MessageBox.Show($"\"{gameDirectory}\" is not Dispel game directory. \nDo you want to try extract anyway?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                abort = result == DialogResult.No;
+            }
+
+            if(!abort)
             {
                 return GetAllFiles(gameDirectory)
                     .Where(file => fileExtensions.Contains(fs.Path.GetExtension(file.ToLower())))
@@ -58,7 +66,6 @@ namespace DispelTools.DataExtractor.AllExtractor
             }
             else
             {
-                MessageBox.Show($"\"{gameDirectory}\" is not Dispel game directory");
                 return new List<ExtractionFile>();
             }
         }

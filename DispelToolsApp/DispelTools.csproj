@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -118,6 +118,7 @@
     <Compile Include="DataEditor\FileDescriptorBuilder.cs" />
     <Compile Include="DataEditor\ItemFieldDescriptor.cs" />
     <Compile Include="DataEditor\Mappers\ExtRefMapper.cs" />
+    <Compile Include="DataEditor\Mappers\MulMonsterDbMapper.cs" />
     <Compile Include="DataEditor\Mappers\MonsterDbMapper.cs" />
     <Compile Include="DataEditor\Mappers\StoreDbMapper.cs" />
     <Compile Include="DataEditor\Mappers\MiscItemDbMapper.cs" />
@@ -379,6 +380,7 @@
     <Content Include="Resources\pointer.png" />
     <Content Include="Resources\select.png" />
     <Content Include="Resources\transparentPattern.png" />
+    <EmbeddedResource Include="Resources\unknown.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">

@@ -96,6 +96,10 @@ namespace DispelTools.DataEditor
             {
                 return new MonsterDbMapper();
             }
+            if (filenameWithExtension.ToUpper().Equals("MULMONSTER.DB"))
+            {
+                return new MulMonsterDbMapper();
+            }
 
             throw new ArgumentException($"No mapper found for {filenameWithExtension}");
         }

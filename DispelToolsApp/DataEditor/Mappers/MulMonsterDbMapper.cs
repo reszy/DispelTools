@@ -4,51 +4,43 @@ using System.IO.Abstractions;
 
 namespace DispelTools.DataEditor.Mappers
 {
-    internal class MonsterDbMapper : Mapper
+    internal class MulMonsterDbMapper : Mapper
     {
-        public MonsterDbMapper(IFileSystem fs) : base(fs) { }
+        public MulMonsterDbMapper(IFileSystem fs) : base(fs) { }
 
-        public MonsterDbMapper() { }
+        public MulMonsterDbMapper() { }
 
         private const byte FILLER = 0x0;
 
-        internal override int PropertyItemSize => 40 * 4;
+        internal override int PropertyItemSize => 31 * 4;
 
-        protected override byte CounterSize => 0;
+        protected override byte CounterSize => 1;
 
         protected override List<ItemFieldDescriptor> CreateDescriptors()
         {
             var builder = new FileDescriptorBuilder();
+
             builder.Add("name", ItemFieldDescriptor.AsFixedString(24, FILLER, Field.DisplayType.TEXT_KOR));
 
-            builder.Add("PZ MAX", ItemFieldDescriptor.AsInt32());
-            builder.Add("PZ MIN", ItemFieldDescriptor.AsInt32());
-            builder.Add("PM MAX", ItemFieldDescriptor.AsInt32());
-            builder.Add("PM MIN", ItemFieldDescriptor.AsInt32());
+            builder.Add("PZ", ItemFieldDescriptor.AsInt32());
+            builder.Add("PM", ItemFieldDescriptor.AsInt32());
 
-            builder.Add("stat1 ?", ItemFieldDescriptor.AsInt32());
-            builder.Add("stat2 max?", ItemFieldDescriptor.AsInt32());
-            builder.Add("stat2 min?", ItemFieldDescriptor.AsInt32());
-            builder.Add("always 10", ItemFieldDescriptor.AsInt32());
+            builder.Add("stat1?", ItemFieldDescriptor.AsInt32());
+            builder.Add("stat2?", ItemFieldDescriptor.AsInt32());
 
-            builder.Add("always 10", ItemFieldDescriptor.AsInt32());
-            builder.Add("stat3 max?", ItemFieldDescriptor.AsInt32());
-            builder.Add("stat3 min?", ItemFieldDescriptor.AsInt32());
+            builder.Add("0 or 10", ItemFieldDescriptor.AsInt32());
 
-            builder.Add("stat4 max?", ItemFieldDescriptor.AsInt32());
-            builder.Add("stat4 min?", ItemFieldDescriptor.AsInt32());
+            builder.Add("stat3?", ItemFieldDescriptor.AsInt32());
+            builder.Add("stat4?", ItemFieldDescriptor.AsInt32());
 
-            builder.Add(ItemFieldDescriptor.AsInt32());
             builder.Add(ItemFieldDescriptor.AsInt32());
             builder.Add("isUndead", ItemFieldDescriptor.AsInt32(), "0 or 1");
 
             builder.Add("isAlive", ItemFieldDescriptor.AsInt32(), "0 or 1, golem is not alive and not undead");
-            builder.Add("Attack type?", ItemFieldDescriptor.AsInt32(), "goblin and chicken = 1,archers = 2, worm bot no zombie =3, deer and dog = 5");
-            builder.Add("EXP MAX", ItemFieldDescriptor.AsInt32());
-            builder.Add("EXP MIN", ItemFieldDescriptor.AsInt32());
+            builder.Add("Attack type?", ItemFieldDescriptor.AsInt32(), "goblin and chicken = 1, archers = 2, worm bot no zombie =3, deer and dog = 5");
+            builder.Add("EXP MAX or just EXP", ItemFieldDescriptor.AsInt32());
+            builder.Add("EXP MIN or Gold", ItemFieldDescriptor.AsInt32());
 
-            builder.Add("GOLD MAX", ItemFieldDescriptor.AsInt32());
-            builder.Add("GOLD MIN", ItemFieldDescriptor.AsInt32());
             builder.Add("9 or 10", ItemFieldDescriptor.AsInt32(), "only goblin king have 10");
             builder.Add("1 or 6 if archer", ItemFieldDescriptor.AsInt32());
 

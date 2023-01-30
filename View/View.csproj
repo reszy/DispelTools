@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Icons\DispelTools.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IO.Abstractions" Version="19.1.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DispelToolsApp\DispelTools.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Icons\DispelTools.ico" />
+  </ItemGroup>
+
+</Project>

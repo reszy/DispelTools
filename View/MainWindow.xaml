@@ -1,0 +1,46 @@
+﻿<Window x:Class="View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:View"
+        mc:Ignorable="d"
+        Height="450" Width="800"
+        SizeToContent="WidthAndHeight"
+        Icon="Icons/DispelTools.ico">
+    <Window.CommandBindings>
+        <CommandBinding Command="local:CustomCommands.Exit" Executed="ExitCommand_Executed" />
+        <CommandBinding Command="local:CustomCommands.OpenView" Executed="OpenViewCommand_Executed" />
+    </Window.CommandBindings>
+    <Grid Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition x:Name="ContentsHeight" Height="*"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" x:Name="TopMenu">
+            <MenuItem Header="_Program">
+                <MenuItem Header="Analyzers">
+                    <MenuItem Header="ImageAnalyzer"/>
+                </MenuItem>
+                <MenuItem Header="Extractors">
+                    <MenuItem Header="ImageExtractor" IsCheckable="True" Command="local:CustomCommands.OpenView"/>
+                    <MenuItem Header="ImageExtractor" IsCheckable="True" Command="local:CustomCommands.OpenView"/>
+                    <MenuItem Header="StringExtractor" IsCheckable="True" Command="local:CustomCommands.OpenView"/>
+                    <MenuItem Header="MapImageExtractor" IsCheckable="True" Command="local:CustomCommands.OpenView"/>
+                    <MenuItem Header="AllExtractor" IsCheckable="True" Command="local:CustomCommands.OpenView"/>
+                </MenuItem>
+                <MenuItem Header="Editors">
+                    <MenuItem Header="SimpleEditor" IsCheckable="True" Command="local:CustomCommands.OpenView" CommandParameter="SimpleEditorView"/>
+                </MenuItem>
+                <MenuItem Header="MapViewer" IsCheckable="True" Command="local:CustomCommands.OpenView"/>
+                <MenuItem Header="Patcher" IsCheckable="True" Command="local:CustomCommands.OpenView"/>
+                <Separator/>
+                <MenuItem Header="_Settings" IsCheckable="True" Command="local:CustomCommands.OpenView" CommandParameter="SettingsView"/>
+                <Separator/>
+                <MenuItem Header="E_xit" Command="local:CustomCommands.Exit"/>
+            </MenuItem>
+        </Menu>
+        <ContentControl x:Name="Contents" Grid.Row="1" Padding="0">
+        </ContentControl>
+    </Grid>
+</Window>

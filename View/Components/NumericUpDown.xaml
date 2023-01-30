@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="View.Components.NumericUpDown"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:View.Components"
+             mc:Ignorable="d" 
+             d:DesignHeight="20" d:DesignWidth="200"
+             x:Name="_this">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+        <DockPanel  Grid.Column="0" >
+            <Label DockPanel.Dock="Left" x:Name="HexLabel" Content="0x" Padding="3 1 0 0" BorderThickness="1,1,0,1" Visibility="Collapsed" d:Visibility="Visible" Background="White" BorderBrush="#FFABADB3"/>
+            <TextBox DockPanel.Dock="Right" x:Name="TextBlock" d:Text="12345" DataContext="{ Binding ElementName=_this}" Text="{Binding Path=StrValue}" PreviewKeyDown="TextPreviewKeyDown" PreviewMouseWheel="TextPreviewMouseWheel" PreviewTextInput="TextPreviewInput" TextWrapping="NoWrap" MaxLines="1" MaxLength="16"/>
+        </DockPanel>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" Click="ClickedUp" Padding="2">
+                <Polygon Points="1,3 9,3 5,0" Stroke="Black" Fill="Black" />
+            </Button>
+            <Button Grid.Row="1" Click="ClickedDown" Padding="2">
+                <Polygon Points="1,0 9,0 5,3" Stroke="Black" Fill="Black" />
+            </Button>
+        </Grid>
+    </Grid>
+</UserControl>

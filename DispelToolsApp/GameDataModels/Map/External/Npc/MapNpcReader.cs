@@ -19,7 +19,7 @@ namespace DispelTools.GameDataModels.Map.External.Npc
 
         internal override string[] ValuesMapping { get; } = { "goto1X", "goto1Y", "npcId", "lookingDirection", "id" };
 
-        protected override OnMapSpriteInfo ProcessItem(Components.CustomPropertyGridControl.PropertyItem item, object[] values)
+        protected override OnMapSpriteInfo ProcessItem(DataEditor.Data.PropertyItem item, object[] values)
         {
             var direction = (int)values[3];
             return new OnMapSpriteInfo(

@@ -1,10 +1,9 @@
-﻿using DispelTools.Components.CustomPropertyGridControl;
+﻿using DispelTools.DataEditor.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
-using System.Windows.Forms;
 
 namespace DispelTools.DataEditor
 {
@@ -44,7 +43,7 @@ namespace DispelTools.DataEditor
                 }
                 if (expectedElements != spaceForElements)
                 {
-                    MessageBox.Show($"In file count = {expectedElements}, counted {spaceForElements}");
+                    //MessageBox.Show($"In file count = {expectedElements}, counted {spaceForElements}");
                 }
                 for (int i = 0; i < spaceForElements; i++)
                 {
@@ -55,7 +54,7 @@ namespace DispelTools.DataEditor
         }
         public void SaveElement(PropertyItem element, int elementNumber, string filename)
         {
-            using (var writer = new BinaryWriter(fs.FileStream.Create(filename, FileMode.Open, FileAccess.Write)))
+            using (var writer = new BinaryWriter(fs.File.OpenWrite(filename)))
             {
                 writer.BaseStream.Position = elementNumber * PropertyItemSize + CounterSize;
                 WriteElement(writer, element);

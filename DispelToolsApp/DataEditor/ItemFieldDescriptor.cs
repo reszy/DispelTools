@@ -1,4 +1,4 @@
-﻿using DispelTools.Components.CustomPropertyGridControl;
+﻿using DispelTools.DataEditor.Data;
 using System.Collections.Generic;
 using System.IO;
 
@@ -14,7 +14,7 @@ namespace DispelTools.DataEditor
         }
 
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; init; }
         public bool ReadOnly { get; set; }
         public IFieldType ItemFieldDescriptorType { get; set; }
 

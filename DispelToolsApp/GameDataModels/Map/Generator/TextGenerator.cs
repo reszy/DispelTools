@@ -10,13 +10,13 @@ namespace DispelTools.GameDataModels.Map.Generator
         public static readonly int DigitWidth = 7;
         public static readonly int DigitHeight = 10;
 
-        private readonly Font font;
+        //private readonly Font font;
         public DirectBitmap[] DigitCache;
 
-        public TextGenerator(Font font)
+        public TextGenerator(/*Font font*/)
         {
             DigitCache = new DirectBitmap[10];
-            this.font = font;
+            //this.font = font;
             for (int i = 0; i < 10; i++)
             {
                 DigitCache[i] = CreateDigit(i);
@@ -31,15 +31,15 @@ namespace DispelTools.GameDataModels.Map.Generator
 
             RectangleF rectf = new RectangleF(0, 0, DigitWidth, DigitHeight);
 
-            Graphics g = Graphics.FromImage(image.Bitmap);
+            //Graphics g = Graphics.FromImage(image.Bitmap);
 
-            g.SmoothingMode = SmoothingMode.AntiAlias;
-            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
-            g.DrawString(digit.ToString(), font, Brushes.White, rectf);
+            //g.SmoothingMode = SmoothingMode.AntiAlias;
+            //g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            //g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            //g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+            //g.DrawString(digit.ToString(), font, Brushes.White, rectf);
 
-            g.Flush();
+            //g.Flush();
 
             return image;
         }

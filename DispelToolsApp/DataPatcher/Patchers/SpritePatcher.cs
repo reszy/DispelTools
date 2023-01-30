@@ -175,27 +175,27 @@ namespace DispelTools.DataPatcher.Patchers
 
         private void ApplyImagePatch(BinaryWriter target, PatchMark patch, ColorManagement targetColorManagement, bool keepImageSize)
         {
-            using (System.Drawing.Bitmap image = new System.Drawing.Bitmap(patch.PatchFile.PatchFileName))
-            {
-                if (keepImageSize)
-                {
-                    if (image.Width != patch.Width || image.Height != patch.Height)
-                    {
-                        throw new ArgumentException("Dimensions of image patch does not match to target image");
-                    }
-                }
-                target.Write(image.Width);
-                target.Write(image.Height);
-                target.Write(image.Width * image.Height);
-                for (int y = 0; y < image.Height; y++)
-                {
-                    for (int x = 0; x < image.Width; x++)
-                    {
-                        byte[] colorBytes = targetColorManagement.ProduceBytes(image.GetPixel(x, y));
-                        target.Write(colorBytes);
-                    }
-                }
-            }
+            //using (System.Drawing.Bitmap image = new System.Drawing.Bitmap(patch.PatchFile.PatchFileName))
+            //{
+            //    if (keepImageSize)
+            //    {
+            //        if (image.Width != patch.Width || image.Height != patch.Height)
+            //        {
+            //            throw new ArgumentException("Dimensions of image patch does not match to target image");
+            //        }
+            //    }
+            //    target.Write(image.Width);
+            //    target.Write(image.Height);
+            //    target.Write(image.Width * image.Height);
+            //    for (int y = 0; y < image.Height; y++)
+            //    {
+            //        for (int x = 0; x < image.Width; x++)
+            //        {
+            //            byte[] colorBytes = targetColorManagement.ProduceBytes(image.GetPixel(x, y));
+            //            target.Write(colorBytes);
+            //        }
+            //    }
+            //}
         }
 
         public override void Initialize(List<string> patchFiless, string targetFile, DetailedProgressReporter workReporter)

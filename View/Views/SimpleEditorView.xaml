@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="View.Views.SimpleEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:View"
+             xmlns:components="clr-namespace:View.Components"
+             mc:Ignorable="d" 
+             Height="650" Width="400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="69"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Canvas Grid.Row="0">
+            <Button Content="Open" Canvas.Left="13" Canvas.Top="13" Width="75" Height="23" Click="OpenButtonClick"/>
+            <Label x:Name="OpenedFileLabel" Content="No file selected" Canvas.Left="95" Canvas.Top="13" Width="263" Height="23" FontSize="12" Padding="3"/>
+            <components:NumericUpDown x:Name="InElementNumber" Value="0" Canvas.Left="13" Canvas.Top="43" Width="75" Height="20" Minimum="0"/>
+            <Label x:Name="MaxElementsLabel" Content="/0" Canvas.Left="95" Canvas.Top="45" Height="13" FontSize="12" Padding="0"/>
+            <Button Content="Save" Canvas.Left="314" Canvas.Top="43" Width="75" Height="23" Click="SaveButtonClick"/>
+            <CheckBox x:Name="HideUnnamedCheckBox" Content="Hide unnamed fields" Canvas.Left="186" Canvas.Top="45" Width="122" Height="17" FontSize="11" Checked="HideUnnamedIsCheckedChanged" Unchecked="HideUnnamedIsCheckedChanged"/>
+        </Canvas>
+        <ScrollViewer Margin="10" Grid.Row="1" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden">
+            <VirtualizingStackPanel x:Name="DataPanel"/>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

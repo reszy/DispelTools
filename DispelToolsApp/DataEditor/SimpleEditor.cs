@@ -1,4 +1,4 @@
-﻿using DispelTools.Components.CustomPropertyGridControl;
+﻿using DispelTools.DataEditor.Data;
 using DispelTools.DataEditor.Mappers;
 using System;
 using System.Collections.Generic;

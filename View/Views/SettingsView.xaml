@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="View.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:View.Views"
+             mc:Ignorable="d" 
+             x:Name="_this"
+             Height="189" Width="466">
+    <UserControl.Resources>
+        <Thickness x:Key="HorizontalMargin">0,0,10,0</Thickness>
+        <Thickness x:Key="VerticalMargin">0,10,0,10</Thickness>
+    </UserControl.Resources>
+    <StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <StackPanel Orientation="Horizontal" Margin="{StaticResource VerticalMargin}">
+        <Label Grid.Row="1" Grid.Column="1" Width="92" Padding="0">Game directory:</Label>
+            <TextBox x:Name="GameDirTextBox" Margin="{StaticResource HorizontalMargin}" Width="287" DataContext="{ Binding ElementName=_this}" Text="{Binding Path=GameDirText}"/>
+            <Button Margin="{StaticResource HorizontalMargin}" Width="29" Click="GameDirButtonClick">...</Button>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="{StaticResource VerticalMargin}">
+            <Label Grid.Row="1" Grid.Column="1" Width="92" Padding="0">Output directory:</Label>
+            <TextBox x:Name="OutDirTextBox" Margin="{StaticResource HorizontalMargin}" Width="287" DataContext="{ Binding ElementName=_this}" Text="{Binding Path=OutDirText}"/>
+            <Button Margin="{StaticResource HorizontalMargin}" Width="29" Click="OutDirButtonClick">...</Button>
+        </StackPanel>
+        <Button Margin="{StaticResource VerticalMargin}" Width="75" Height="23" Click="SaveSettingsClick">Save</Button>
+    </StackPanel>
+</UserControl>

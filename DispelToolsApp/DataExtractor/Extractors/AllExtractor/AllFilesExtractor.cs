@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
-using System.Windows.Forms;
 
 namespace DispelTools.DataExtractor.AllExtractor
 {
@@ -51,9 +50,9 @@ namespace DispelTools.DataExtractor.AllExtractor
             bool abort = false;
             if (!IsDispelDirectory(gameDirectory))
             {
-                var result = MessageBox.Show($"\"{gameDirectory}\" is not Dispel game directory. \nDo you want to try extract anyway?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+               // var result = MessageBox.Show($"\"{gameDirectory}\" is not Dispel game directory. \nDo you want to try extract anyway?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                abort = result == DialogResult.No;
+                //abort = result == DialogResult.No;
             }
 
             if(!abort)

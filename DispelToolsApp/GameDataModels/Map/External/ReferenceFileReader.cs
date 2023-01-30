@@ -33,7 +33,7 @@ namespace DispelTools.GameDataModels.Map.External
 
             MapExternalSpriteCache spriteCache = new MapExternalSpriteCache(directory, names);
 
-            List<Components.CustomPropertyGridControl.PropertyItem> items = Mapper.ReadFile(mapRefPath);
+            List<DataEditor.Data.PropertyItem> items = Mapper.ReadFile(mapRefPath);
             var fieldMapping = Mapper.CreateMapping(ValuesMapping);
 
             foreach (var item in items)
@@ -52,7 +52,7 @@ namespace DispelTools.GameDataModels.Map.External
             return objects;
         }
 
-        protected abstract OnMapSpriteInfo ProcessItem(Components.CustomPropertyGridControl.PropertyItem item, object[] values);
+        protected abstract OnMapSpriteInfo ProcessItem(DataEditor.Data.PropertyItem item, object[] values);
 
         public class OnMapSpriteInfo
         {

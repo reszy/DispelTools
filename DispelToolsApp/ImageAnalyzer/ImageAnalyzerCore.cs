@@ -9,13 +9,26 @@ namespace DispelTools.ImageAnalyzer
 {
     internal class ImageAnalyzerCore
     {
+        public class ImageAlignOptions
+        {
+            public int offset { get; internal set; }
+            public int width { get; internal set; }
+            public int height { get; internal set; }
+            public int lineLen { get; internal set; }
+            public int imageNumber { get; internal set; }
+            public int imageOffset { get; internal set; }
+            public ColorManagement.ColorMode colorMode { get; internal set; }
+            public Transparency transparency { get; internal set; }
+
+            public enum Transparency { NONE, COLOR_KEY_BLACK, ALPHA };
+        }
 
         public DirectBitmap RawImage { get; private set; } = null;
         public DataAnalyzedBitmap RawImageAnalyzed { get; private set; } = null;
         public DirectBitmap FilteredImage { get; private set; } = null;
         public DirectBitmap EditedImage { get; private set; } = null;
 
-        private ImageAlignControls.Options optionsUsed = null;
+        private ImageAlignOptions optionsUsed = null;
 
         public event EventHandler CreatedNewLayerEvent;
 
@@ -33,7 +46,7 @@ namespace DispelTools.ImageAnalyzer
 
         public bool IsReadyToSave => RawImage != null;
 
-        internal void LoadImage(string filename, ImageAlignControls.Options options)
+        internal void LoadImage(string filename, ImageAlignOptions options)
         {
             optionsUsed = options;
             if (options.width > 0 && options.height * options.imageNumber > 0)
@@ -61,7 +74,7 @@ namespace DispelTools.ImageAnalyzer
                                 }
                                 var color = eof ? Color.Transparent : colorManager.ProduceColor(colorBytes);
 
-                                if (options.transparency == ImageAlignControls.Options.Transparency.COLOR_KEY_BLACK && color.GetBrightness() == 0)
+                                if (options.transparency == ImageAlignOptions.Transparency.COLOR_KEY_BLACK && color.GetBrightness() == 0)
                                 {
                                     color = Color.FromArgb(0, color);
                                 }

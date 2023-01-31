@@ -26,7 +26,7 @@ namespace DispelTools.DebugTools.MetricTools
             }
         }
 
-        public static void DumpMetrics(object sender, EventArgs args)
+        public static void DumpMetrics(object? sender, EventArgs args)
         {
             if (Enabled)
             {

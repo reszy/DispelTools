@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DispelTools.DataExtractor;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -23,9 +24,12 @@ namespace View
     public partial class MainWindow : Window
     {
         private INestedView? nestedControl;
+
+        private Dictionary<string, IViewInfo> AvailableViews = new();
         public MainWindow()
         {
             InitializeComponent();
+            CreateViewList();
             MenuItem? settingMenuItem = FindMenuItem(TopMenu.Items, nameof(SettingsView));
             SetView(new SettingsView(), settingMenuItem);
         }
@@ -36,26 +40,47 @@ namespace View
 
         void OpenViewCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            if (e.OriginalSource is not MenuItem) return;
-
             var viewName = e.Parameter as string;
-            if (viewName is null) return;
-
-            var viewType = Type.GetType($"View.Views.{viewName}");
-            if (viewType?.IsAssignableTo(typeof(INestedView)) ?? false)
+            
+            if (viewName is not null && AvailableViews.TryGetValue(viewName, out var viewInfo))
             {
-                var viewConstructor = viewType.GetConstructor(Array.Empty<Type>());
-
-                if (e.OriginalSource is MenuItem menuItem && viewConstructor is not null)
+                var viewConstructor = viewInfo.PrepareConstructor();
+                if (viewConstructor is not null)
                 {
-                    var view = viewConstructor.Invoke(Array.Empty<object>()) as INestedView;
-                    SetView(view, menuItem);
+                    var view = viewConstructor.Construct();
+                    SetView(view, FindMenuItem(TopMenu.Items, viewName));
+                }
+                else
+                {
+                    if(viewConstructor is null)
+                    {
+                        MessageBox.Show($"Cannot construct view with name {viewName}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
             }
             else
             {
                 MessageBox.Show($"Cannot find view with name {viewName}");
             }
+        }
+
+        private void CreateViewList()
+        {
+            AddSimpleViewInfo<SettingsView>();
+            AddSimpleViewInfo<SimpleEditorView>();
+            AddSingleParamViewInfo<ExtractorView, DispelTools.DataExtractor.ImageExtractor.SprImageExtractorFactory>("Sprite");
+            AddSingleParamViewInfo<ExtractorView, DispelTools.DataExtractor.MapExtractor.MapImageExtractorFactory>("Map");
+            AddSingleParamViewInfo<ExtractorView, DispelTools.DataExtractor.SoundExtractor.SnfSoundExtractorFactory>("Sound");
+            AddSingleParamViewInfo<ExtractorView, DispelTools.DataExtractor.AllExtractor.AllFilesExtractorFactory>("All");
+        }
+
+        private void AddSimpleViewInfo<T>() where T : INestedView
+        {
+            AvailableViews[typeof(T).Name] = new ViewInfo<T>();
+        }
+        private void AddSingleParamViewInfo<T,K>(string secondParam) where T : INestedView
+        {
+            AvailableViews[$"{typeof(T).Name} {secondParam}"] = new ViewInfo<T>(typeof(K));
         }
 
         private void SetView(INestedView? view, MenuItem? menuItem)
@@ -68,9 +93,6 @@ namespace View
                 Contents.Content = control;
                 nestedControl?.Close();
                 nestedControl = view;
-
-                Width = control.Width;
-                ContentsHeight.Height = new(control.Height);
             }
         }
 

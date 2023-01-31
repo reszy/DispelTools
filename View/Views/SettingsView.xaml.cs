@@ -25,6 +25,8 @@ namespace View.Views
         public string GameDirText { get => gameDirText; set => SetGameDir(value); }
         public string OutDirText { get => outDirText; set => SetOutDir(value); }
 
+        public string ViewName => "Settings";
+
         private void GameDirButtonClick(object sender, RoutedEventArgs e)
         {
             folderBrowserDialog.SelectedPath = GameDirText;

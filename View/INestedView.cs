@@ -9,6 +9,7 @@ namespace View
 {
     internal interface INestedView
     {
+        string ViewName { get; }
         void Close() { }
     }
 }

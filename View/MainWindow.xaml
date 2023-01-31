@@ -7,7 +7,8 @@
         mc:Ignorable="d"
         Height="450" Width="800"
         SizeToContent="WidthAndHeight"
-        Icon="Icons/DispelTools.ico">
+        Icon="Icons/DispelTools.ico"
+        ResizeMode="NoResize">
     <Window.CommandBindings>
         <CommandBinding Command="local:CustomCommands.Exit" Executed="ExitCommand_Executed" />
         <CommandBinding Command="local:CustomCommands.OpenView" Executed="OpenViewCommand_Executed" />
@@ -33,7 +34,7 @@
                     <MenuItem Header="SimpleEditor" Command="local:CustomCommands.OpenView" CommandParameter="SimpleEditorView"/>
                 </MenuItem>
                 <MenuItem Header="MapViewer" Command="local:CustomCommands.OpenView"/>
-                <MenuItem Header="Patcher" Command="local:CustomCommands.OpenView"/>
+                <MenuItem Header="Patcher" Command="local:CustomCommands.OpenView" CommandParameter="PatcherView Sprite"/>
                 <Separator/>
                 <MenuItem Header="_Settings" Command="local:CustomCommands.OpenView" CommandParameter="SettingsView"/>
                 <Separator/>

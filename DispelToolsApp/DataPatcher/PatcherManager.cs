@@ -10,7 +10,7 @@ using System.Text;
 
 namespace DispelTools.DataPatcher
 {
-    internal class PatcherManager
+    public class PatcherManager
     {
         private readonly IFileSystem fs;
         private readonly IPatcherFactory patcherFactory;
@@ -18,7 +18,7 @@ namespace DispelTools.DataPatcher
 
         private readonly Dictionary<string, List<string>> mappedPatches;
         private readonly List<string> unmappedPatches;
-        private PatcherParams patcherParams;
+        private PatcherParams patcherParams = new();
 
         public int FilesToPatchCount => mappedPatches.Count;
 
@@ -62,7 +62,7 @@ namespace DispelTools.DataPatcher
             return sb.ToString();
         }
 
-        internal void Start()
+        public void Start()
         {
             var workReporter = new DetailedProgressReporter(backgroundWorker, mappedPatches.Count);
             workReporter.SetText("Patching...");
@@ -113,7 +113,8 @@ namespace DispelTools.DataPatcher
             foreach (var patch in patcherParams.PatchesFilenames)
             {
                 var patchFileName = fs.Path.GetFileName(patch);
-                patchFileName = patchFileName.Substring(0, fs.Path.GetFileNameWithoutExtension(patchFileName).IndexOf('.'));
+                var spriteNameEnd = fs.Path.GetFileNameWithoutExtension(patchFileName).IndexOf('.');
+                patchFileName = spriteNameEnd < 0 ? fs.Path.GetFileNameWithoutExtension(patchFileName) : patchFileName.Substring(0, spriteNameEnd);
 
                 if (targetCache.ContainsKey(patchFileName))
                 {

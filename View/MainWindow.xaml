@@ -23,19 +23,19 @@
                     <MenuItem Header="ImageAnalyzer"/>
                 </MenuItem>
                 <MenuItem Header="Extractors">
-                    <MenuItem Header="ImageExtractor" IsCheckable="True" Command="local:CustomCommands.OpenView"/>
-                    <MenuItem Header="ImageExtractor" IsCheckable="True" Command="local:CustomCommands.OpenView"/>
-                    <MenuItem Header="StringExtractor" IsCheckable="True" Command="local:CustomCommands.OpenView"/>
-                    <MenuItem Header="MapImageExtractor" IsCheckable="True" Command="local:CustomCommands.OpenView"/>
-                    <MenuItem Header="AllExtractor" IsCheckable="True" Command="local:CustomCommands.OpenView"/>
+                    <MenuItem Header="ImageExtractor" Command="local:CustomCommands.OpenView" CommandParameter="ExtractorView Sprite"/>
+                    <MenuItem Header="SoundExtractor" Command="local:CustomCommands.OpenView" CommandParameter="ExtractorView Sound"/>
+                    <MenuItem Header="StringExtractor" Command="local:CustomCommands.OpenView" CommandParameter="ExtractorView Sound"/>
+                    <MenuItem Header="MapImageExtractor" Command="local:CustomCommands.OpenView" CommandParameter="ExtractorView Map"/>
+                    <MenuItem Header="AllExtractor" Command="local:CustomCommands.OpenView" CommandParameter="ExtractorView All"/>
                 </MenuItem>
                 <MenuItem Header="Editors">
-                    <MenuItem Header="SimpleEditor" IsCheckable="True" Command="local:CustomCommands.OpenView" CommandParameter="SimpleEditorView"/>
+                    <MenuItem Header="SimpleEditor" Command="local:CustomCommands.OpenView" CommandParameter="SimpleEditorView"/>
                 </MenuItem>
-                <MenuItem Header="MapViewer" IsCheckable="True" Command="local:CustomCommands.OpenView"/>
-                <MenuItem Header="Patcher" IsCheckable="True" Command="local:CustomCommands.OpenView"/>
+                <MenuItem Header="MapViewer" Command="local:CustomCommands.OpenView"/>
+                <MenuItem Header="Patcher" Command="local:CustomCommands.OpenView"/>
                 <Separator/>
-                <MenuItem Header="_Settings" IsCheckable="True" Command="local:CustomCommands.OpenView" CommandParameter="SettingsView"/>
+                <MenuItem Header="_Settings" Command="local:CustomCommands.OpenView" CommandParameter="SettingsView"/>
                 <Separator/>
                 <MenuItem Header="E_xit" Command="local:CustomCommands.Exit"/>
             </MenuItem>

@@ -20,6 +20,9 @@ namespace View.Views
         private PropertyItem? SelectedItem;
 
         private readonly OpenFileDialog openFileDialog;
+
+        public string ViewName => "Simple data editor";
+
         public SimpleEditorView()
         {
             InitializeComponent();

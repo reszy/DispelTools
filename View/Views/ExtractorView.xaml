@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="View.Views.ExtractorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:View.Views"
+             xmlns:components="clr-namespace:View.Components"
+             mc:Ignorable="d" 
+             Width="612" MinHeight="172" MaxHeight="412" d:Height="412">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0" LastChildFill="False" Margin="15 2">
+            <Button x:Name="OpenButton" Width="75" Height="22" Click="OpenClick">Open</Button>
+            <Button x:Name="SelectDirectoryButton" Width="141" Height="22" Margin="5,0" Click="DirectorySelectClick">Select ouput directory</Button>
+            <Button x:Name="OptionsButton" DockPanel.Dock="Right" Width="84" Height="22" Click="OptionsClick">Options</Button>
+            <Button x:Name="OpenSlectedDirectoryButton" DockPanel.Dock="Right" Width="152" Height="22" Margin="10 0" Click="OpenSelectedDirectoryClick" IsEnabled="False">Open output directory</Button>
+        </DockPanel>
+        <DockPanel Grid.Row="1" LastChildFill="False" Margin="15 2">
+            <Grid DockPanel.Dock="Right" d:Background="AntiqueWhite">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Grid.Row="0" Height="16" Padding="0" Margin="0 1">Selected:</Label>
+                <Label Grid.Column="0" Grid.Row="1" Height="16" Padding="0" Margin="0 1">Outout directory:</Label>
+                <TextBlock Grid.Column="1" Grid.Row="0" Width="400" Padding="1" x:Name="SelectedInfo" TextTrimming="CharacterEllipsis" d:Text="1 C:\Windwos\Windows.exe" />
+                <TextBlock Grid.Column="1" Grid.Row="1" Width="400" Padding="1" x:Name="OutputDirectoryInfo" TextTrimming="CharacterEllipsis"  d:Text="C:\Windwos\Windows.exe"/>
+            </Grid>
+            <Button x:Name="ExtractButton" DockPanel.Dock="Left" Width="75" Margin="0 0 5 0" Click="ExtractClick" IsEnabled="False">Extract</Button>
+        </DockPanel>
+        <components:ProgressBarWithText x:Name="ProgressBar" Grid.Row="2" Margin="15, 5"/>
+        <components:Details x:Name="Details" Grid.Row="3" Margin="15,10" Header="Details" UnfoldSize="240" Height="Auto" />
+    </Grid>
+</UserControl>

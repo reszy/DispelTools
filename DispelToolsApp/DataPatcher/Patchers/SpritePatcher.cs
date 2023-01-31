@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace DispelTools.DataPatcher.Patchers
 {
-    internal class SpritePatcherFactory : IPatcherFactory
+    public class SpritePatcherFactory : IPatcherFactory
     {
         public string PatcherName => "Image patcher (SPR)";
 

@@ -72,6 +72,7 @@ namespace View
             AddSingleParamViewInfo<ExtractorView, DispelTools.DataExtractor.MapExtractor.MapImageExtractorFactory>("Map");
             AddSingleParamViewInfo<ExtractorView, DispelTools.DataExtractor.SoundExtractor.SnfSoundExtractorFactory>("Sound");
             AddSingleParamViewInfo<ExtractorView, DispelTools.DataExtractor.AllExtractor.AllFilesExtractorFactory>("All");
+            AddSingleParamViewInfo<PatcherView, DispelTools.DataPatcher.Patchers.SpritePatcherFactory>("Sprite");
         }
 
         private void AddSimpleViewInfo<T>() where T : INestedView

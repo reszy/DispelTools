@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="View.Views.PatcherView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:View.Views"
+             xmlns:components="clr-namespace:View.Components"
+             mc:Ignorable="d" 
+             MinHeight="267" Width="612">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="130"/>
+            <RowDefinition Height="55"/>
+            <RowDefinition MinHeight="40"/>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0" LastChildFill="False">
+            <Button x:Name="InputSelectButton" DockPanel.Dock="Left" Width="141" Height="25" Click="SelectPatchesClick" >Select patches</Button>
+            <Button x:Name="OutputSelectButton" DockPanel.Dock="Left" Width="141" Height="25" Margin="5 0" Click="SelectPatchedFileClick">Select file to patch</Button>
+            <Button x:Name="OptionsButton" DockPanel.Dock="Right" Width="84" Height="25" Click="OptionsClick">Options</Button>
+        </DockPanel>
+        <DockPanel Grid.Row="1" LastChildFill="False">
+            <Button x:Name="PatchButton" DockPanel.Dock="Left" VerticalAlignment="Bottom" Width="75" Height="37" Margin="0 0 5 5" IsEnabled="False" Click="PatchClick">Patch</Button>
+            <Border BorderThickness="2" Margin="5" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+                <ScrollViewer VerticalAlignment="Center" Height="128" Width="410" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    <TextBlock x:Name="SelectionTextBox" TextWrapping="NoWrap" Padding="5" Height="Auto" d:Text="testtesttest"/>
+                </ScrollViewer>
+            </Border>
+        </DockPanel>
+        <components:ProgressBarWithText x:Name="ProgressBar" Grid.Row="2" Margin="0 5"/>
+        <components:Details x:Name="Details" Grid.Row="3" Header="Details" UnfoldSize="240"/>
+    </Grid>
+</UserControl>

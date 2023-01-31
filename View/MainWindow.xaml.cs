@@ -1,4 +1,5 @@
 ﻿using DispelTools.DataExtractor;
+using DispelTools.DebugTools.MetricTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using View.Views;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace View
 {
@@ -26,10 +28,17 @@ namespace View
         private INestedView? nestedControl;
 
         private Dictionary<string, IViewInfo> AvailableViews = new();
+        private static readonly string title = "Dispel Tools";
+        private readonly string version;
         public MainWindow()
         {
             InitializeComponent();
             CreateViewList();
+
+            Closed += Metrics.DumpMetrics;
+            Version version = Assembly.GetExecutingAssembly().GetName().Version!;
+            this.version = $"v{version.Major}.{version.Minor}.{version.Revision}";
+
             MenuItem? settingMenuItem = FindMenuItem(TopMenu.Items, nameof(SettingsView));
             SetView(new SettingsView(), settingMenuItem);
         }
@@ -94,6 +103,8 @@ namespace View
                 Contents.Content = control;
                 nestedControl?.Close();
                 nestedControl = view;
+
+                Title = $"{title} - {view.ViewName} - {version}";
             }
         }
 

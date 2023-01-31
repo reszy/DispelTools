@@ -4,7 +4,7 @@ set -e
 function printHelp() {
     echo "Bump version script"
     echo "Select one of: "
-    echo "revision   major   minor"
+    echo "patch   major   minor"
     exit 1
 }
 
@@ -27,12 +27,14 @@ function bumpMajor() {
 }
 
 function bumpVersion() {
-    versionFile='DispelToolsApp/Properties/AssemblyInfo.cs'
-    local line=$(grep -n "AssemblyVersion" $versionFile | tail -n 1)
-    local version=$(echo $line | awk -F[\"\"] '{print $2}')
-    local lineNumber=$(echo $line | cut -d: -f1)
+    versionFile='View/View.csproj'
+    local line=$(grep -n "<Version>" $versionFile | tail -n 1)
+    local version=$(echo "$line" | awk -F'[<>]' '{print $3} ')
+    local lineNumber=$(echo "$line" | cut -d: -f1)
+    local lineNoNumber=$(echo "$line" | cut -d: -f2)
     versionArray=(${version//./ })
     local position="$1"
+    echo "$lineNoNumber"
     echo "Previous version: $version"
     if [ "$position" -lt 0 ] || [ "$position" -gt 3 ]; then
         echo "version position $position is not [0-3]"
@@ -43,11 +45,12 @@ function bumpVersion() {
         versionArray[i]=0
     done
 
-    local version="${versionArray[0]}.${versionArray[1]}.${versionArray[2]}.${versionArray[3]}"
+    local newversion="${versionArray[0]}.${versionArray[1]}.${versionArray[2]}.${versionArray[3]}"
     tag="v${versionArray[0]}.${versionArray[1]}.${versionArray[3]}"
 
-    echo "Next version $version"
-    local newLine=$(echo "[assembly: AssemblyVersion(\"$version\")]")
+    echo "Next version $newversion"
+    local escapedVersion=$(echo "$version" | sed 's/[\.]/\\./g')
+    local newLine=$(echo "$lineNoNumber" | sed "s/$escapedVersion/$newversion/")
     echo "New tag: $tag"
 
 
@@ -62,9 +65,10 @@ function bumpVersion() {
             exit 0
         ;;
     esac
-
     
-    sed -i "${lineNumber}s/.*/$newLine/" $versionFile
+    local escapedNewLine=$(echo "$newLine" | sed 's/[\/]/\\\//g')
+    
+    sed -i "${lineNumber}s/.*/$escapedNewLine/" $versionFile
 }
 
 function prepareGit() {
@@ -88,7 +92,12 @@ function commitGit() {
 [ -z "$1" ] && printHelp
 
 case "$1" in
-    'revision')
+    'test')
+        bumpVersion 0
+        bumpVersion 1
+        bumpVersion 3
+    ;;
+    'patch')
         bumpRevision
     ;;
     'major')

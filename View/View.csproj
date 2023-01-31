@@ -6,6 +6,10 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
+    <Version>0.5.0.0</Version>
+    <Product>DispelTools</Product>
+    <Title>DispelTools</Title>
+    <Copyright>Copyright ©  2021</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

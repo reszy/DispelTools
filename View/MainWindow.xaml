@@ -33,7 +33,7 @@
                 <MenuItem Header="Editors">
                     <MenuItem Header="SimpleEditor" Command="local:CustomCommands.OpenView" CommandParameter="SimpleEditorView"/>
                 </MenuItem>
-                <MenuItem Header="MapViewer" Command="local:CustomCommands.OpenView"/>
+                <MenuItem Header="MapViewer" Command="local:CustomCommands.OpenView" CommandParameter="MapViewerView"/>
                 <MenuItem Header="Patcher" Command="local:CustomCommands.OpenView" CommandParameter="PatcherView Sprite"/>
                 <Separator/>
                 <MenuItem Header="_Settings" Command="local:CustomCommands.OpenView" CommandParameter="SettingsView"/>

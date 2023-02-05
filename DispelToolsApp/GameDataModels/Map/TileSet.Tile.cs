@@ -59,7 +59,7 @@ namespace DispelTools.GameDataModels.Map
                 }
                 return mask;
             }
-            public void PlotTileOnBitmap(DirectBitmap parent, int destX, int destY)
+            public void PlotTileOnBitmap(RawBitmap parent, int destX, int destY)
             {
                 if (destX + TILE_WIDTH <= parent.Width && destX >= 0 && destY >= 0 && destY + TILE_HEIGHT <= parent.Height)
                 {

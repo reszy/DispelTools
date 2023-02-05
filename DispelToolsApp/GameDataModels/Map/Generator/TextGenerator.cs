@@ -11,11 +11,11 @@ namespace DispelTools.GameDataModels.Map.Generator
         public static readonly int DigitHeight = 10;
 
         //private readonly Font font;
-        public DirectBitmap[] DigitCache;
+        public RawRgb[] DigitCache;
 
         public TextGenerator(/*Font font*/)
         {
-            DigitCache = new DirectBitmap[10];
+            DigitCache = new RawRgb[10];
             //this.font = font;
             for (int i = 0; i < 10; i++)
             {
@@ -23,11 +23,11 @@ namespace DispelTools.GameDataModels.Map.Generator
             }
         }
 
-        private DirectBitmap CreateDigit(int digit)
+        private RawRgb CreateDigit(int digit)
         {
             if (digit < 0 || digit > 9) { throw new ArgumentException("number must be single digit"); }
 
-            DirectBitmap image = new DirectBitmap(DigitWidth, DigitHeight);
+            RawRgb image = new RawRgb(DigitWidth, DigitHeight);
 
             RectangleF rectf = new RectangleF(0, 0, DigitWidth, DigitHeight);
 
@@ -44,7 +44,7 @@ namespace DispelTools.GameDataModels.Map.Generator
             return image;
         }
 
-        public void PlotIdOnMap(DirectBitmap image, short id, int destX, int destY)
+        public void PlotIdOnMap(RawRgb image, short id, int destX, int destY)
         {
             if (destX + DigitWidth <= image.Width && destX >= 0 && destY >= 0 && destY + DigitHeight <= image.Height)
             {
@@ -61,7 +61,7 @@ namespace DispelTools.GameDataModels.Map.Generator
             }
         }
 
-        private void PlotDigit(DirectBitmap image, DirectBitmap digit, int destX, int destY)
+        private void PlotDigit(RawRgb image, RawRgb digit, int destX, int destY)
         {
             for (int y = 0; y < DigitHeight; y++)
             {

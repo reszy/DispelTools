@@ -1,15 +1,10 @@
 ﻿using DispelTools.Common;
-using System;
-using System.Collections.Generic;
 using System.IO.Abstractions;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
-namespace View.Dialog
+namespace FileDialogs
 {
-    class FolderBrowseDialog
+    public class FolderBrowseDialog
     {
         private readonly System.Windows.Forms.FolderBrowserDialog dialog;
         private readonly Window owner;

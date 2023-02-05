@@ -10,22 +10,6 @@ namespace DispelTools.ImageProcessing
         private static readonly MagickColor black = MagickColor.FromRgb(0, 0, 0);
         private static readonly MagickColor transparent = MagickColor.FromRgba(0, 0, 0 ,0);
 
-
-        public static DirectBitmap ToDirectBitmap(this RawRgb pixels)
-        {
-            var bitmap = new DirectBitmap(pixels.Width, pixels.Height);
-            for (int i = 0; i < bitmap.Bits.Length; i++)
-            {
-                var bi = i * 3;
-                uint r = pixels.Bytes[bi + 0];
-                uint g = pixels.Bytes[bi + 1];
-                uint b = pixels.Bytes[bi + 2];
-                uint a = ((r + g + b) > 0) ? 255u : 0;
-                uint color = (a << 24) + (r << 16) + (g << 8) + b;
-                bitmap.Bits[i] = (int)color;
-            }
-            return bitmap;
-        }
         public static void SaveAsPng(this RawRgb pixels, string output, bool blackAsTransparent)
         {
             var settings = new MagickReadSettings()

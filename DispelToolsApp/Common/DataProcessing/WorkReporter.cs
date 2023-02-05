@@ -47,5 +47,12 @@ namespace DispelTools.Common.DataProcessing
         {
             backgroundWorker.ReportProgress(currentProgress, text);
         }
+
+        public void ReportWarning(string message)
+        {
+            backgroundWorker.ReportProgress(currentProgress, new WorkerWarning(message));
+        }
+
+        public record WorkerWarning(string Message);
     }
 }

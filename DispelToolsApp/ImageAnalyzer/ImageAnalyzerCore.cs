@@ -7,7 +7,7 @@ using System.IO;
 
 namespace DispelTools.ImageAnalyzer
 {
-    internal class ImageAnalyzerCore
+    public class ImageAnalyzerCore
     {
         public class ImageAlignOptions
         {
@@ -23,10 +23,10 @@ namespace DispelTools.ImageAnalyzer
             public enum Transparency { NONE, COLOR_KEY_BLACK, ALPHA };
         }
 
-        public DirectBitmap RawImage { get; private set; } = null;
-        public DataAnalyzedBitmap RawImageAnalyzed { get; private set; } = null;
-        public DirectBitmap FilteredImage { get; private set; } = null;
-        public DirectBitmap EditedImage { get; private set; } = null;
+        public RawRgba? RawImage { get; private set; } = null;
+        public DataAnalyzedBitmap? RawImageAnalyzed { get; private set; } = null;
+        public RawRgba? FilteredImage { get; private set; } = null;
+        public RawRgba? EditedImage { get; private set; } = null;
 
         private ImageAlignOptions optionsUsed = null;
 
@@ -34,10 +34,6 @@ namespace DispelTools.ImageAnalyzer
 
         public void ClearAll()
         {
-            EditedImage?.Dispose();
-            FilteredImage?.Dispose();
-            RawImage?.Dispose();
-
             RawImageAnalyzed = null;
             EditedImage = null;
             FilteredImage = null;
@@ -46,7 +42,7 @@ namespace DispelTools.ImageAnalyzer
 
         public bool IsReadyToSave => RawImage != null;
 
-        internal void LoadImage(string filename, ImageAlignOptions options)
+        public void LoadImage(string filename, ImageAlignOptions options)
         {
             optionsUsed = options;
             if (options.width > 0 && options.height * options.imageNumber > 0)
@@ -56,7 +52,7 @@ namespace DispelTools.ImageAnalyzer
                     file.BaseStream.Seek(options.offset, SeekOrigin.Begin);
                     var colorManager = ColorManagement.From(options.colorMode);
 
-                    var bitmap = new DirectBitmap(options.width, options.height * options.imageNumber);
+                    var bitmap = new RawRgba(options.width, options.height * options.imageNumber);
                     var dataAnalyzedBitmap = new DataAnalyzedBitmap(options.width, options.height * options.imageNumber);
                     bool eof = false;
 
@@ -94,7 +90,7 @@ namespace DispelTools.ImageAnalyzer
             CreatedNewLayerEvent?.Invoke(this, EventArgs.Empty);
         }
 
-        internal void SaveEditedImage(string filename)
+        public void SaveEditedImage(string filename)
         {
             if (EditedImage == null) { return; }
             if (optionsUsed.width > 0 && optionsUsed.height * optionsUsed.imageNumber > 0)
@@ -130,12 +126,11 @@ namespace DispelTools.ImageAnalyzer
                 }
             }
         }
-        internal void ApplyFilter(IPerPixelFilter filter)
+        public void ApplyFilter(IPerPixelFilter filter)
         {
             if (FilteredImage == null || (FilteredImage.Width != RawImage.Width || FilteredImage.Height != RawImage.Height))
             {
-                FilteredImage?.Dispose();
-                FilteredImage = new DirectBitmap(RawImage.Width, RawImage.Height);
+                FilteredImage = new RawRgba(RawImage.Width, RawImage.Height);
                 CreatedNewLayerEvent?.Invoke(this, EventArgs.Empty);
             }
             if(filter == null)
@@ -151,16 +146,16 @@ namespace DispelTools.ImageAnalyzer
                 }
             }
         }
-        internal void ModifyImage()
+        public void ModifyImage()
         {
 
         }
 
-        internal void EditPixel(Point position, Color color)
+        public void EditPixel(Point position, Color color)
         {
             if (EditedImage == null)
             {
-                EditedImage = DirectBitmap.From(RawImage);
+                //TODO EditedImage = RawRgba.From(RawImage);
                 CreatedNewLayerEvent?.Invoke(this, EventArgs.Empty);
             }
             EditedImage.SetPixel(position.X, position.Y, color);

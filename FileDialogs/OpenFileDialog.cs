@@ -1,11 +1,10 @@
 ﻿using DispelTools.Common;
-using System;
 using System.IO.Abstractions;
 using System.Windows;
 
-namespace View.Dialog
+namespace FileDialogs
 {
-    internal class OpenFileDialog
+    public class OpenFileDialog
     {
         private readonly Microsoft.Win32.OpenFileDialog dialog;
         private readonly Window owner;

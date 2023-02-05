@@ -1,15 +1,10 @@
 ﻿using DispelTools.Common;
-using System;
-using System.Collections.Generic;
 using System.IO.Abstractions;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
-namespace View.Dialog
+namespace FileDialogs
 {
-    internal class SaveFileDialog
+    public class SaveFileDialog
     {
         private readonly Microsoft.Win32.SaveFileDialog dialog;
         private readonly Window owner;
@@ -21,15 +16,19 @@ namespace View.Dialog
 
             public bool HaveSubFolder { get; private set; }
             public string SubFolder { get => subFolder; init { HaveSubFolder = true; subFolder = value; } }
+            public string Filter { get; set; } = string.Empty;
         }
         public string[] FileNames => dialog.FileNames;
         public string FileName => dialog.FileName;
+        public string Filter => dialog.Filter;
+        public int FilterIndex => dialog.FilterIndex;
         public SaveFileDialog(IFileSystem fs, Window owner, Configuration configuration)
         {
             this.fs = fs;
             this.owner = owner;
             dialog = new()
             {
+                Filter = configuration.Filter,
                 InitialDirectory = configuration.HaveSubFolder ? Settings.GameRootDir + '\\' + configuration.SubFolder : Settings.GameRootDir
             };
         }

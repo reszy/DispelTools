@@ -10,7 +10,7 @@ using System.Linq;
 namespace DispelTools.GameDataModels.Map.Reader
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "these are values of unknown purpose but important")]
-    public partial class MapReader
+    internal class MapReader
     {
         private readonly string filename;
         private readonly string mapName;

@@ -5,21 +5,23 @@ using System.Text;
 
 namespace DispelTools.GameDataModels.Map
 {
-    public class MapContainer : IDisposable
+    public partial class MapContainer : IDisposable
     {
         private bool disposedValue;
 
+        public string SourceDirectory { get; private set; }
         public string MapName { get; }
         public MapModel Model { get; }
         public List<SpriteSequence> InternalSprites { get; }
-        public TileSet Gtl { get; set; }
-        public TileSet Btl { get; set; }
+        public TileSet? Gtl { get; set; }
+        public TileSet? Btl { get; set; }
         public List<External.MapExternalObject> ExtraEntities { get; }
         public List<External.MapExternalObject> MonsterEntities { get; }
         public List<External.MapExternalObject> NpcEntities { get; }
 
         public MapContainer(string mapName, MapModel model, List<SpriteSequence> sprites)
         {
+            SourceDirectory = string.Empty;
             MapName = mapName;
             Model = model;
             InternalSprites = sprites;

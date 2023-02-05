@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30907.101
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DispelTools", "DispelToolsApp\DispelTools.csproj", "{C582770F-DE2D-4B45-87DA-1A526D24EAB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DispelTools", "DispelToolsApp\DispelTools.csproj", "{C582770F-DE2D-4B45-87DA-1A526D24EAB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DispelToolsTests", "DispelToolsTests\DispelToolsTests.csproj", "{61402419-3BEF-40DC-B008-810859B28B02}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DispelToolsTests", "DispelToolsTests\DispelToolsTests.csproj", "{61402419-3BEF-40DC-B008-810859B28B02}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "View", "View\View.csproj", "{DC7AAD50-4226-4C66-81AB-C1E22A7F7D8E}"
 EndProject
@@ -26,6 +26,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "devlog", "devlog", "{9405A9
 		Docs\devlog\main.md = Docs\devlog\main.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileDialogs", "FileDialogs\FileDialogs.csproj", "{C3D592BB-892E-49B1-9817-175156F381DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewTests", "ViewTests\ViewTests.csproj", "{1D2548CC-5992-4D35-917B-B5810CC97339}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,14 +40,22 @@ Global
 		{C582770F-DE2D-4B45-87DA-1A526D24EAB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C582770F-DE2D-4B45-87DA-1A526D24EAB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C582770F-DE2D-4B45-87DA-1A526D24EAB4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DC7AAD50-4226-4C66-81AB-C1E22A7F7D8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DC7AAD50-4226-4C66-81AB-C1E22A7F7D8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DC7AAD50-4226-4C66-81AB-C1E22A7F7D8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DC7AAD50-4226-4C66-81AB-C1E22A7F7D8E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{61402419-3BEF-40DC-B008-810859B28B02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{61402419-3BEF-40DC-B008-810859B28B02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61402419-3BEF-40DC-B008-810859B28B02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61402419-3BEF-40DC-B008-810859B28B02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC7AAD50-4226-4C66-81AB-C1E22A7F7D8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC7AAD50-4226-4C66-81AB-C1E22A7F7D8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC7AAD50-4226-4C66-81AB-C1E22A7F7D8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC7AAD50-4226-4C66-81AB-C1E22A7F7D8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3D592BB-892E-49B1-9817-175156F381DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3D592BB-892E-49B1-9817-175156F381DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3D592BB-892E-49B1-9817-175156F381DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3D592BB-892E-49B1-9817-175156F381DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D2548CC-5992-4D35-917B-B5810CC97339}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D2548CC-5992-4D35-917B-B5810CC97339}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D2548CC-5992-4D35-917B-B5810CC97339}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D2548CC-5992-4D35-917B-B5810CC97339}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

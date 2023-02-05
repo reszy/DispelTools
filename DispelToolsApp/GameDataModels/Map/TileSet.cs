@@ -51,11 +51,11 @@ namespace DispelTools.GameDataModels.Map
 
         public Tile this[int i] => i < tiles.Count ? tiles[i] : UnknownTile;
 
-        public DirectBitmap TileSetToOneBitmap()
+        public RawRgb TileSetToOneBitmap()
         {
             int w = (int)Math.Ceiling(Math.Sqrt((double)tiles.Count / 4));
             int h = w * 4;
-            var bigBitmap = new DirectBitmap((TILE_WIDTH * w) + (TILE_WIDTH / 2) + 1, TILE_HEIGHT * (int)Math.Ceiling((float)h / 2));
+            var bigBitmap = new RawRgb((TILE_WIDTH * w) + (TILE_WIDTH / 2) + 1, TILE_HEIGHT * (int)Math.Ceiling((float)h / 2));
             int i = 0;
             for (int y = 0; y < h; y++)
             {

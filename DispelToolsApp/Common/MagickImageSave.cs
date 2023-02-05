@@ -49,22 +49,25 @@ namespace DispelTools.Common
             image.Write(output, encoder.Format);
             image.Dispose();
         }
-        public static void SaveAs(this DirectBitmap bitmap, string output, IMagickImageEncoder encoder)
+
+        public static void SaveAs(this RawRgba pixels, string output, IMagickImageEncoder encoder)
         {
             var settings = new MagickReadSettings()
             {
-                Width = bitmap.Width,
-                Height = bitmap.Height,
-                Format = MagickFormat.Bgra,
-                Depth = 8
+                Width = pixels.Width,
+                Height = pixels.Height,
+                Format = MagickFormat.Rgba,
+                Depth = 8,
             };
-            using (var stream = bitmap.Stream())
-            {
-                var image = new MagickImage(stream, settings);
-                encoder.ApplySettings(image);
-                image.Write(output, encoder.Format);
-                image.Dispose();
-            }
+            var image = new MagickImage(pixels.Bytes, settings);
+            encoder.ApplySettings(image);
+            image.Write(output, encoder.Format);
+            image.Dispose();
+        }
+        public static void SaveAs(this RawBitmap bitmap, string output, IMagickImageEncoder encoder)
+        {
+            if(bitmap is RawRgb rgb) { SaveAs(rgb, output, encoder); }
+            else if(bitmap is RawRgba rgba) { SaveAs(rgba, output, encoder); }
         }
 
         private class PngEncoder : IMagickImageEncoder

@@ -44,6 +44,7 @@ namespace View
         }
         void ExitCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            nestedControl?.Close();
             this.Close();
         }
 
@@ -82,6 +83,7 @@ namespace View
             AddSingleParamViewInfo<ExtractorView, DispelTools.DataExtractor.SoundExtractor.SnfSoundExtractorFactory>("Sound");
             AddSingleParamViewInfo<ExtractorView, DispelTools.DataExtractor.AllExtractor.AllFilesExtractorFactory>("All");
             AddSingleParamViewInfo<PatcherView, DispelTools.DataPatcher.Patchers.SpritePatcherFactory>("Sprite");
+            AddSimpleViewInfo<MapViewerView>();
         }
 
         private void AddSimpleViewInfo<T>() where T : INestedView

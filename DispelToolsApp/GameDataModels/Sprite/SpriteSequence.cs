@@ -87,9 +87,9 @@ namespace DispelTools.GameDataModels.Sprite
 
         private Point CalculateFrameOffset(Point boxCenter, Point frameCenter) => new Point(boxCenter.X - frameCenter.X, boxCenter.Y - frameCenter.Y);
 
-        private DirectBitmap BoxImage(DirectBitmap sourceImage, Size size, Point position)
+        private RawRgb BoxImage(RawRgb sourceImage, Size size, Point position)
         {
-            var image = new DirectBitmap(size.Width, size.Height);
+            var image = new RawRgb(size.Width, size.Height);
             for (int y = 0; y < sourceImage.Height; y++)
             {
                 for (int x = 0; x < sourceImage.Width; x++)

@@ -1,13 +1,12 @@
 ﻿using DispelTools.DataEditor;
 using DispelTools.DataEditor.Data;
+using FileDialogs;
 using System;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using View.Components;
-using View.Dialog;
-using static DispelTools.ImageAnalyzer.DataAnalyzedBitmap;
 
 namespace View.Views
 {

@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="View.Views.MapViewerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:View.Views"
+             xmlns:components="clr-namespace:View.Components"
+             xmlns:pic="clr-namespace:View.Components.PictureDisplay"
+             mc:Ignorable="d"
+             >
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="664"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1019"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+            <Button Width="75" Height="25" Click="OpenClick">Open</Button>
+            <ToggleButton x:Name="ToggleClipBoard" Width="26" Height="26" Margin="8 0" VerticalAlignment="Center" ToolTip="Copy teleport command to clipboard">
+                <Image Source="/Icons/clipboard.png" VerticalAlignment="Top"/>
+            </ToggleButton>
+            <TextBlock x:Name="SelectedMapLabel" VerticalAlignment="Center" Width="300" Margin="8 0" d:Text="Here goes map path or name"/>
+            <Button Width="82" Height="25" VerticalAlignment="Center" Margin="8 0" Click="DebugClick">Debug</Button>
+            <CheckBox x:Name="DebugDotsCheckBox" Margin="40 0" VerticalAlignment="Center">DebugDots</CheckBox>
+        </StackPanel>
+        <pic:PictureDisplayer x:Name="mapDisplay" Grid.Row="1" Grid.Column="0" Width="1019" Height="664" Background="Black"/>
+        <DockPanel  Grid.Row="1" Grid.Column="1" Margin="8 0 0 8">
+            <ComboBox x:Name="TileSetCombo" DockPanel.Dock="Top" Width="132" Height="20" SelectionChanged="TileShowTypeChanged">
+                <ComboBoxItem>GTL</ComboBoxItem>
+                <ComboBoxItem>BTL</ComboBoxItem>
+                <ComboBoxItem>Sprite</ComboBoxItem>
+            </ComboBox>
+            <components:NumericUpDown x:Name="TileShowNumber" DockPanel.Dock="Top" Width="132" Height="20"/>
+            <Border DockPanel.Dock="Top" Width="132" Height="110" Background="Black"/>
+            <StackPanel DockPanel.Dock="Top" Margin="0 8" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+                <CheckBox x:Name="OccludeCheckBox" ToolTip="Prevents from generating corners of map that are not visible in game">Occlude</CheckBox>
+                <components:LabelSeparator Text="Base layer"/>
+                <CheckBox x:Name="GtlCheckBox" ToolTip="Shows ground tiles">GTL</CheckBox>
+                <CheckBox x:Name="CollisionsCheckBox" ToolTip="Colors which tiles can be accessed by player">Collisions</CheckBox>
+                <CheckBox x:Name="EventsCheckBox" ToolTip="Colors and shows eventId on tiles with event on it">Events</CheckBox>
+                <components:LabelSeparator Text="Internal objects"/>
+                <CheckBox x:Name="BtlCheckBox" ToolTip="Shows tiles that can overlap other tiles">BTL</CheckBox>
+                <CheckBox x:Name="SpritesCheckBox" ToolTip="Shows sprites which are included in map file">Sprites</CheckBox>
+                <components:LabelSeparator Text="External objects"/>
+                <CheckBox x:Name="ExtraCheckBox" ToolTip="Shows other objects named (Extra) from external source">Extras</CheckBox>
+                <CheckBox x:Name="MonsterCheckBox" ToolTip="Shows monsters from external source">Monsters</CheckBox>
+                <CheckBox x:Name="NpcCheckBox" ToolTip="Shows friendly NonPlayableCharacers from external source">NPCs</CheckBox>
+                <components:LabelSeparator Text="Last layer"/>
+                <CheckBox x:Name="RoofsCheckBox" ToolTip="Shows roof tiles which are signed as bldg">Roofs</CheckBox>
+            </StackPanel>
+            <Border DockPanel.Dock="Bottom" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" BorderThickness="2" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
+                <TextBlock x:Name="StatsTextBox" DockPanel.Dock="Bottom" Width="128" d:Text="Stats of map" Padding="4"></TextBlock>
+            </Border>
+        </DockPanel>
+        <DockPanel Grid.Row="2" Grid.Column="0">
+            <Button DockPanel.Dock="Left" Width="131" Height="39" Click="GenerateClick">GENERATE</Button>
+            <components:ProgressBarWithText x:Name="ProgressBar" DockPanel.Dock="Right" Height="40" Margin="8 0 0 0"/>
+        </DockPanel>
+        <Button x:Name="SaveAsImageButton" Grid.Row="2" Grid.Column="1" Margin="8 0 0 0" Width="132" Height="40">Save as Image</Button>
+    </Grid>
+</UserControl>

@@ -2,10 +2,12 @@
 using DispelTools.Common.DataProcessing;
 using DispelTools.GameDataModels.Sprite;
 using DispelTools.ImageProcessing;
+using ImageMagick;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace DispelTools.DataPatcher.Patchers
 {
@@ -175,27 +177,30 @@ namespace DispelTools.DataPatcher.Patchers
 
         private void ApplyImagePatch(BinaryWriter target, PatchMark patch, ColorManagement targetColorManagement, bool keepImageSize)
         {
-            //using (System.Drawing.Bitmap image = new System.Drawing.Bitmap(patch.PatchFile.PatchFileName))
-            //{
-            //    if (keepImageSize)
-            //    {
-            //        if (image.Width != patch.Width || image.Height != patch.Height)
-            //        {
-            //            throw new ArgumentException("Dimensions of image patch does not match to target image");
-            //        }
-            //    }
-            //    target.Write(image.Width);
-            //    target.Write(image.Height);
-            //    target.Write(image.Width * image.Height);
-            //    for (int y = 0; y < image.Height; y++)
-            //    {
-            //        for (int x = 0; x < image.Width; x++)
-            //        {
-            //            byte[] colorBytes = targetColorManagement.ProduceBytes(image.GetPixel(x, y));
-            //            target.Write(colorBytes);
-            //        }
-            //    }
-            //}
+            using var image = new MagickImage(patch.PatchFile.PatchFileName);
+            var rawRgbImage = new RawRgb(image.Width, image.Height);
+            using (var memory = new MemoryStream(rawRgbImage.Bytes, true))
+            {
+                image.Write(memory, MagickFormat.Rgb);
+            }
+            if (keepImageSize)
+            {
+                if (image.Width != patch.Width || image.Height != patch.Height)
+                {
+                    throw new ArgumentException("Dimensions of image patch does not match to target image");
+                }
+            }
+            target.Write(image.Width);
+            target.Write(image.Height);
+            target.Write(image.Width * image.Height);
+            for (int y = 0; y < image.Height; y++)
+            {
+                for (int x = 0; x < image.Width; x++)
+                {
+                    byte[] colorBytes = targetColorManagement.ProduceBytes(rawRgbImage.GetPixel(x, y));
+                    target.Write(colorBytes);
+                }
+            }
         }
 
         public override void Initialize(List<string> patchFiless, string targetFile, DetailedProgressReporter workReporter)

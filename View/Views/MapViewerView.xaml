@@ -20,9 +20,12 @@
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
             <Button Width="75" Height="25" Click="OpenClick">Open</Button>
-            <ToggleButton x:Name="ToggleClipBoard" Width="26" Height="26" Margin="8 0" VerticalAlignment="Center" ToolTip="Copy teleport command to clipboard">
+            <ToggleButton x:Name="ToggleClipBoard" Width="26" Height="26" Margin="8 0 4 0" VerticalAlignment="Center" ToolTip="Copy teleport command to clipboard">
                 <Image Source="/Icons/clipboard.png" VerticalAlignment="Top"/>
             </ToggleButton>
+            <Button x:Name="CenterButton" Width="26" Height="26" Margin="4 0 " VerticalAlignment="Center" ToolTip="Center view" Click="CenterViewClick">
+                <Image Source="/Icons/center.png" VerticalAlignment="Top"/>
+            </Button>
             <TextBlock x:Name="SelectedMapLabel" VerticalAlignment="Center" Width="300" Margin="8 0" d:Text="Here goes map path or name"/>
             <Button Width="82" Height="25" VerticalAlignment="Center" Margin="8 0" Click="DebugClick">Debug</Button>
             <CheckBox x:Name="DebugDotsCheckBox" Margin="40 0" VerticalAlignment="Center">DebugDots</CheckBox>

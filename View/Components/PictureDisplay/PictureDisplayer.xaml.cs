@@ -284,5 +284,12 @@ namespace View.Components.PictureDisplay
                 }
             }
         }
+
+        internal void CenterView()
+        {
+            if(imageSource is null) return;
+            imageTransformer.X = (this.Width / 2) - (ImageElement.Width / 2);
+            imageTransformer.Y = (this.Height / 2) - (ImageElement.Height / 2);
+        }
     }
 }

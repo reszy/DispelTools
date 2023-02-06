@@ -6,8 +6,11 @@ namespace View.Components.PictureDisplay
     public class ImageTransformer
     {
         private readonly Image image;
-        public double X { get; private set; }
-        public double Y { get; private set; }
+        private double x;
+        private double y;
+
+        public double X { get => x; set { x = value; Canvas.SetLeft(image, x); } }
+        public double Y { get => y; set { y = value; Canvas.SetTop(image, y); } }
         public double ZoomValue { get; private set; }
 
         public ImageTransformer(Image image)
@@ -21,7 +24,6 @@ namespace View.Components.PictureDisplay
             X = 0;
             Y = 0;
             ZoomValue = 1.0f;
-            SetPosition();
             if (image.Source is not null)
             {
                 SetSize(image.Source.Width, image.Source.Height);
@@ -32,7 +34,6 @@ namespace View.Components.PictureDisplay
         {
             X += x;
             Y += y;
-            SetPosition();
         }
 
         public void Zoom(int originX, int originY, double zoom)
@@ -44,15 +45,8 @@ namespace View.Components.PictureDisplay
             if (image.Source is not null)
             {
                 var size = CalculateZoomedImageSize();
-                SetPosition();
                 SetSize(size.width, size.height);
             }
-        }
-
-        private void SetPosition()
-        {
-            Canvas.SetLeft(image, X);
-            Canvas.SetTop(image, Y);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

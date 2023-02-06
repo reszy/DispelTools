@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Icons\center.png" />
     <None Remove="Icons\clipboard.png" />
     <None Remove="Icons\colorPicker.png" />
     <None Remove="Icons\DispelTools.ico" />
@@ -32,6 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Icons\center.png" />
     <Resource Include="Icons\clipboard.png" />
     <Resource Include="Icons\colorPicker.png" />
     <Resource Include="Icons\DispelTools.ico" />

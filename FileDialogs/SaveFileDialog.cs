@@ -19,8 +19,9 @@ namespace FileDialogs
             public string Filter { get; set; } = string.Empty;
         }
         public string[] FileNames => dialog.FileNames;
-        public string FileName => dialog.FileName;
-        public string Filter => dialog.Filter;
+        public string FileName { get => dialog.FileName; set => dialog.FileName = value; }
+        public string Filter { get => dialog.Filter; set => dialog.Filter = value; }
+        public string InitialDirectory { get => dialog.InitialDirectory; set => dialog.InitialDirectory = value; }
         public int FilterIndex => dialog.FilterIndex;
         public SaveFileDialog(IFileSystem fs, Window owner, Configuration configuration)
         {

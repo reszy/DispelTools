@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using DispelTools.ImageAnalyzer;
 using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace View.Components.PictureDisplay
 {
@@ -38,8 +39,7 @@ namespace View.Components.PictureDisplay
         private HighlightCursor highlight;
 
         //DATA TIP
-        private Color? selectedPixel;
-        private Point? selectedPixelCoords;
+        private SelectedPixelData? selectedPixel;
         private bool showHex = false;
 
 
@@ -51,10 +51,25 @@ namespace View.Components.PictureDisplay
         private DataAnalyzedBitmap.DataPixel selectedPixelData;
         private IPictureDisplayerController? subComponent;
 
+        private bool displayTipInTopHalf = true;
 
-        public bool ShowDataTip { get; internal set; } = true;
+        public bool ShowDataTip
+        {
+            get => DataTip.Visibility == System.Windows.Visibility.Visible;
+            set => DataTip.Visibility = value ? System.Windows.Visibility.Visible : System.Windows.Visibility.Hidden;
+        }
         public DataAnalyzedBitmap DataAnalyzedBitamp { private get; set; }
-        private BitmapSource Image => (BitmapSource)ImageElement.Source;
+
+        public record SelectedPixelData(Point Coords, System.Drawing.Color Color)
+        {
+            public static SelectedPixelData CreateFrom(RawBitmap image, int x, int y)
+            {
+                Point coords = new(Math.Clamp(x, 0, image.Width - 1), Math.Clamp(y, 0, image.Height - 1));
+                return new(coords, image.GetPixel(coords.X, coords.Y));
+            }
+
+            internal static SelectedPixelData CreateFrom(RawBitmap imageSource, Point point) => CreateFrom(imageSource, point.X, point.Y);
+        }
 
 
         public PictureDisplayer()
@@ -68,9 +83,9 @@ namespace View.Components.PictureDisplay
 
         private void MouseMoved(object sender, MouseEventArgs e)
         {
+            var Location = e.GetPosition(this);
             if (ImageElement.Source is not null && imageSource is not null)
             {
-                var Location = e.GetPosition(this);
                 if (panning)
                 {
                     var delta = new Point((int)Location.X - startingPoint.X, (int)Location.Y - startingPoint.Y);
@@ -90,22 +105,37 @@ namespace View.Components.PictureDisplay
                 }
                 Invalidate();
             }
+            if ((Location.Y > Height / 2) ^ displayTipInTopHalf)
+            {
+                displayTipInTopHalf = !displayTipInTopHalf;
+                if (displayTipInTopHalf)
+                {
+                    Canvas.SetTop(DataTip, 20);
+                    Canvas.SetBottom(DataTip, double.NaN);
+                }
+                else
+                {
+                    Canvas.SetBottom(DataTip, 20);
+                    Canvas.SetTop(DataTip, double.NaN);
+                }
+            }
         }
         private void MouseButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (ImageElement.Source is not null && imageSource is not null)
             {
                 var Location = e.GetPosition(this);
-                selectedPixelCoords = ConvertToImageCoords(Location);
                 if (e.RightButton == MouseButtonState.Pressed && !selecting)
                 {
                     Cursor = Cursors.Hand;
                     panning = true;
+                    Mouse.Capture(ThisCanvas, CaptureMode.SubTree);
                     startingPoint = new Point((int)Location.X, (int)Location.Y);
                 }
                 else
                 {
-                    subComponent?.PixelSelected(this, new PixelSelectedArgs(selectedPixelCoords.Value, imageSource.GetPixel(selectedPixelCoords.Value.X, selectedPixelCoords.Value.Y), Keyboard.Modifiers));
+                    selectedPixel = SelectedPixelData.CreateFrom(imageSource, ConvertToImageCoords(Location));
+                    subComponent?.PixelSelected(this, new PixelSelectedArgs(selectedPixel, Keyboard.Modifiers));
                     switch (CurrentMouseMode)
                     {
                         case MouseMode.RectSelector:
@@ -118,9 +148,7 @@ namespace View.Components.PictureDisplay
                         case MouseMode.Pointer:
                         default:
                             {
-                                selectedPixel = imageSource.GetPixel(highlight.X, highlight.Y);
-                                selectedPixelCoords = pointingAt;
-                                PixelSelectedEvent?.Invoke(this, new PixelSelectedArgs(pointingAt, selectedPixel.Value, Keyboard.Modifiers));
+                                PixelSelectedEvent?.Invoke(this, new PixelSelectedArgs(selectedPixel, Keyboard.Modifiers));
                                 Invalidate();
                             }
                             break;
@@ -133,14 +161,16 @@ namespace View.Components.PictureDisplay
         {
             if (e.RightButton == MouseButtonState.Released)
             {
+                if (panning) e.Handled = true;
                 this.Cursor = Cursors.Arrow;
                 panning = false;
                 selecting = false;
+                Mouse.Capture(null);
             }
         }
         private void MouseWheelMoved(object sender, MouseWheelEventArgs e)
         {
-            if (Image != null)
+            if (imageSource is not null)
             {
                 if (!panning)
                 {
@@ -154,6 +184,7 @@ namespace View.Components.PictureDisplay
                     }
                     var origin = e.GetPosition(this);
                     imageTransformer.Zoom((int)origin.X, (int)origin.Y, zoom.GetZoom());
+                    highlight.SetScale(zoom.GetZoom());
                     Invalidate();
                 }
             }
@@ -188,10 +219,10 @@ namespace View.Components.PictureDisplay
             YPos.ValueText = pointingPosition.Y.ToString();
             if (selectedPixel is not null)
             {
-                Ch1.ValueText = selectedPixel.Value.R.ToString();
-                Ch2.ValueText = selectedPixel.Value.G.ToString();
-                Ch3.ValueText = selectedPixel.Value.B.ToString();
-                Ch4.ValueText = selectedPixel.Value.A.ToString();
+                Ch1.ValueText = selectedPixel.Color.R.ToString();
+                Ch2.ValueText = selectedPixel.Color.G.ToString();
+                Ch3.ValueText = selectedPixel.Color.B.ToString();
+                Ch4.ValueText = selectedPixel.Color.A.ToString();
             }
         }
 
@@ -215,13 +246,14 @@ namespace View.Components.PictureDisplay
         internal void SetController(IPictureDisplayerController displayerController)
         {
             subComponent = displayerController;
-            if(subComponent.HasCustomHighlight)
+            if (subComponent.HasCustomHighlight)
             {
-                highlight.SetCustomCursor(subComponent.CreateCustomHighlight());
+                var customHighlight = subComponent.CreateCustomHighlight();
+                highlight.SetCustomCursor(customHighlight.polygon, customHighlight.offset);
             }
             else
             {
-                highlight.SetCustomCursor(null);
+                highlight.SetCustomCursor(null, null);
             }
         }
 
@@ -246,7 +278,7 @@ namespace View.Components.PictureDisplay
 
         public System.Windows.Point ConvertToPictureBoxCoords(Point point)
         {
-            return new ((double)Math.Floor(point.X * zoom.GetZoom() + imageTransformer.X),
+            return new((double)Math.Floor(point.X * zoom.GetZoom() + imageTransformer.X),
                         (double)Math.Floor(point.Y * zoom.GetZoom() + imageTransformer.Y));
         }
 
@@ -268,7 +300,7 @@ namespace View.Components.PictureDisplay
         private void Highlight(Point point)
         {
             if (imageSource is null) return;
-            if (point.X >= 0 && point.X < Image.Width && point.Y >= 0 && point.Y < Image.Height)
+            if (point.X >= 0 && point.X < imageSource.Width && point.Y >= 0 && point.Y < imageSource.Height)
             {
                 var highlightPixelColor = imageSource.GetPixel(point.X, point.Y);
                 highlight.SetColorInversed(highlightPixelColor);
@@ -287,7 +319,7 @@ namespace View.Components.PictureDisplay
 
         internal void CenterView()
         {
-            if(imageSource is null) return;
+            if (imageSource is null) return;
             imageTransformer.X = (this.Width / 2) - (ImageElement.Width / 2);
             imageTransformer.Y = (this.Height / 2) - (ImageElement.Height / 2);
         }

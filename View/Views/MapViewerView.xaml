@@ -33,12 +33,12 @@
         <pic:PictureDisplayer x:Name="mapDisplay" Grid.Row="1" Grid.Column="0" Width="1019" Height="664" Background="Black"/>
         <DockPanel  Grid.Row="1" Grid.Column="1" Margin="8 0 0 8">
             <ComboBox x:Name="TileSetCombo" DockPanel.Dock="Top" Width="132" Height="20" SelectionChanged="TileShowTypeChanged">
-                <ComboBoxItem>GTL</ComboBoxItem>
+                <ComboBoxItem IsSelected="True">GTL</ComboBoxItem>
                 <ComboBoxItem>BTL</ComboBoxItem>
                 <ComboBoxItem>Sprite</ComboBoxItem>
             </ComboBox>
-            <components:NumericUpDown x:Name="TileShowNumber" DockPanel.Dock="Top" Width="132" Height="20"/>
-            <Border DockPanel.Dock="Top" Width="132" Height="110" Background="Black"/>
+            <components:NumericUpDown x:Name="TileShowNumber" DockPanel.Dock="Top" Width="132" Height="20" Minimum="0"/>
+            <pic:PictureDisplayer x:Name="TileDisplayer" DockPanel.Dock="Top" Width="132" Height="110" Background="Black" ShowDataTip="False"/>
             <StackPanel DockPanel.Dock="Top" Margin="0 8" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
                 <CheckBox x:Name="OccludeCheckBox" ToolTip="Prevents from generating corners of map that are not visible in game">Occlude</CheckBox>
                 <components:LabelSeparator Text="Base layer"/>
@@ -56,13 +56,13 @@
                 <CheckBox x:Name="RoofsCheckBox" ToolTip="Shows roof tiles which are signed as bldg">Roofs</CheckBox>
             </StackPanel>
             <Border DockPanel.Dock="Bottom" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" BorderThickness="2" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
-                <TextBlock x:Name="StatsTextBox" DockPanel.Dock="Bottom" Width="128" d:Text="Stats of map" Padding="4"></TextBlock>
+                <TextBlock x:Name="StatsTextBox" DockPanel.Dock="Bottom" Width="128" d:Text="Stats of map" Padding="4" FontSize="10"></TextBlock>
             </Border>
         </DockPanel>
         <DockPanel Grid.Row="2" Grid.Column="0">
             <Button DockPanel.Dock="Left" Width="131" Height="39" Click="GenerateClick">GENERATE</Button>
             <components:ProgressBarWithText x:Name="ProgressBar" DockPanel.Dock="Right" Height="40" Margin="8 0 0 0"/>
         </DockPanel>
-        <Button x:Name="SaveAsImageButton" Grid.Row="2" Grid.Column="1" Margin="8 0 0 0" Width="132" Height="40">Save as Image</Button>
+        <Button x:Name="SaveAsImageButton" Grid.Row="2" Grid.Column="1" Margin="8 0 0 0" Width="132" Height="40" Click="SaveAsImageClick">Save as Image</Button>
     </Grid>
 </UserControl>

@@ -88,7 +88,7 @@ namespace View.Components.PictureDisplay
             for (int i = 0; i < InfoSize; i++)
             {
                 var lwt = new LabelWithValue() { LabelText = Labels[i], ValueText = info[i] };
-                Grid.SetRow(grid, i);
+                Grid.SetRow(lwt, i);
                 grid.Children.Add(lwt);
             }
         }

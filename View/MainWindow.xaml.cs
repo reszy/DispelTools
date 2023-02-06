@@ -44,7 +44,6 @@ namespace View
         }
         void ExitCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            nestedControl?.Close();
             this.Close();
         }
 
@@ -143,6 +142,12 @@ namespace View
                         UncheckAll(menu.Items);
                 }
             }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            nestedControl?.Close();
+            nestedControl = null;
         }
     }
 }

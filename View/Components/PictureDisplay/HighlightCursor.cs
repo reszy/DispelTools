@@ -17,6 +17,7 @@ namespace View.Components.PictureDisplay
         private Border standard;
         private double orginalWidth;
         private double orginalHeight;
+        private System.Windows.Point origin;
 
         public int X { get; private set; }
         public int Y { get; private set; }
@@ -26,8 +27,9 @@ namespace View.Components.PictureDisplay
             this.canvas = canvas;
             standard= new Border() { Background = new SolidColorBrush(Colors.Transparent), BorderThickness = new System.Windows.Thickness(1) };
         }
-        public void SetCustomCursor(Polygon? custom)
+        public void SetCustomCursor(Polygon? custom, System.Windows.Point? origin)
         {
+            this.origin = origin ?? default;
             canvas.Children.Remove(this.custom);
             this.custom = custom;
             if (custom is null)
@@ -57,6 +59,20 @@ namespace View.Components.PictureDisplay
             }
         }
 
+        public void SetScale(double scale)
+        {
+            if (custom is null)
+            {
+                standard.Width = scale;
+                standard.Height = scale;
+            }
+            else
+            {
+                custom.Width = orginalWidth * scale;
+                custom.Height = orginalHeight * scale;
+            }
+        }
+
         public void SetPosition(System.Windows.Point position, double scale)
         {
             if (custom is null)
@@ -68,8 +84,8 @@ namespace View.Components.PictureDisplay
             }
             else
             {
-                Canvas.SetLeft(custom, position.X);
-                Canvas.SetTop(custom, position.Y);
+                Canvas.SetLeft(custom, position.X - origin.X * scale);
+                Canvas.SetTop(custom, position.Y - origin.Y * scale);
                 custom.Width = orginalWidth * scale;
                 custom.Height = orginalHeight * scale;
             }

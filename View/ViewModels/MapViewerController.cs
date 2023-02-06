@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using View.Components.PictureDisplay;
@@ -16,7 +13,7 @@ namespace View.ViewModels
     {
         public bool EvenTiles { get; set; }
 
-        private MapViewerView infoSource;
+        private readonly MapViewerView infoSource;
 
         public MapViewerController(MapViewerView infoSource)
         {
@@ -25,15 +22,26 @@ namespace View.ViewModels
 
         public bool HasCustomHighlight => true;
 
-        public Polygon CreateCustomHighlight()
+        public (Polygon polygon, System.Windows.Point offset) CreateCustomHighlight()
         {
             List<System.Windows.Point> points = new() {
+                new System.Windows.Point(-32, 0),
+                new System.Windows.Point(0, -16),
+                new System.Windows.Point(32, 0),
                 new System.Windows.Point(0, 16),
-                new System.Windows.Point(31, 0),
-                new System.Windows.Point(62, 16),
-                new System.Windows.Point(31, 32)
             };
-            return new Polygon() { StrokeThickness = 2, Points = new PointCollection(points), Fill = new SolidColorBrush(Colors.Transparent), Stretch = Stretch.Uniform, Width = 62, Height = 32 };
+            return (
+                new Polygon()
+                {
+                    StrokeThickness = 2,
+                    Points = new PointCollection(points),
+                    Fill = new SolidColorBrush(Colors.Transparent),
+                    Stretch = Stretch.Uniform,
+                    Width = 62,
+                    Height = 32
+                },
+                new(32, 16)
+            );
         }
 
         public Point GetCustomHighlightImagePosition(Point pointerImagePosition)
@@ -63,10 +71,10 @@ namespace View.ViewModels
 
             var corners = new Point[]
             {
-                    new Point(left, top),
-                    new Point(right, top),
-                    new Point(left, bottom),
-                    new Point(right, bottom)
+                new Point(left, top),
+                new Point(right, top),
+                new Point(left, bottom),
+                new Point(right, bottom)
             };
             var possibleCoords = new HashSet<Point>();
             foreach (var corner in corners)

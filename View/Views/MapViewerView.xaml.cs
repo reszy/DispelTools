@@ -55,7 +55,7 @@ namespace View.Views
             fs = new FileSystem();
             filename = string.Empty;
 
-            //textGenerator = new TextGenerator(new Font(FontFamily.GenericMonospace, 8.0f));
+            textGenerator = new TextGenerator();
             mapViewerController = new(this);
             mapDisplay.SetController(mapViewerController);
 
@@ -99,8 +99,8 @@ namespace View.Views
             openFileDialog.ShowDialog(() =>
             {
                 filename = openFileDialog.FileName;
-                //saveImageDialog.InitialDirectory = fs.Path.GetDirectoryName(filename);
-                //saveImageDialog.FileName = fs.Path.GetFileNameWithoutExtension(filename);
+                saveImageDialog.InitialDirectory = fs.Path.GetDirectoryName(filename) ?? saveImageDialog.InitialDirectory;
+                saveImageDialog.FileName = fs.Path.GetFileNameWithoutExtension(filename);
                 mapContainer?.Dispose();
                 mapContainer = null;
                 SelectedMapLabel.Text = fs.Path.GetFileName(filename);
@@ -173,7 +173,7 @@ namespace View.Views
                 if (TileSetCombo.SelectedIndex == 2)
                 {
                     sidePreviewImage = mapContainer.InternalSprites[(int)TileShowNumber.Value].GetFrame(0).RawRgb;
-                    //TileDisplayer.SetImage(sidePreviewImage.Bitmap, true);
+                    TileDisplayer.SetImage(sidePreviewImage, true);
                 }
             }
         }
@@ -289,7 +289,7 @@ namespace View.Views
         {
             sidePreviewImage = new RawRgb(TileSet.TILE_WIDTH, TileSet.TILE_HEIGHT);
             tile.PlotTileOnBitmap(sidePreviewImage, 0, 0);
-            //TileDisplayer.SetImage(sidePreviewImage.Bitmap, true);
+            TileDisplayer.SetImage(sidePreviewImage, true);
         }
 
         // Debug function

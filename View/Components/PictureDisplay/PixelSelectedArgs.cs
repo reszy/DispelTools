@@ -1,19 +1,21 @@
 ﻿using System.Drawing;
 using System.Windows.Input;
+using static View.Components.PictureDisplay.PictureDisplayer;
 
 namespace View.Components.PictureDisplay
 {
     public readonly struct PixelSelectedArgs
     {
-        public PixelSelectedArgs(Point position, Color pixelColor, ModifierKeys modifierKeys)
+
+        public PixelSelectedArgs(SelectedPixelData pixelData, ModifierKeys modifierKeys)
         {
-            Position = position;
-            PixelColor = pixelColor;
+            PixelData = pixelData;
             ModifierKeys = modifierKeys;
         }
 
-        public Point Position { get; }
-        public Color PixelColor { get; }
+        public SelectedPixelData PixelData { get; }
+        public Point Position => PixelData.Coords;
+        public Color PixelColor => PixelData.Color;
         public ModifierKeys ModifierKeys { get; }
     }
 }

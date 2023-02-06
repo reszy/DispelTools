@@ -7,6 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\numbers.png" />
+    <None Remove="Resources\unknown.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\numbers.png" />
+    <EmbeddedResource Include="Resources\unknown.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="12.2.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="System.IO.Abstractions" Version="19.1.13" />

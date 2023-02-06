@@ -20,7 +20,8 @@ namespace FileDialogs
             public string Filter { get; init; } = string.Empty;
         }
         public string[] FileNames => dialog.FileNames;
-        public string FileName => dialog.FileName;
+        public string FileName { get => dialog.FileName; set => dialog.FileName = value; }
+        public string Filter { get => dialog.Filter; set => dialog.Filter = value; }
         public OpenFileDialog(IFileSystem fs, Window owner, Configuration configuration)
         {
             this.fs = fs;

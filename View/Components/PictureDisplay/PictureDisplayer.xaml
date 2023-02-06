@@ -22,8 +22,8 @@
             </Border.Style>
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0">
                     <Grid.RowDefinitions>
@@ -45,9 +45,9 @@
                     <local:LabelWithValue x:Name="Ch3" Grid.Row="2" Grid.Column="1" LabelText="Ch 3:"/>
                     <local:LabelWithValue x:Name="Ch4" Grid.Row="3" Grid.Column="1" LabelText="Ch 4:"/>
                 </Grid>
-                <StackPanel x:Name="SubComponentTipPanel" Orientation="Horizontal" />
+                <StackPanel x:Name="SubComponentTipPanel" Grid.Column="1" Orientation="Horizontal" />
             </Grid>
         </Border>
-        <Label x:Name="TemporalTip" Background="Black" Foreground="White" FontFamily="Courier New" d:Content="TestText" Padding="5 2" Canvas.Right="20" Canvas.Top="20"/>
+        <Label x:Name="TemporalTip" Background="Black" Foreground="White" FontFamily="Courier New" d:Content="TestText" Padding="5 2" Canvas.Right="20" Canvas.Top="20" Visibility="Hidden"/>
     </Canvas>
 </UserControl>

@@ -1,7 +1,6 @@
 ﻿using DispelTools.Common;
-using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
+using ImageMagick;
+using System.Reflection;
 
 namespace DispelTools.GameDataModels.Map.Generator
 {
@@ -10,41 +9,48 @@ namespace DispelTools.GameDataModels.Map.Generator
         public static readonly int DigitWidth = 7;
         public static readonly int DigitHeight = 10;
 
-        //private readonly Font font;
         public RawRgb[] DigitCache;
 
-        public TextGenerator(/*Font font*/)
+        public TextGenerator()
         {
             DigitCache = new RawRgb[10];
-            //this.font = font;
+            var image = LoadDigitsImage();
             for (int i = 0; i < 10; i++)
             {
-                DigitCache[i] = CreateDigit(i);
+                DigitCache[i] = CreateDigit(i, image);
             }
         }
 
-        private RawRgb CreateDigit(int digit)
+        private static RawRgb LoadDigitsImage()
+        {
+            using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("DispelTools.Resources.numbers.png");
+            if (stream is null) throw new Exception("Cannot open embeded resource numbers.png");
+
+            var image = new MagickImage(stream);
+            var rawRgbImage = new RawRgb(image.Width, image.Height);
+            using (var memory = new MemoryStream(rawRgbImage.Bytes, true))
+                image.Write(memory, MagickFormat.Rgb);
+            return rawRgbImage;
+        }
+
+        private static RawRgb CreateDigit(int digit, RawBitmap digitsImage)
         {
             if (digit < 0 || digit > 9) { throw new ArgumentException("number must be single digit"); }
 
             RawRgb image = new RawRgb(DigitWidth, DigitHeight);
 
-            RectangleF rectf = new RectangleF(0, 0, DigitWidth, DigitHeight);
-
-            //Graphics g = Graphics.FromImage(image.Bitmap);
-
-            //g.SmoothingMode = SmoothingMode.AntiAlias;
-            //g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            //g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            //g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
-            //g.DrawString(digit.ToString(), font, Brushes.White, rectf);
-
-            //g.Flush();
+            for (int x = digit * DigitWidth, xDst = 0; xDst < DigitWidth; x++, xDst++)
+            {
+                for (int y = 0; y < DigitHeight; y++)
+                {
+                    image.SetPixel(xDst, y, digitsImage.GetPixel(x, y));
+                }
+            }
 
             return image;
         }
 
-        public void PlotIdOnMap(RawRgb image, short id, int destX, int destY)
+        public void PlotIdOnMap(RawBitmap image, short id, int destX, int destY)
         {
             if (destX + DigitWidth <= image.Width && destX >= 0 && destY >= 0 && destY + DigitHeight <= image.Height)
             {
@@ -61,7 +67,7 @@ namespace DispelTools.GameDataModels.Map.Generator
             }
         }
 
-        private void PlotDigit(RawRgb image, RawRgb digit, int destX, int destY)
+        private static void PlotDigit(RawBitmap image, RawRgb digit, int destX, int destY)
         {
             for (int y = 0; y < DigitHeight; y++)
             {

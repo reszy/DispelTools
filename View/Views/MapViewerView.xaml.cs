@@ -319,6 +319,11 @@ namespace View.Views
             }
         }
 
+        private void CenterViewClick(object sender, RoutedEventArgs e)
+        {
+            mapDisplay.CenterView();
+        }
+
         public void Close()
         {
             if (mapContainer != null) Settings.MapGenerationOptions = CheckBoxesToGenerationOptions();

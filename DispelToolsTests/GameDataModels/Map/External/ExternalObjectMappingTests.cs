@@ -59,7 +59,7 @@ namespace DispelToolsTests.GameDataModels.Map.External
 
             //when
             mockFS.AddFile("testFile", testFile);
-            var items = mapperClone.ReadFile("testFile");
+            var items = mapperClone.ReadFile("testFile", new DispelTools.Common.DataProcessing.WorkReporter(new System.ComponentModel.BackgroundWorker()));
 
             //given
             Assert.IsTrue(items.Count > 0);

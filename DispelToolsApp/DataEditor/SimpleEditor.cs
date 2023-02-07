@@ -1,4 +1,5 @@
-﻿using DispelTools.DataEditor.Data;
+﻿using DispelTools.Common.DataProcessing;
+using DispelTools.DataEditor.Data;
 using DispelTools.DataEditor.Mappers;
 using System;
 using System.Collections.Generic;
@@ -104,7 +105,7 @@ namespace DispelTools.DataEditor
             throw new ArgumentException($"No mapper found for {filenameWithExtension}");
         }
 
-        public PropertyItem ReadValue(int element)
+        public PropertyItem ReadValue(int element, WorkReporter workReporter)
         {
             if (values == null)
             {
@@ -112,7 +113,7 @@ namespace DispelTools.DataEditor
                 {
                     throw new ArgumentNullException("Mapper not found");
                 }
-                values = mapper.ReadFile(filename);
+                values = mapper.ReadFile(filename, workReporter);
             }
             return values[element];
         }

@@ -1,6 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using DispelTools.Common.DataProcessing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using static DispelToolsTests.TestHelpers;
@@ -10,6 +12,7 @@ namespace DispelTools.DataEditor.Tests
     [TestClass()]
     public class SimpleEditorTests
     {
+        public static readonly WorkReporter workReporter = new(new BackgroundWorker());
         private class TestMapper : Mapper
         {
             private const int PROPERTY_ITEM_SIZE = 50;
@@ -105,13 +108,13 @@ namespace DispelTools.DataEditor.Tests
             var editor = new SimpleEditor("testfile", mockFS);
             editor.SetMapper(mapper);
 
-            var result1 = editor.ReadValue(0);
+            var result1 = editor.ReadValue(0, workReporter);
             Assert.AreEqual(TestMapper.STR_DATA, result1[0].EncodedText);
             Assert.AreEqual(TestMapper.I32_DATA, result1[1].Value);
             Assert.AreEqual(TestMapper.I16_DATA, result1[2].Value);
             Assert.AreEqual(TestMapper.BYTE_DATA, result1[3].Value);
             CollectionAssert.AreEqual(TestMapper.BYA_DATA, result1[4].ByteArrayValue);
-            var result2 = editor.ReadValue(1);
+            var result2 = editor.ReadValue(1, workReporter);
             Assert.AreEqual(TestMapper.STR_DATA2, result2[0].EncodedText);
             Assert.AreEqual(TestMapper.I32_DATA2, result2[1].Value);
             Assert.AreEqual(TestMapper.I16_DATA2, result2[2].Value);
@@ -142,8 +145,8 @@ namespace DispelTools.DataEditor.Tests
             //result2[2].Value = TestMapper.I16_DATA;
             //result2[3].Value = TestMapper.BYTE_DATA;
 
-            editor.Save(editor.ReadValue(1), 0);
-            editor.Save(editor.ReadValue(0), 1);
+            editor.Save(editor.ReadValue(1, workReporter), 0);
+            editor.Save(editor.ReadValue(0, workReporter), 1);
 
             CollectionAssert.AreEqual(mapper.TestDataSwitched, mockFile.Contents);
         }

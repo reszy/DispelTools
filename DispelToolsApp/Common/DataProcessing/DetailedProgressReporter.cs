@@ -34,11 +34,5 @@ namespace DispelTools.Common.DataProcessing
             SkipCount++;
             backgroundWorker.ReportProgress(currentProgress, new SimpleDetail("Skip: " + message));
         }
-
-        /// <summary>
-        /// Sends text as userState(Not like details). Used to set text on progress bar not for details panel.
-        /// </summary>
-        /// <param name="text">Text to put on bar</param>
-        public void SetText(string text) => backgroundWorker.ReportProgress(currentProgress, text);
     }
 }

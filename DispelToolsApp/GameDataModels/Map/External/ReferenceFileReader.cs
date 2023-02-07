@@ -1,4 +1,5 @@
 ﻿using DispelTools.Common;
+using DispelTools.Common.DataProcessing;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,7 +18,7 @@ namespace DispelTools.GameDataModels.Map.External
         internal abstract DataEditor.Mapper Mapper { get; }
         internal abstract string[] ValuesMapping { get; }
 
-        public List<MapExternalObject> GetObjects(string gamePath, string mapFilePath, MapContainer mapContainer)
+        public List<MapExternalObject> GetObjects(string gamePath, string mapFilePath, MapContainer mapContainer, WorkReporter workReporter)
         {
             var mapName = Path.GetFileNameWithoutExtension(mapFilePath);
             int mapPixelHeight = mapContainer.Model.MapSizeInPixels.Height;
@@ -33,7 +34,7 @@ namespace DispelTools.GameDataModels.Map.External
 
             MapExternalSpriteCache spriteCache = new MapExternalSpriteCache(directory, names);
 
-            List<DataEditor.Data.PropertyItem> items = Mapper.ReadFile(mapRefPath);
+            List<DataEditor.Data.PropertyItem> items = Mapper.ReadFile(mapRefPath, workReporter);
             var fieldMapping = Mapper.CreateMapping(ValuesMapping);
 
             foreach (var item in items)

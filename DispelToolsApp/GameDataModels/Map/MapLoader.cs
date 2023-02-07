@@ -52,12 +52,11 @@ namespace DispelTools.GameDataModels.Map
         {
             try
             {
-                target.AddRange(reader.GetObjects(Settings.GameRootDir, $"{SourceDirectory}\\{MapName}.map", this));
+                target.AddRange(reader.GetObjects(Settings.GameRootDir, $"{SourceDirectory}\\{MapName}.map", this, workReporter));
             }
             catch (ReadFileException e)
             {
                 workReporter.ReportWarning(e.Message);
-                
             }
         }
     }

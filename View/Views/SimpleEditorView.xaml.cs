@@ -1,7 +1,9 @@
-﻿using DispelTools.DataEditor;
+﻿using DispelTools.Common.DataProcessing;
+using DispelTools.DataEditor;
 using DispelTools.DataEditor.Data;
 using FileDialogs;
 using System;
+using System.ComponentModel;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Windows;
@@ -19,6 +21,7 @@ namespace View.Views
         private PropertyItem? SelectedItem;
 
         private readonly OpenFileDialog openFileDialog;
+        private readonly BackgroundWorker backgroundWorker;
 
         public string ViewName => "Simple data editor";
 
@@ -32,6 +35,9 @@ namespace View.Views
                 .ToList()
                 .ForEach(x => DataPanel.Children.Add(x));
             InElementNumber.ValueChanged += ElementNumberValueChanged;
+            backgroundWorker = new();
+            backgroundWorker.DoWork += Read;
+            backgroundWorker.RunWorkerCompleted += ReadingFileCompleted;
         }
 
         private void OpenButtonClick(object sender, EventArgs e)
@@ -46,7 +52,7 @@ namespace View.Views
 
                     SetMaxElementsLabel(InElementNumber.Maximum = editor.GetElementCount());
                     OpenedFileLabel.Content = openFileDialog.FileName;
-                    Read();
+                    backgroundWorker.RunWorkerAsync();
                 }
                 else
                 {
@@ -55,7 +61,7 @@ namespace View.Views
             });
         }
 
-        private void ElementNumberValueChanged(object sender, RoutedEventArgs e) => Read();
+        private void ElementNumberValueChanged(object sender, RoutedEventArgs e) => backgroundWorker.RunWorkerAsync();
 
         private void SaveButtonClick(object sender, RoutedEventArgs e) => editor?.Save(SelectedItem!, (int)InElementNumber.Value);
 
@@ -66,12 +72,26 @@ namespace View.Views
         }
         private void SetMaxElementsLabel(decimal number) => MaxElementsLabel.Content = "/ " + number;
 
-        private void Read()
+        private void Read(object? sender, DoWorkEventArgs args)
         {
             if (editor != null)
             {
-                SelectedItem = editor.ReadValue((int)InElementNumber.Value);
+                var workReporter = new WorkReporter(backgroundWorker);
+                workReporter.DecideOnWarning = WorkPaused;
+                SelectedItem = editor.ReadValue((int)InElementNumber.Value, workReporter);
+            }
+        }
 
+        private static bool WorkPaused(WorkReporter.WorkerWarning warning)
+        {
+            var result = MessageBox.Show(warning.Message + "\n Ignore and continue?", "Reading warning", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
+            return result == MessageBoxResult.Yes;
+        }
+
+        private void ReadingFileCompleted(object? sender, RunWorkerCompletedEventArgs args)
+        {
+            if (SelectedItem is not null)
+            {
                 DataPanel.Children.Clear();
                 SelectedItem.Select(x => new DataRow(x))
                 .ToList()

@@ -1,4 +1,5 @@
 ﻿using DispelTools.Common;
+using DispelTools.Common.DataProcessing;
 using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
@@ -18,7 +19,7 @@ namespace DispelTools.GameDataModels.Map.External.Monster
             this.fs = fs;
         }
 
-        public List<MapExternalObject> GetObjects(string gamePath, string mapFilePath, MapContainer mapContainer)
+        public List<MapExternalObject> GetObjects(string gamePath, string mapFilePath, MapContainer mapContainer, WorkReporter workReporter)
         {
             int mapPixelHeight = mapContainer.Model.MapSizeInPixels.Height;
             int mapNonOccludedStartY = mapContainer.Model.MapNonOccludedStart.Y;

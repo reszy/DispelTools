@@ -1,4 +1,5 @@
-﻿using DispelTools.DataEditor.Data;
+﻿using DispelTools.Common.DataProcessing;
+using DispelTools.DataEditor.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,11 +23,11 @@ namespace DispelTools.DataEditor
             descriptorList = CreateDescriptors();
         }
 
-        public List<PropertyItem> ReadFile(string filename)
+        public List<PropertyItem> ReadFile(string filename, WorkReporter workReporter)
         {
             int elementStep = PropertyItemSize;
             var list = new List<PropertyItem>();
-            using (var reader = new BinaryReader(fs.FileStream.Create(filename, FileMode.Open, FileAccess.Read)))
+            using (var reader = new BinaryReader(fs.File.OpenRead(filename)))
             {
                 int expectedElements = 0;
                 int spaceForElements = (int)Math.Floor((decimal)((reader.BaseStream.Length - CounterSize) / elementStep));
@@ -43,7 +44,8 @@ namespace DispelTools.DataEditor
                 }
                 if (expectedElements != spaceForElements)
                 {
-                    //MessageBox.Show($"In file count = {expectedElements}, counted {spaceForElements}");
+                    var canProceed = workReporter.AskUserIfCanProceed(new($"In file count = {expectedElements}, expected by file size {spaceForElements}"));
+                    if (!canProceed) return list;
                 }
                 for (int i = 0; i < spaceForElements; i++)
                 {

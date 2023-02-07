@@ -16,6 +16,12 @@ namespace DispelTools.Common.DataProcessing
         public int Max => stageCount * STAGE_MAX;
         public int StagesLeft => stageCount - currentStage;
 
+        /// <summary>
+        /// allows to decide what to do during process.
+        /// return true if continue or false to abort
+        /// </summary>
+        public Func<WorkerWarning, bool>? DecideOnWarning { get; set; }
+
         public WorkReporter(BackgroundWorker backgroundWorker, int stageCount = 1)
         {
             if (stageCount < 1)
@@ -31,7 +37,7 @@ namespace DispelTools.Common.DataProcessing
         {
             if (stage < 1 || stage > stageCount)
             {
-                throw new ArgumentOutOfRangeException("stage count out of range");
+                throw new ArgumentOutOfRangeException(nameof(stage), "stage count out of range");
             }
             currentStage = stage;
             currentProgress = (currentStage - 1) * STAGE_MAX;
@@ -43,15 +49,11 @@ namespace DispelTools.Common.DataProcessing
             currentProgress = (currentStage - 1) * STAGE_MAX + (int)((double)progress / totalInStage * STAGE_MAX);
             backgroundWorker.ReportProgress(currentProgress);
         }
-        public void SetText(string text)
-        {
-            backgroundWorker.ReportProgress(currentProgress, text);
-        }
+        public void SetText(string text) => backgroundWorker.ReportProgress(currentProgress, text);
 
-        public void ReportWarning(string message)
-        {
-            backgroundWorker.ReportProgress(currentProgress, new WorkerWarning(message));
-        }
+        public void ReportWarning(string message) => backgroundWorker.ReportProgress(currentProgress, new WorkerWarning(message));
+
+        public bool AskUserIfCanProceed(WorkerWarning warning) => DecideOnWarning?.Invoke(warning) ?? false;
 
         public record WorkerWarning(string Message);
     }

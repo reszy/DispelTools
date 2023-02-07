@@ -91,6 +91,19 @@ namespace DispelTools.DataExtractor
                 return new List<ExtractionFile>();
             }
         }
+
+        public ExtractorValidationResult Validate(out string returnMessage)
+        {
+            if (extractor is null)
+            {
+                returnMessage = "Extractor is not initialized";
+                return ExtractorValidationResult.Error;
+            }
+            else
+            {
+                return extractor.Validate(filenames, out returnMessage);
+            }
+        }
     }
 }
 

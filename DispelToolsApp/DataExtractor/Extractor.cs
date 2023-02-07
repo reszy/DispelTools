@@ -19,5 +19,11 @@ namespace DispelTools.DataExtractor
         public abstract void ExtractFile(ExtractionFileProcess process);
 
         public virtual List<ExtractionFile> Initialize(List<string> filenames, string outputDirectory) => filenames.Select((filename) => new ExtractionFile(filename, outputDirectory)).ToList();
+
+        public virtual ExtractorValidationResult Validate(List<string> filenames, out string returnMessage)
+        {
+            returnMessage = string.Empty;
+            return ExtractorValidationResult.Ok;
+        }
     }
 }

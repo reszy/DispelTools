@@ -47,26 +47,12 @@ namespace DispelTools.DataExtractor.AllExtractor
         {
             string gameDirectory = filenames[0];
             string[] fileExtensions = new string[] { ".spr", ".snf", ".map", ".btl", ".gtl" };
-            bool abort = false;
-            if (!IsDispelDirectory(gameDirectory))
-            {
-               // var result = MessageBox.Show($"\"{gameDirectory}\" is not Dispel game directory. \nDo you want to try extract anyway?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                //abort = result == DialogResult.No;
-            }
-
-            if(!abort)
-            {
-                return GetAllFiles(gameDirectory)
-                    .Where(file => fileExtensions.Contains(fs.Path.GetExtension(file.ToLower())))
-                    .OrderBy(file => fs.Path.GetExtension(file).ToLower())
-                    .Select(file => new ExtractionFile(file, CreateOutputDirectoryName(file.Replace(gameDirectory, outputDirectory))))
-                    .ToList();
-            }
-            else
-            {
-                return new List<ExtractionFile>();
-            }
+            return GetAllFiles(gameDirectory)
+                .Where(file => fileExtensions.Contains(fs.Path.GetExtension(file.ToLower())))
+                .OrderBy(file => fs.Path.GetExtension(file).ToLower())
+                .Select(file => new ExtractionFile(file, CreateOutputDirectoryName(file.Replace(gameDirectory, outputDirectory))))
+                .ToList();
         }
 
         private string CreateOutputDirectoryName(string path)
@@ -81,6 +67,17 @@ namespace DispelTools.DataExtractor.AllExtractor
             {
                 return directory;
             }
+        }
+
+        public override ExtractorValidationResult Validate(List<string> filenames, out string message)
+        {
+            var gameDirectory = filenames[0];
+            if (!IsDispelDirectory(gameDirectory))
+            {
+                message = $"\"{gameDirectory}\" is not Dispel game directory.";
+                return ExtractorValidationResult.Warning;
+            }
+            return base.Validate(filenames, out message);
         }
 
         private bool IsDispelDirectory(string gameDirectory)

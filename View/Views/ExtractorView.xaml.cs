@@ -144,6 +144,24 @@ namespace View.Views
                 extractionParams.Filename = filenames;
                 extractionParams.OutputDirectory = outputDirectory;
                 var extractor = new ExtractionManager(extractorFactory.CreateInstance(), extractionParams, worker);
+
+                switch(extractor.Validate(out string returnMessage))
+                {
+                    case ExtractorValidationResult.Ok:
+                        break;
+                    case ExtractorValidationResult.Warning:
+                        {
+                            var result = MessageBox.Show(returnMessage + "\nDo you want to try extract anyway?", "Reading warning", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
+                            if (result == MessageBoxResult.No)
+                                return;
+                            else
+                                break;
+                        }
+                    default:
+                    case ExtractorValidationResult.Error:
+                        return;
+                }
+
                 int fileCount = extractor.Prepare();
                 if (fileCount > 0)
                 {

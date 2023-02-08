@@ -1,5 +1,5 @@
 ﻿using DispelTools.ImageProcessing;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,38 +8,37 @@ using static DispelTools.ImageProcessing.ColorManagement.ColorMode;
 
 namespace DispelToolsTests.ImageProcessing
 {
-    [TestClass]
     public class ColorManagementTests
     {
 
-        [DataTestMethod]
-        [DynamicData(nameof(GetModes), DynamicDataSourceType.Method)]
+        [Test]
+        [TestCaseSource(nameof(GetModes))]
         public void ShouldThrowExceptionWhenExceededByteNumber(ColorManagement.ColorMode mode)
         {
             var colorManagement = ColorManagement.From(mode);
 
             byte[] tooBig = new byte[colorManagement.BytesConsumed + 1];
-            Assert.ThrowsException<ColorManagement.ColorBytesNumberException>(() => colorManagement.ProduceColor(tooBig));
+            Assert.Throws<ColorManagement.ColorBytesNumberException>(() => colorManagement.ProduceColor(tooBig));
         }
 
-        [DataTestMethod]
-        [DynamicData(nameof(GetModes), DynamicDataSourceType.Method)]
+        [Test]
+        [TestCaseSource(nameof(GetModes))]
         public void ShouldReturnCorrectByteNumber(ColorManagement.ColorMode mode)
         {
             var colorManagement = ColorManagement.From(mode);
 
             byte[] bytes = colorManagement.ProduceBytes(Color.Black);
-            Assert.AreEqual(colorManagement.BytesConsumed, bytes.Length);
+            Assert.That(bytes, Has.Length.EqualTo(colorManagement.BytesConsumed));
         }
 
-        [DataTestMethod]
-        [DynamicData(nameof(GetModesWithParams), DynamicDataSourceType.Method)]
+        [Test]
+        [TestCaseSource(nameof(GetModesWithParams))]
         public void ShouldConvertBytesForthAndBack(ColorManagement.ColorMode mode, byte[] expected, Color expectedColor, byte[] actual)
         {
             var colorManagement = ColorManagement.From(mode);
 
             var colorResult = colorManagement.ProduceColor(actual);
-            Assert.AreEqual(expectedColor, colorResult);
+            Assert.That(colorResult, Is.EqualTo(expectedColor));
             byte[] bytesResult = colorManagement.ProduceBytes(colorResult);
             CollectionAssert.AreEqual(expected, bytesResult, $"Expected {WriteBytes(expected)} but was {WriteBytes(bytesResult)}");
         }

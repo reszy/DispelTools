@@ -1,54 +1,53 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 
 namespace DispelTools.ImageAnalyzer.Tests
 {
-    [TestClass()]
     public class DataPixelTests
     {
 
 
-        [TestMethod()]
+        [Test]
         public void DataPixel4ByteTest()
         {
             byte[] bytes = new byte[4] { 2, 120, 60, 1 };
             var dataPixel = new DataAnalyzedBitmap.DataPixel(bytes);
-            Assert.AreEqual(2, dataPixel.Byte);
-            Assert.AreEqual(30722, dataPixel.Word);
-            Assert.AreEqual(3962882, dataPixel.DWord);
-            Assert.AreEqual(20740098, dataPixel.QWord);
+            Assert.That(dataPixel.Byte, Is.EqualTo(2));
+            Assert.That(dataPixel.Word, Is.EqualTo(30722));
+            Assert.That(dataPixel.DWord, Is.EqualTo(3962882));
+            Assert.That(dataPixel.QWord, Is.EqualTo(20740098));
         }
 
-        [TestMethod()]
+        [Test]
         public void DataPixel3ByteTest()
         {
             byte[] bytes = new byte[3] { 120, 60, 1 };
             var dataPixel = new DataAnalyzedBitmap.DataPixel(bytes);
-            Assert.AreEqual(120, dataPixel.Byte);
-            Assert.AreEqual(15480, dataPixel.Word);
-            Assert.AreEqual(81016, dataPixel.DWord);
-            Assert.AreEqual(81016, dataPixel.QWord);
+            Assert.That(dataPixel.Byte, Is.EqualTo(120));
+            Assert.That(dataPixel.Word, Is.EqualTo(15480));
+            Assert.That(dataPixel.DWord, Is.EqualTo(81016));
+            Assert.That(dataPixel.QWord, Is.EqualTo(81016));
         }
 
-        [TestMethod()]
+        [Test]
         public void DataPixel2ByteTest()
         {
             byte[] bytes = new byte[2] { 60, 1 };
             var dataPixel = new DataAnalyzedBitmap.DataPixel(bytes);
-            Assert.AreEqual(60, dataPixel.Byte);
-            Assert.AreEqual(316, dataPixel.Word);
-            Assert.AreEqual(316, dataPixel.DWord);
-            Assert.AreEqual(316, dataPixel.QWord);
+            Assert.That(dataPixel.Byte, Is.EqualTo(60));
+            Assert.That(dataPixel.Word, Is.EqualTo(316));
+            Assert.That(dataPixel.DWord, Is.EqualTo(316));
+            Assert.That(dataPixel.QWord, Is.EqualTo(316));
         }
 
-        [TestMethod()]
+        [Test]
         public void DataPixel1ByteTest()
         {
             byte[] bytes = new byte[1] { 1 };
             var dataPixel = new DataAnalyzedBitmap.DataPixel(bytes);
-            Assert.AreEqual(1, dataPixel.Byte);
-            Assert.AreEqual(1, dataPixel.Word);
-            Assert.AreEqual(1, dataPixel.DWord);
-            Assert.AreEqual(1, dataPixel.QWord);
+            Assert.That(dataPixel.Byte, Is.EqualTo(1));
+            Assert.That(dataPixel.Word, Is.EqualTo(1));
+            Assert.That(dataPixel.DWord, Is.EqualTo(1));
+            Assert.That(dataPixel.QWord, Is.EqualTo(1));
         }
     }
 }

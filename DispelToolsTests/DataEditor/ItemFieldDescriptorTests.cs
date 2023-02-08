@@ -1,16 +1,15 @@
 ﻿using DispelTools.Common;
 using static DispelToolsTests.TestHelpers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using System.Text;
+using NUnit.Framework;
 
 namespace DispelTools.DataEditor.Tests
 {
-    [TestClass()]
     public class ItemFieldDescriptorTests
     {
 
-        [TestMethod()]
+        [Test]
         public void ShouldWriteStringWithZeroWhenStringIsEqualToMax()
         {
             //given
@@ -36,11 +35,11 @@ namespace DispelTools.DataEditor.Tests
             byte[] result = reader.ReadBytes(expected.Length);
 
             //then
-            Assert.AreEqual(expected.Length, memory.Length);
+            Assert.That(memory, Has.Length.EqualTo(expected.Length));
             CollectionAssert.AreEqual(expected, result);
         }
 
-        [TestMethod()]
+        [Test]
         public void ShouldWriteStringWithZeroAndFillerWhenStringIsShorterThanMax()
         {
             //given
@@ -70,11 +69,11 @@ namespace DispelTools.DataEditor.Tests
             byte[] result = reader.ReadBytes(expected.Length);
 
             //then
-            Assert.AreEqual(expected.Length, memory.Length);
+            Assert.That(memory, Has.Length.EqualTo(expected.Length));
             CollectionAssert.AreEqual(expected, result);
         }
 
-        [TestMethod()]
+        [Test]
         public void ShouldWriteStringWithZeroWhenStringIsLongerThanMax()
         {
             //given
@@ -100,7 +99,7 @@ namespace DispelTools.DataEditor.Tests
             byte[] result = reader.ReadBytes(expected.Length);
 
             //then
-            Assert.AreEqual(expected.Length, memory.Length);
+            Assert.That(memory, Has.Length.EqualTo(expected.Length));
             CollectionAssert.AreEqual(expected, result);
         }
     }

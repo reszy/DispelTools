@@ -1,14 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
+﻿using System.IO;
 using System.Collections;
 using DispelTools.Common;
+using NUnit.Framework;
 
 namespace DispelTools.Common.Tests
 {
-    [TestClass()]
     public class FileReaderWriterExtensionTests
     {
-        [TestMethod()]
+        [Test]
         public void ReadIntsTest()
         {
             byte[] bytes = new byte[12] {

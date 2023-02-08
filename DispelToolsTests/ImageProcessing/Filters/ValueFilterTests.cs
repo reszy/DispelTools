@@ -1,23 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DispelTools.ImageProcessing.Filters;
-using System;
-using System.Collections.Generic;
+﻿using NUnit.Framework;
 using System.Drawing;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DispelTools.ImageProcessing.Filters.Tests
 {
-    [TestClass()]
     public class ValueFilterTests
     {
-
-        [TestMethod()]
-        [DynamicData(nameof(GetTestData), DynamicDataSourceType.Method)]
+        [Test]
+        [TestCaseSource(nameof(GetTestData))]
         public void ValueFilterTest(Color input, Color expected, ValueFilter filter)
         {
             var result = filter.Apply(input);
-            Assert.AreEqual(expected.ToArgb(), result.ToArgb(), $"Expected:{expected}. Actual:{result}");
+            Assert.That(result.ToArgb(), Is.EqualTo(expected.ToArgb()), $"Expected:{expected}. Actual:{result}");
         }
 
         public static IEnumerable<object[]> GetTestData()

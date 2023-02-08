@@ -1,15 +1,15 @@
 ﻿using DispelTools.Common.DataProcessing;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
+using System.Text;
 using static DispelToolsTests.TestHelpers;
 
 namespace DispelTools.DataEditor.Tests
 {
-    [TestClass()]
     public class SimpleEditorTests
     {
         public static readonly WorkReporter workReporter = new(new BackgroundWorker());
@@ -70,7 +70,7 @@ namespace DispelTools.DataEditor.Tests
                 );
                 if (testData.Length != DATA_SIZE)
                 {
-                    throw new InternalTestFailureException($"data Length {testData.Length} is not {DATA_SIZE}");
+                    Assert.Fail($"data Length {testData.Length} is not {DATA_SIZE}");
                 }
             }
             private void CreateTestDataSwitched()
@@ -91,12 +91,18 @@ namespace DispelTools.DataEditor.Tests
                 );
                 if (testDataSwitched.Length != DATA_SIZE)
                 {
-                    throw new InternalTestFailureException($"data Length {testData.Length} is not {DATA_SIZE}");
+                    Assert.Fail($"data Length {testData.Length} is not {DATA_SIZE}");
                 }
             }
         }
 
-        [TestMethod()]
+        [SetUp]
+        public void SetUp()
+        {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        }
+
+        [Test]
         public void ReadValueTest()
         {
             var mockFS = new MockFileSystem();
@@ -109,20 +115,26 @@ namespace DispelTools.DataEditor.Tests
             editor.SetMapper(mapper);
 
             var result1 = editor.ReadValue(0, workReporter);
-            Assert.AreEqual(TestMapper.STR_DATA, result1[0].EncodedText);
-            Assert.AreEqual(TestMapper.I32_DATA, result1[1].Value);
-            Assert.AreEqual(TestMapper.I16_DATA, result1[2].Value);
-            Assert.AreEqual(TestMapper.BYTE_DATA, result1[3].Value);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result1[0].EncodedText, Is.EqualTo(TestMapper.STR_DATA));
+                Assert.That(result1[1].Value, Is.EqualTo(TestMapper.I32_DATA));
+                Assert.That(result1[2].Value, Is.EqualTo(TestMapper.I16_DATA));
+                Assert.That(result1[3].Value, Is.EqualTo(TestMapper.BYTE_DATA));
+            });
             CollectionAssert.AreEqual(TestMapper.BYA_DATA, result1[4].ByteArrayValue);
             var result2 = editor.ReadValue(1, workReporter);
-            Assert.AreEqual(TestMapper.STR_DATA2, result2[0].EncodedText);
-            Assert.AreEqual(TestMapper.I32_DATA2, result2[1].Value);
-            Assert.AreEqual(TestMapper.I16_DATA2, result2[2].Value);
-            Assert.AreEqual(TestMapper.BYTE_DATA2, result2[3].Value);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result2[0].EncodedText, Is.EqualTo(TestMapper.STR_DATA2));
+                Assert.That(result2[1].Value, Is.EqualTo(TestMapper.I32_DATA2));
+                Assert.That(result2[2].Value, Is.EqualTo(TestMapper.I16_DATA2));
+                Assert.That(result2[3].Value, Is.EqualTo(TestMapper.BYTE_DATA2));
+            });
             CollectionAssert.AreEqual(TestMapper.BYA_DATA2, result2[4].ByteArrayValue);
         }
 
-        [TestMethod()]
+        [Test]
         public void SaveTest()
         {
             var mockFS = new MockFileSystem();

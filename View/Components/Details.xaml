@@ -9,7 +9,6 @@
              x:Name="_this"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Triggers>
-        <!--
         <EventTrigger RoutedEvent="local:Details.Collapse">
             <BeginStoryboard>
                 <Storyboard>
@@ -32,7 +31,6 @@
                 </Storyboard>
             </BeginStoryboard>
         </EventTrigger>
-        -->
     </UserControl.Triggers>
     <Grid>
         <Grid.RowDefinitions>

@@ -1,15 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 
 namespace DispelTools.DataExtractor.AllExtractor.Tests
 {
-    [TestClass()]
     public class AllFilesExtractorTests
     {
-        [TestMethod()]
+        private readonly MockFileSystem mockFileSystem = new();
+
+        [Test]
         public void InitializeTest()
         {
             string gameFolder = @"c:\game";
@@ -25,7 +27,6 @@ namespace DispelTools.DataExtractor.AllExtractor.Tests
                 gameFolder + @"\maps\map1.map",
             };
 
-            var mockFileSystem = new MockFileSystem();
             var mockFileData = new MockFileData("");
             mockFileSystem.AddDirectory(gameFolder);
             mockFileSystem.AddDirectory(gameFolder + @"\CharacterInGame");
@@ -47,13 +48,13 @@ namespace DispelTools.DataExtractor.AllExtractor.Tests
 
             foreach (var result in results)
             {
-                Assert.IsNotNull(FindSimilar(result.FileName, expectedListOfFiles), $"Not found {result} in results");
-                StringAssert.StartsWith(result.OuputDirectory, outputDirectory);
+                Assert.That(FindSimilar(result.FileName, expectedListOfFiles), Is.Not.Null, $"Not found {result} in results");
+                StringAssert.StartsWith(outputDirectory, result.OuputDirectory);
             }
             CollectionAssert.AllItemsAreUnique(results);
-            Assert.AreEqual(expectedListOfFiles.Count, results.Count, $"\nElements: \n{string.Join("\n", results)}");
+            Assert.That(results, Has.Count.EqualTo(expectedListOfFiles.Count), $"\nElements: \n{string.Join("\n", results)}");
         }
 
-        private string FindSimilar(string path, List<string> list) => list.Where(s => s.StartsWith(Path.GetDirectoryName(path))).First();
+        private string FindSimilar(string path, List<string> list) => list.First(s => s.StartsWith(mockFileSystem.Path.GetDirectoryName(path) ?? string.Empty));
     }
 }

@@ -1,19 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using System.Collections.Generic;
 using System.Drawing;
 
 namespace DispelTools.ImageProcessing.Filters.Tests
 {
-    [TestClass()]
     public class ChannelFilterTests
     {
-
-        [TestMethod()]
-        [DynamicData(nameof(GetTestData), DynamicDataSourceType.Method)]
+        [Test]
+        [TestCaseSource(nameof(GetTestData))]
         public void ChannelFilterTest(Color input, Color expected, ChannelFilter filter)
         {
             var result = filter.Apply(input);
-            Assert.AreEqual(expected.ToArgb(), result.ToArgb());
+            Assert.That(result.ToArgb(), Is.EqualTo(expected.ToArgb()));
         }
 
         public static IEnumerable<object[]> GetTestData()

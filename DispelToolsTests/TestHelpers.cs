@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace DispelToolsTests
+﻿namespace DispelToolsTests
 {
     public static class TestHelpers
     {

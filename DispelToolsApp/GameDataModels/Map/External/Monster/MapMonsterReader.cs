@@ -10,7 +10,7 @@
 
         protected override string ReferencePrefix { get; } = "Mon";
 
-        internal override DataEditor.Mapper Mapper { get; } = new DataEditor.Mappers.MonRefMapper();
+        internal override DataEditor.MapperDefinition MapperDefinition { get; } = new DataEditor.Mappers.MonRefMapper();
 
         internal override string[] ValuesMapping { get; } = { "posX", "posY", "monId", "fileId" };
 

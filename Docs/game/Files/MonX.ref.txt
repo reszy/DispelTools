@@ -1,0 +1,29 @@
+struct MonX.ref
+{
+    INT32     entries_count
+    //
+    // First entry scheme
+    //
+    INT32     fileId    // 4 bytes
+    INT32     monId     // 4 bytes
+    INT32     posX      // 4 bytes
+    INT32     posY      // 4 bytes
+    //
+    // ... Unknown 20 bytes
+    //
+    BYTE      LootSlot1_itemId  // 1 byte
+    BYTE      LootSlot1_itemType        // 1 byte
+    //
+    // ... Unknown 2 bytes
+    //
+    BYTE      LootSlot2_itemId  // 1 byte
+    BYTE      LootSlot2_itemType        // 1 byte
+    //
+    // ... Unknown 2 bytes
+    //
+    BYTE      LootSlot3_itemId  // 1 byte
+    BYTE      LootSlot3_itemType        // 1 byte
+    //
+    // ... Remaining entries
+    //
+}

@@ -1,17 +1,11 @@
-﻿using System.Collections.Generic;
-using System.IO.Abstractions;
-
-namespace DispelTools.DataEditor.Mappers
+﻿namespace DispelTools.DataEditor.Mappers
 {
-    internal class MonRefMapper : Mapper
+    internal class MonRefMapper : MapperDefinition
     {
-        public MonRefMapper() { }
+        public override int PropertyItemSize => 14 * 4;
+        public override string GetMapperName() => "Mon*.ref mapper";
 
-        public MonRefMapper(IFileSystem fs) : base(fs) { }
-
-        internal override int PropertyItemSize => 14 * 4;
-
-        protected override List<ItemFieldDescriptor> CreateDescriptors()
+        public override List<ItemFieldDescriptor> CreateDescriptors()
         {
 
             var builder = new FileDescriptorBuilder();

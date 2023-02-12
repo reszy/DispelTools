@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-
-namespace DispelTools.DataEditor.Mappers
+﻿namespace DispelTools.DataEditor.Mappers
 {
-    internal class StoreDbMapper : Mapper
+    internal class StoreDbMapper : MapperDefinition
     {
         private const byte FILLER = 0x0;
-        internal override int PropertyItemSize => 237 * 4;
-        protected override List<ItemFieldDescriptor> CreateDescriptors()
+
+        public override int PropertyItemSize => 237 * 4;
+        public override List<ItemFieldDescriptor> CreateDescriptors()
         {
             var builder = new FileDescriptorBuilder();
             builder.Add("name", ItemFieldDescriptor.AsFixedString(32, FILLER));

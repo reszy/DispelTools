@@ -1,0 +1,39 @@
+struct NpcX.ref
+{
+    INT32     entries_count
+    //
+    // First entry scheme
+    //
+    INT32     id        // 4 bytes
+    INT32     npcId     // 4 bytes
+    BYTE[260] name      // 260 bytes
+    BYTE[260] text      // 260 bytes
+    INT32     party/scriptId    // 4 bytes
+    INT32     showOnEvent?      // 4 bytes
+    //
+    // ... Unknown 4 bytes
+    //
+    INT32     goto1Filled       // 4 bytes
+    INT32     goto2Filled       // 4 bytes
+    INT32     goto3Filled       // 4 bytes
+    INT32     goto4Filled       // 4 bytes     when goto4 not filled its 1, idk why
+    INT32     goto1X    // 4 bytes
+    INT32     goto2X    // 4 bytes
+    INT32     goto3X    // 4 bytes
+    INT32     goto4X    // 4 bytes
+    INT32     goto1Y    // 4 bytes
+    INT32     goto2Y    // 4 bytes
+    INT32     goto3Y    // 4 bytes
+    INT32     goto4Y    // 4 bytes
+    //
+    // ... Unknown 16 bytes
+    //
+    INT32     lookingDirection  // 4 bytes     0 = up, clockwise
+    //
+    // ... Unknown 56 bytes
+    //
+    INT32     dialogId  // 4 bytes     also text for shop
+    //
+    // ... Remaining entries
+    //
+}

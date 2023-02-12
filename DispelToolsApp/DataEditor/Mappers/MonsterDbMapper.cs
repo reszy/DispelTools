@@ -1,22 +1,17 @@
 ﻿using DispelTools.DataEditor.Data;
-using System.Collections.Generic;
-using System.IO.Abstractions;
 
 namespace DispelTools.DataEditor.Mappers
 {
-    internal class MonsterDbMapper : Mapper
+    internal class MonsterDbMapper : MapperDefinition
     {
-        public MonsterDbMapper(IFileSystem fs) : base(fs) { }
-
-        public MonsterDbMapper() { }
 
         private const byte FILLER = 0x0;
 
-        internal override int PropertyItemSize => 40 * 4;
+        public override int PropertyItemSize => 40 * 4;
 
-        protected override byte CounterSize => 0;
+        public override byte CounterSize => 0;
 
-        protected override List<ItemFieldDescriptor> CreateDescriptors()
+        public override List<ItemFieldDescriptor> CreateDescriptors()
         {
             var builder = new FileDescriptorBuilder();
             builder.Add("name", ItemFieldDescriptor.AsFixedString(24, FILLER, Field.DisplayType.TEXT_KOR));

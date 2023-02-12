@@ -1,0 +1,23 @@
+struct HealItemDb
+{
+    INT32     entries_count
+    //
+    // First entry scheme
+    //
+    BYTE[30]  name      // 30 bytes
+    BYTE[202] description       // 202 bytes
+    INT16     Base_price        // 2 bytes
+    //
+    // ... Unknown 6 bytes
+    //
+    INT16     PZ        // 2 bytes
+    INT16     PM        // 2 bytes
+    BYTE      Full_PZ   // 1 byte
+    BYTE      Full_PM   // 1 byte
+    BYTE      Poison_heal       // 1 byte
+    BYTE      Petrif_heal       // 1 byte
+    BYTE      Heal_polimorph    // 1 byte
+    //
+    // ... Remaining entries
+    //
+}

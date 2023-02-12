@@ -19,6 +19,7 @@
             <Label x:Name="MaxElementsLabel" Content="/0" Canvas.Left="95" Canvas.Top="45" Height="13" FontSize="12" Padding="0"/>
             <Button Content="Save" Canvas.Left="314" Canvas.Top="43" Width="75" Height="23" Click="SaveButtonClick"/>
             <CheckBox x:Name="HideUnnamedCheckBox" Content="Hide unnamed fields" Canvas.Left="186" Canvas.Top="45" Width="122" Height="17" FontSize="11" Checked="HideUnnamedIsCheckedChanged" Unchecked="HideUnnamedIsCheckedChanged"/>
+            <Button Canvas.Right="13" Canvas.Top="13" Width="75" Height="23" Padding="3" Click="ExportClick">Export</Button>
         </Canvas>
         <ScrollViewer Margin="10" Grid.Row="1" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden">
             <VirtualizingStackPanel x:Name="DataPanel"/>

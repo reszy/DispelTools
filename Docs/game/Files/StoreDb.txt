@@ -1,0 +1,17 @@
+struct StoreDb
+{
+    INT32     entries_count
+    //
+    // First entry scheme
+    //
+    BYTE[32]  name      // 32 bytes
+    //
+    // ... Unknown 148 bytes
+    //
+    BYTE[512] text      // 512 bytes
+    BYTE[128] haggle_success    // 128 bytes
+    BYTE[128] haggle_fail       // 128 bytes
+    //
+    // ... Remaining entries
+    //
+}

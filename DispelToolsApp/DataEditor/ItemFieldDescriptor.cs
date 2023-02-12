@@ -4,7 +4,7 @@ using System.IO;
 
 namespace DispelTools.DataEditor
 {
-    public class ItemFieldDescriptor
+    public struct ItemFieldDescriptor
     {
         public ItemFieldDescriptor(string name, bool readOnly, IFieldType itemFieldDescriptorType)
         {

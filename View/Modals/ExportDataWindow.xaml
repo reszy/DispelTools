@@ -1,0 +1,33 @@
+﻿<Window x:Class="View.Modals.ExportDataWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:View.Modals"
+        mc:Ignorable="d"
+        Title="Export"
+        SizeToContent="WidthAndHeight" ShowInTaskbar="False" ResizeMode="NoResize" WindowStyle="ToolWindow">
+    <StackPanel Margin="10">
+        <Label Padding="0">Target</Label>
+        <RadioButton GroupName="ExportType" IsEnabled="False" IsChecked="True">Export data</RadioButton>
+        <RadioButton GroupName="ExportType" IsEnabled="False">Export scheme</RadioButton>
+        
+        <Separator/>
+        <Label Padding="0">Amount</Label>
+        <RadioButton GroupName="ExportAmount" IsEnabled="False">All files</RadioButton>
+        <RadioButton GroupName="ExportAmount" IsEnabled="False" IsChecked="True">All in file</RadioButton>
+        <RadioButton GroupName="ExportAmount" IsEnabled="False">Selected</RadioButton>
+
+        <Separator/>
+        <Label Margin="0 8 0 0" Padding="0">Destination file:</Label>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0">
+            <TextBox Width="200" IsEnabled="False"></TextBox>
+            <Button Width="20" IsEnabled="False">...</Button>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 10 0 0">
+            <Button x:Name="ProjDocsExport" Click="ExportDocsClick">Export to project docs</Button>
+            <Button Margin="8 0 0 0" Padding="4" IsEnabled="False">Export</Button>
+            <Button Margin="8 0 0 0" Padding="4" Click="CloseClick">Cancel</Button>
+        </StackPanel>
+    </StackPanel>
+</Window>

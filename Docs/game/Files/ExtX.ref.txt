@@ -1,0 +1,50 @@
+struct ExtX.ref
+{
+    INT32     entries_count
+    //
+    // First entry scheme
+    //
+    BYTE      number_in_file    // 1 byte
+    //
+    // ... Unknown 1 bytes
+    //
+    BYTE      ExtId     // 1 byte      Id from Extra.ini
+    BYTE[32]  name      // 32 bytes
+    BYTE      type      // 1 byte      7-magic, 6-interactive object, 5-altar, 4-sign, 2-door, 0-chest
+    INT32     xPos      // 4 bytes
+    INT32     yPos      // 4 bytes
+    BYTE      rotation  // 1 byte
+    //
+    // ... Unknown 7 bytes
+    //
+    INT32     closed    // 4 bytes     chest 0-open, 1-closed
+    BYTE      required_item_id  // 1 byte      lower bound
+    BYTE      required_item_type_id     // 1 byte
+    //
+    // ... Unknown 2 bytes
+    //
+    BYTE      2?required_item_id        // 1 byte      upper bound
+    BYTE      2?required_item_type_id   // 1 byte
+    //
+    // ... Unknown 18 bytes
+    //
+    INT32     gold_amount       // 4 bytes
+    BYTE      item_id   // 1 byte
+    BYTE      item_group_type_id        // 1 byte
+    //
+    // ... Unknown 2 bytes
+    //
+    INT32     item_count        // 4 bytes
+    //
+    // ... Unknown 40 bytes
+    //
+    INT32     event_id  // 4 bytes     id from event.ini
+    INT32     message_id        // 4 bytes     id from message.scr for signs
+    //
+    // ... Unknown 40 bytes
+    //
+    BYTE      Visibility?       // 1 byte
+    //
+    // ... Remaining entries
+    //
+}

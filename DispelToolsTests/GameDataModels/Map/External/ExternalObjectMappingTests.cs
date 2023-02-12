@@ -16,7 +16,7 @@ namespace DispelToolsTests.GameDataModels.Map.External
         {
             //given
             var reader = new MapExtraReader();
-            var mockedFile = new MockFileData(CreateFileContents(0xCD, reader.Mapper.PropertyItemSize, 1));
+            var mockedFile = new MockFileData(CreateFileContents(0xCD, reader.MapperDefinition.PropertyItemSize, 1));
 
             //then
             TestReader(reader, mockedFile);
@@ -27,7 +27,7 @@ namespace DispelToolsTests.GameDataModels.Map.External
         {
             //given
             var reader = new MapMonsterReader();
-            var mockedFile = new MockFileData(CreateFileContents(0xCD, reader.Mapper.PropertyItemSize, 1));
+            var mockedFile = new MockFileData(CreateFileContents(0xCD, reader.MapperDefinition.PropertyItemSize, 1));
 
             //then
             TestReader(reader, mockedFile);
@@ -38,7 +38,7 @@ namespace DispelToolsTests.GameDataModels.Map.External
         {
             //given
             var reader = new MapNpcReader();
-            var mockedFile = new MockFileData(CreateFileContents(0xCD, reader.Mapper.PropertyItemSize, 1));
+            var mockedFile = new MockFileData(CreateFileContents(0xCD, reader.MapperDefinition.PropertyItemSize, 1));
 
             //then
             TestReader(reader, mockedFile);
@@ -48,12 +48,12 @@ namespace DispelToolsTests.GameDataModels.Map.External
         {
             //given
             var mockFS = new MockFileSystem();
-            var mappedValues = reader.Mapper.CreateMapping(reader.ValuesMapping);
-            Mapper? mapperClone = (Mapper?)reader.Mapper.GetType().GetConstructor(new Type[] { typeof(IFileSystem) })?.Invoke(new object[] { mockFS });
+            var mapper = new Mapper(mockFS, reader.MapperDefinition);
+            var mappedValues = mapper.CreateMapping(reader.ValuesMapping);
 
             //when
             mockFS.AddFile("testFile", testFile);
-            var items = mapperClone?.ReadFile("testFile", new DispelTools.Common.DataProcessing.WorkReporter(new System.ComponentModel.BackgroundWorker()));
+            var items = mapper.ReadFile("testFile", new DispelTools.Common.DataProcessing.WorkReporter(new System.ComponentModel.BackgroundWorker()));
 
             //given
             Assert.That(items, Is.Not.Null);

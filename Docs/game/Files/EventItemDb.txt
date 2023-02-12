@@ -1,0 +1,12 @@
+struct EventItemDb
+{
+    INT32     entries_count
+    //
+    // First entry scheme
+    //
+    BYTE[30]  name      // 30 bytes
+    BYTE[202] description       // 202 bytes
+    //
+    // ... Remaining entries
+    //
+}

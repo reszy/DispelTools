@@ -15,7 +15,7 @@ namespace DispelTools.GameDataModels.Map.External.Npc
 
         protected override string ReferencePrefix { get; } = "Npc";
 
-        internal override DataEditor.Mapper Mapper { get; } = new DataEditor.Mappers.NpcRefMapper();
+        internal override DataEditor.MapperDefinition MapperDefinition { get; } = new DataEditor.Mappers.NpcRefMapper();
 
         internal override string[] ValuesMapping { get; } = { "goto1X", "goto1Y", "npcId", "lookingDirection", "id" };
 

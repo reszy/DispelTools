@@ -1,22 +1,17 @@
-﻿using System.Collections.Generic;
-using System.IO.Abstractions;
-
-namespace DispelTools.DataEditor.Mappers
+﻿namespace DispelTools.DataEditor.Mappers
 {
-    internal class NpcRefMapper : Mapper
+    internal class NpcRefMapper : MapperDefinition
     {
         private const byte FILLER = 0xCD;
         private const int STRING_MAX_LENGTH = 260;
 
         private readonly int elementStep = 0x2a0;
 
-        public NpcRefMapper() { }
+        public override int PropertyItemSize => elementStep;
 
-        public NpcRefMapper(IFileSystem fs) : base(fs) { }
+        public override string GetMapperName() => "Npc*.ref mapper";
 
-        internal override int PropertyItemSize => elementStep;
-
-        protected override List<ItemFieldDescriptor> CreateDescriptors()
+        public override List<ItemFieldDescriptor> CreateDescriptors()
         {
             var builder = new FileDescriptorBuilder();
             builder.Add("id", ItemFieldDescriptor.AsInt32(), true);

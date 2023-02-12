@@ -1,0 +1,13 @@
+struct MiscItemDb
+{
+    INT32     entries_count
+    //
+    // First entry scheme
+    //
+    BYTE[30]  name      // 30 bytes
+    BYTE[202] description       // 202 bytes
+    INT32     base_price        // 4 bytes
+    //
+    // ... Remaining entries
+    //
+}

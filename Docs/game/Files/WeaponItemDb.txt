@@ -1,0 +1,40 @@
+struct WeaponItemDb
+{
+    INT32     entries_count
+    //
+    // First entry scheme
+    //
+    BYTE[30]  name      // 30 bytes
+    BYTE[202] description       // 202 bytes
+    INT16     Base_price        // 2 bytes
+    //
+    // ... Unknown 6 bytes
+    //
+    INT16     PZ        // 2 bytes
+    INT16     PM        // 2 bytes
+    INT16     SIŁ       // 2 bytes
+    INT16     ZW        // 2 bytes
+    INT16     MM        // 2 bytes
+    INT16     TF        // 2 bytes
+    INT16     UNK       // 2 bytes
+    INT16     TRF       // 2 bytes
+    INT16     ATK       // 2 bytes
+    INT16     OBR       // 2 bytes
+    INT16     MAG       // 2 bytes
+    INT16     WYT       // 2 bytes
+    //
+    // ... Unknown 4 bytes
+    //
+    INT16     REQ_SIŁ   // 2 bytes
+    //
+    // ... Unknown 2 bytes
+    //
+    INT16     REQ_ZW    // 2 bytes
+    //
+    // ... Unknown 2 bytes
+    //
+    INT16     REQ_MM    // 2 bytes
+    //
+    // ... Remaining entries
+    //
+}

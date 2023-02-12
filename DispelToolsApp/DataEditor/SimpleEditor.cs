@@ -1,5 +1,6 @@
 ﻿using DispelTools.Common.DataProcessing;
 using DispelTools.DataEditor.Data;
+using DispelTools.DataEditor.Export;
 using DispelTools.DataEditor.Mappers;
 using System;
 using System.Collections.Generic;
@@ -54,56 +55,7 @@ namespace DispelTools.DataEditor
             ValidationMessage = "Mapper was added manually";
             validated = true;
         }
-        private Mapper FindMapper()
-        {
-            string filenameWithExtension = fs.Path.GetFileName(filename);
-            if (filenameWithExtension.ToUpper().StartsWith("NPC") && filenameWithExtension.ToUpper().EndsWith("REF"))
-            {
-                return new NpcRefMapper();
-            }
-            if (filenameWithExtension.ToUpper().StartsWith("MON") && filenameWithExtension.ToUpper().EndsWith("REF"))
-            {
-                return new MonRefMapper();
-            }
-            if (filenameWithExtension.ToUpper().StartsWith("EXT") && filenameWithExtension.ToUpper().EndsWith("REF"))
-            {
-                return new ExtRefMapper();
-            }
-            if (filenameWithExtension.ToUpper().Equals("EDITITEM.DB"))
-            {
-                return new EditItemDbMapper();
-            }
-            if (filenameWithExtension.ToUpper().Equals("HEALITEM.DB"))
-            {
-                return new HealItemDbMapper();
-            }
-            if (filenameWithExtension.ToUpper().Equals("EVENTITEM.DB"))
-            {
-                return new EventItemDbMapper();
-            }
-            if (filenameWithExtension.ToUpper().Equals("MISCITEM.DB"))
-            {
-                return new MiscItemDbMapper();
-            }
-            if (filenameWithExtension.ToUpper().Equals("WEAPONITEM.DB"))
-            {
-                return new WeaponItemDbMapper();
-            }
-            if (filenameWithExtension.ToUpper().Equals("STORE.DB"))
-            {
-                return new StoreDbMapper();
-            }
-            if (filenameWithExtension.ToUpper().Equals("MONSTER.DB"))
-            {
-                return new MonsterDbMapper();
-            }
-            if (filenameWithExtension.ToUpper().Equals("MULMONSTER.DB"))
-            {
-                return new MulMonsterDbMapper();
-            }
-
-            throw new ArgumentException($"No mapper found for {filenameWithExtension}");
-        }
+        private Mapper FindMapper() => Mapper.GetMapperForFilename(fs, filename) ?? throw new ArgumentException($"No mapper found for {fs.Path.GetFileName(filename)}");
 
         public PropertyItem ReadValue(int element, WorkReporter workReporter)
         {
@@ -131,6 +83,13 @@ namespace DispelTools.DataEditor
                 fs.File.Copy(filename, orginalBackup);
             }
             mapper.SaveElement(element, elementNumber, filename);
+        }
+
+        public void ExportDocScheme()
+        {
+            var exporter = new ExportAsDocScheme(fs);
+            exporter.PrepareDirectoryAndMappers();
+            exporter.Export();
         }
     }
 }

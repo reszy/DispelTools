@@ -9,6 +9,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using View.Components;
+using View.Modals;
 
 namespace View.Views
 {
@@ -99,5 +100,13 @@ namespace View.Views
             }
         }
 
+        private void ExportClick(object? sender, RoutedEventArgs args)
+        {
+            var exportWindow = new ExportDataWindow()
+            {
+                Editor = editor
+            };
+            exportWindow.ShowDialog();
+        }
     }
 }

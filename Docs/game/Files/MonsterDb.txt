@@ -1,0 +1,44 @@
+struct MonsterDb
+{
+    //
+    // First entry scheme
+    //
+    BYTE[24]  name      // 24 bytes
+    INT32     PZ_MAX    // 4 bytes
+    INT32     PZ_MIN    // 4 bytes
+    INT32     PM_MAX    // 4 bytes
+    INT32     PM_MIN    // 4 bytes
+    INT32     stat1_?   // 4 bytes
+    INT32     stat2_max?        // 4 bytes
+    INT32     stat2_min?        // 4 bytes
+    INT32     always_10         // 4 bytes
+    INT32     always_10         // 4 bytes
+    INT32     stat3_max?        // 4 bytes
+    INT32     stat3_min?        // 4 bytes
+    INT32     stat4_max?        // 4 bytes
+    INT32     stat4_min?        // 4 bytes
+    //
+    // ... Unknown 8 bytes
+    //
+    INT32     isUndead  // 4 bytes     0 or 1
+    INT32     isAlive   // 4 bytes     0 or 1, golem is not alive and not undead
+    INT32     Attack_type?      // 4 bytes     goblin and chicken = 1,archers = 2, worm bot no zombie =3, deer and dog = 5
+    INT32     EXP_MAX   // 4 bytes
+    INT32     EXP_MIN   // 4 bytes
+    INT32     GOLD_MAX  // 4 bytes
+    INT32     GOLD_MIN  // 4 bytes
+    INT32     9_or_10   // 4 bytes     only goblin king have 10
+    INT32     1_or_6_if_archer  // 4 bytes
+    INT32     magic_stat1       // 4 bytes
+    INT32     magic_stat2       // 4 bytes
+    INT32     magic_stat3       // 4 bytes
+    INT32     redDragon,_balrog,_beholder,_=_1  // 4 bytes
+    INT32     always_1  // 4 bytes
+    INT32     not_magic_effect_stat1    // 4 bytes
+    INT32     not_magic_effect_stat2    // 4 bytes
+    INT32     not_magic_effect_stat3    // 4 bytes
+    INT32     always_10         // 4 bytes
+    //
+    // ... Remaining entries
+    //
+}

@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
-
-namespace DispelTools.DataEditor.Mappers
+﻿namespace DispelTools.DataEditor.Mappers
 {
-    internal class EditItemDbMapper : Mapper
+    internal class EditItemDbMapper : MapperDefinition
     {
         private const byte FILLER = 0x0;
         private const int NAME_STRING_MAX_LENGTH = 30;
         private const int DESCRIPTION_STRING_MAX_LENGTH = 202;
-        internal override int PropertyItemSize => 67 * 4;
 
-        protected override List<ItemFieldDescriptor> CreateDescriptors()
+        public override int PropertyItemSize => 67 * 4;
+
+        public override List<ItemFieldDescriptor> CreateDescriptors()
         {
             var builder = new FileDescriptorBuilder();
             builder.Add("name", ItemFieldDescriptor.AsFixedString(NAME_STRING_MAX_LENGTH, FILLER));

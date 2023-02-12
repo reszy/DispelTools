@@ -10,7 +10,7 @@
 
         protected override string ReferencePrefix { get; } = "Ext";
 
-        internal override DataEditor.Mapper Mapper { get; } = new DataEditor.Mappers.ExtRefMapper();
+        internal override DataEditor.MapperDefinition MapperDefinition { get; } = new DataEditor.Mappers.ExtRefMapper();
 
         internal override string[] ValuesMapping { get; } = { "xPos", "yPos", "ExtId", "rotation", "type", "closed", "number in file" };
 

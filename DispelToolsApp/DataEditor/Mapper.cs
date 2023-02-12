@@ -1,5 +1,6 @@
 ﻿using DispelTools.Common.DataProcessing;
 using DispelTools.DataEditor.Data;
+using DispelTools.DataEditor.Mappers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,19 +9,20 @@ using System.Linq;
 
 namespace DispelTools.DataEditor
 {
-    public abstract partial class Mapper
+    public class Mapper
     {
         private readonly IFileSystem fs;
         private readonly List<ItemFieldDescriptor> descriptorList;
 
-        protected Mapper(IFileSystem fs)
+        private readonly int propertyItemSize;
+        private readonly byte counterSize;
+
+        public Mapper(IFileSystem fs, MapperDefinition mapperDefinition)
         {
             this.fs = fs;
-            descriptorList = CreateDescriptors();
-        }
-        protected Mapper() : this(new FileSystem())
-        {
-            descriptorList = CreateDescriptors();
+            descriptorList = mapperDefinition.CreateDescriptors();
+            propertyItemSize = mapperDefinition.PropertyItemSize;
+            counterSize = mapperDefinition.CounterSize;
         }
 
         public List<PropertyItem> ReadFile(string filename, WorkReporter workReporter)
@@ -30,11 +32,11 @@ namespace DispelTools.DataEditor
             using (var reader = new BinaryReader(fs.File.OpenRead(filename)))
             {
                 int expectedElements = 0;
-                int spaceForElements = (int)Math.Floor((decimal)((reader.BaseStream.Length - CounterSize) / elementStep));
-                if (CounterSize > 0)
+                int spaceForElements = (int)Math.Floor((decimal)((reader.BaseStream.Length - counterSize) / elementStep));
+                if (counterSize > 0)
                 {
                     byte[] fullCount = new byte[] { 0, 0, 0, 0 };
-                    var count = reader.ReadBytes(CounterSize);
+                    var count = reader.ReadBytes(counterSize);
                     count.CopyTo(fullCount, 0);
                     expectedElements = BitConverter.ToInt32(fullCount, 0);
                 }
@@ -58,16 +60,13 @@ namespace DispelTools.DataEditor
         {
             using (var writer = new BinaryWriter(fs.File.OpenWrite(filename)))
             {
-                writer.BaseStream.Position = elementNumber * PropertyItemSize + CounterSize;
+                writer.BaseStream.Position = elementNumber * PropertyItemSize + counterSize;
                 WriteElement(writer, element);
             }
         }
 
         public Mapping CreateMapping(params string[] fieldNames) => new Mapping(this, fieldNames);
-        internal abstract int PropertyItemSize { get; }
-
-        protected virtual byte CounterSize { get; } = 4;
-        protected abstract List<ItemFieldDescriptor> CreateDescriptors();
+        public int PropertyItemSize { get => propertyItemSize; }
 
         private PropertyItem ReadElement(BinaryReader reader)
         {
@@ -112,6 +111,57 @@ namespace DispelTools.DataEditor
                     .Select(fieldId => item[fieldId].Value)
                     .ToArray();
             }
+        }
+
+        public static Mapper? GetMapperForFilename(IFileSystem fs, string filename)
+        {
+            string filenameWithExtension = fs.Path.GetFileName(filename);
+            if (filenameWithExtension.ToUpper().StartsWith("NPC") && filenameWithExtension.ToUpper().EndsWith("REF"))
+            {
+                return new(fs, new NpcRefMapper());
+            }
+            if (filenameWithExtension.ToUpper().StartsWith("MON") && filenameWithExtension.ToUpper().EndsWith("REF"))
+            {
+                return new(fs, new MonRefMapper());
+            }
+            if (filenameWithExtension.ToUpper().StartsWith("EXT") && filenameWithExtension.ToUpper().EndsWith("REF"))
+            {
+                return new(fs, new ExtRefMapper());
+            }
+            if (filenameWithExtension.ToUpper().Equals("EDITITEM.DB"))
+            {
+                return new(fs, new EditItemDbMapper());
+            }
+            if (filenameWithExtension.ToUpper().Equals("HEALITEM.DB"))
+            {
+                return new(fs, new HealItemDbMapper());
+            }
+            if (filenameWithExtension.ToUpper().Equals("EVENTITEM.DB"))
+            {
+                return new(fs, new EventItemDbMapper());
+            }
+            if (filenameWithExtension.ToUpper().Equals("MISCITEM.DB"))
+            {
+                return new(fs, new MiscItemDbMapper());
+            }
+            if (filenameWithExtension.ToUpper().Equals("WEAPONITEM.DB"))
+            {
+                return new(fs, new WeaponItemDbMapper());
+            }
+            if (filenameWithExtension.ToUpper().Equals("STORE.DB"))
+            {
+                return new(fs, new StoreDbMapper());
+            }
+            if (filenameWithExtension.ToUpper().Equals("MONSTER.DB"))
+            {
+                return new(fs, new MonsterDbMapper());
+            }
+            if (filenameWithExtension.ToUpper().Equals("MULMONSTER.DB"))
+            {
+                return new(fs, new MulMonsterDbMapper());
+            }
+
+            return null;
         }
     }
 }

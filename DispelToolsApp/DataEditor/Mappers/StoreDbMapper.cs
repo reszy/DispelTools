@@ -4,7 +4,7 @@
     {
         private const byte FILLER = 0x0;
 
-        public override int PropertyItemSize => 237 * 4;
+        public override int ItemSize => 237 * 4;
         public override List<ItemFieldDescriptor> CreateDescriptors()
         {
             var builder = new FileDescriptorBuilder();

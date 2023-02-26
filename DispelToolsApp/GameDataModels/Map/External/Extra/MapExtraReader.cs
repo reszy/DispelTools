@@ -14,7 +14,7 @@
 
         internal override string[] ValuesMapping { get; } = { "xPos", "yPos", "ExtId", "rotation", "type", "closed", "number in file" };
 
-        protected override OnMapSpriteInfo ProcessItem(DataEditor.Data.PropertyItem item, object[] values)
+        protected override OnMapSpriteInfo ProcessItem(DataEditor.Data.DataItem item, object[] values)
         {
             var rotation = (byte)values[3];
             var type = (byte)values[4];

@@ -23,10 +23,10 @@ namespace View.Components
     /// </summary>
     public partial class DataRow : UserControl
     {
-        private readonly Field field;
+        private readonly IField field;
         private readonly NotifyTextBox? textControl;
         private readonly NumericUpDown? numericControl;
-        public DataRow(Field field)
+        public DataRow(IField field)
         {
             this.field = field;
             InitializeComponent();
@@ -43,21 +43,21 @@ namespace View.Components
             {
                 textControl = new()
                 {
-                    Text = field.EncodedText,
+                    Text = field.GetDecodedText(),
                     IsEnabled = !field.ReadOnly
                 };
                 textControl.ValueChanged += TextValueChanged;
                 ValueBox.Content = textControl;
             }
-            else
+            else if(field is IPrimitiveField pField)
             {
                 numericControl = new()
                 {
-                    Maximum = field.MaxValue,
-                    Minimum = field.MinValue,
-                    Value = (int)field.DecimalValue,
+                    Maximum = pField.MaxValue,
+                    Minimum = pField.MinValue,
+                    Value = (int)field.Value,
                     IsEnabled = !field.ReadOnly,
-                    Hexadecimal = field.Type == Field.DisplayType.HEX
+                    Hexadecimal = field.DisplayType == Field.DisplayType.HEX
                 };
                 numericControl.ValueChanged += NumberValueChanged;
                 ValueBox.Content = numericControl;
@@ -69,14 +69,14 @@ namespace View.Components
 
         private void TextValueChanged(object sender, RoutedEventArgs e)
         {
-            field.SetValue(textControl.Text);
+            field.Value = textControl.Text;
             textControl.FontWeight = field.HasChanged ? FontWeights.Bold : FontWeights.Normal;
             ResetButton.Content = GetResetButtonText();
         }
 
         private void NumberValueChanged(object sender, RoutedEventArgs e)
         {
-            field.SetValue(numericControl.Value);
+            field.Value = numericControl.Value;
             numericControl.FontWeight = field.HasChanged ? FontWeights.Bold : FontWeights.Normal;
             ResetButton.Content = GetResetButtonText();
         }
@@ -88,12 +88,12 @@ namespace View.Components
                 field.RevertValue();
                 if (numericControl != null)
                 {
-                    numericControl.Value = (int)field.DecimalValue;
+                    numericControl.Value = (int)field.Value;
                     numericControl.FontWeight = field.HasChanged ? FontWeights.Bold : FontWeights.Normal;
                 }
                 if (textControl != null)
                 {
-                    textControl.Text = field.EncodedText;
+                    textControl.Text = field.GetDecodedText();
                     textControl.FontWeight = field.HasChanged ? FontWeights.Bold : FontWeights.Normal;
                 }
                 ResetButton.Content = GetResetButtonText();

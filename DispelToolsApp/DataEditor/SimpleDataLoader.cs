@@ -1,42 +1,43 @@
 ﻿using DispelTools.Common.DataProcessing;
 using DispelTools.DataEditor.Data;
 using DispelTools.DataEditor.Mappers;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.IO.Abstractions;
-using System.Linq;
 
 namespace DispelTools.DataEditor
 {
-    public class Mapper
+    public partial class SimpleDataLoader
     {
         private readonly IFileSystem fs;
         private readonly List<ItemFieldDescriptor> descriptorList;
 
-        private readonly int propertyItemSize;
-        private readonly byte counterSize;
+        private readonly int dataItemSize;
+        private readonly byte inFileCounterSize;
 
-        public Mapper(IFileSystem fs, MapperDefinition mapperDefinition)
+        public SimpleDataLoader(IFileSystem fs, MapperDefinition mapperDefinition)
         {
             this.fs = fs;
+            MapperDefinition = mapperDefinition;
             descriptorList = mapperDefinition.CreateDescriptors();
-            propertyItemSize = mapperDefinition.PropertyItemSize;
-            counterSize = mapperDefinition.CounterSize;
+            dataItemSize = mapperDefinition.ItemSize;
+            inFileCounterSize = mapperDefinition.InFileCounterSize;
         }
 
-        public List<PropertyItem> ReadFile(string filename, WorkReporter workReporter)
+        public SimpleDataContainer LoadData(string filename, WorkReporter workReporter)
         {
-            int elementStep = PropertyItemSize;
-            var list = new List<PropertyItem>();
+            return new(MapperDefinition, ReadFile(filename, workReporter), filename, fs.Path.GetFileName(filename));
+        }
+        private List<DataItem> ReadFile(string filename, WorkReporter workReporter)
+        {
+            int elementStep = DataItemSize;
+            var list = new List<DataItem>();
             using (var reader = new BinaryReader(fs.File.OpenRead(filename)))
             {
                 int expectedElements = 0;
-                int spaceForElements = (int)Math.Floor((decimal)((reader.BaseStream.Length - counterSize) / elementStep));
-                if (counterSize > 0)
+                int spaceForElements = (int)Math.Floor((decimal)((reader.BaseStream.Length - inFileCounterSize) / elementStep));
+                if (inFileCounterSize > 0)
                 {
                     byte[] fullCount = new byte[] { 0, 0, 0, 0 };
-                    var count = reader.ReadBytes(counterSize);
+                    var count = reader.ReadBytes(inFileCounterSize);
                     count.CopyTo(fullCount, 0);
                     expectedElements = BitConverter.ToInt32(fullCount, 0);
                 }
@@ -56,64 +57,48 @@ namespace DispelTools.DataEditor
             }
             return list;
         }
-        public void SaveElement(PropertyItem element, int elementNumber, string filename)
+        public void SaveElement(SimpleDataContainer container, DataItem item)
         {
-            using (var writer = new BinaryWriter(fs.File.OpenWrite(filename)))
-            {
-                writer.BaseStream.Position = elementNumber * PropertyItemSize + counterSize;
-                WriteElement(writer, element);
-            }
+            var itemIndex = container.IndexOf(item);
+            using var writer = new BinaryWriter(fs.File.OpenWrite(container.Path));
+            writer.BaseStream.Position = itemIndex * DataItemSize + inFileCounterSize;
+            WriteElement(writer, item);
         }
+        public int DataItemSize { get => dataItemSize; }
+        public MapperDefinition MapperDefinition { get; }
 
-        public Mapping CreateMapping(params string[] fieldNames) => new Mapping(this, fieldNames);
-        public int PropertyItemSize { get => propertyItemSize; }
-
-        private PropertyItem ReadElement(BinaryReader reader)
+        private DataItem ReadElement(BinaryReader reader)
         {
-            var propertyItem = new PropertyItem();
+            var propertyItem = new DataItem();
             for (int i = 0; i < descriptorList.Count; i++)
             {
                 var fieldDescriptor = descriptorList[i];
                 object value = fieldDescriptor.ItemFieldDescriptorType.Read(reader);
-                var field = new Field(fieldDescriptor.Name, value, fieldDescriptor.ItemFieldDescriptorType.VisualFieldType, fieldDescriptor.ReadOnly)
-                {
-                    Description = fieldDescriptor.Description
-                };
-                propertyItem.AddField(field);
+                propertyItem.AddField(CreateField(fieldDescriptor, value));
             }
             return propertyItem;
         }
-        private void WriteElement(BinaryWriter writer, PropertyItem propertyitem)
+        private void WriteElement(BinaryWriter writer, DataItem propertyitem)
         {
             for (int i = 0; i < descriptorList.Count; i++)
             {
                 var descriptor = descriptorList[i];
                 var field = propertyitem[i];
-                descriptor.ItemFieldDescriptorType.Write(writer, field.IsText ? field.ByteArrayValue : field.Value);
+                descriptor.ItemFieldDescriptorType.Write(writer, field);
             }
         }
 
-        public class Mapping
+        private static IField CreateField(ItemFieldDescriptor descriptor, object value)
         {
-            private int[] mapping;
-
-            public Mapping(Mapper mapper, params string[] fieldNames)
-            {
-                mapping = fieldNames
-                    .Select(name => mapper.descriptorList.Find(descriptor => descriptor.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
-                    .Select(descriptor => mapper.descriptorList.IndexOf(descriptor))
-                    .ToArray();
-            }
-
-            public object[] Convert(PropertyItem item)
-            {
-                return mapping
-                    .Select(fieldId => item[fieldId].Value)
-                    .ToArray();
-            }
+            if (descriptor.FieldClass == typeof(ByteArrayField)) return new ByteArrayField(descriptor.Name, (byte[])value, descriptor.ItemFieldDescriptorType.VisualFieldType);
+            if (descriptor.FieldClass == typeof(TextField)) return new TextField(descriptor.Name, (byte[])value, descriptor.Encoding);
+            if (descriptor.FieldClass == typeof(PrimitiveField<byte>)) return new PrimitiveField<byte>(descriptor.Name, (byte)value, descriptor.ItemFieldDescriptorType.VisualFieldType);
+            if (descriptor.FieldClass == typeof(PrimitiveField<int>)) return new PrimitiveField<int>(descriptor.Name, (int)value, descriptor.ItemFieldDescriptorType.VisualFieldType);
+            if (descriptor.FieldClass == typeof(PrimitiveField<short>)) return new PrimitiveField<short>(descriptor.Name, (short)value, descriptor.ItemFieldDescriptorType.VisualFieldType);
+            throw new ArgumentException("Unsupported field type", nameof(descriptor));
         }
 
-        public static Mapper? GetMapperForFilename(IFileSystem fs, string filename)
+        public static SimpleDataLoader? GetMapperForFilename(IFileSystem fs, string filename)
         {
             string filenameWithExtension = fs.Path.GetFileName(filename);
             if (filenameWithExtension.ToUpper().StartsWith("NPC") && filenameWithExtension.ToUpper().EndsWith("REF"))

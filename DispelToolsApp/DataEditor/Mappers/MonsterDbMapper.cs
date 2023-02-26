@@ -7,14 +7,14 @@ namespace DispelTools.DataEditor.Mappers
 
         private const byte FILLER = 0x0;
 
-        public override int PropertyItemSize => 40 * 4;
+        public override int ItemSize => 40 * 4;
 
-        public override byte CounterSize => 0;
+        public override byte InFileCounterSize => 0;
 
         public override List<ItemFieldDescriptor> CreateDescriptors()
         {
             var builder = new FileDescriptorBuilder();
-            builder.Add("name", ItemFieldDescriptor.AsFixedString(24, FILLER, Field.DisplayType.TEXT_KOR));
+            builder.Add("name", ItemFieldDescriptor.AsFixedString(24, FILLER), Field.SupportedEncoding.KOR);
 
             builder.Add("PZ MAX", ItemFieldDescriptor.AsInt32());
             builder.Add("PZ MIN", ItemFieldDescriptor.AsInt32());

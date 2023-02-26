@@ -2,7 +2,7 @@
 {
     internal class MonRefMapper : MapperDefinition
     {
-        public override int PropertyItemSize => 14 * 4;
+        public override int ItemSize => 14 * 4;
         public override string GetMapperName() => "Mon*.ref mapper";
 
         public override List<ItemFieldDescriptor> CreateDescriptors()

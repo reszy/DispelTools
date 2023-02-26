@@ -2,6 +2,7 @@
 using DispelTools.DataEditor.Data;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Reflection;
@@ -12,10 +13,6 @@ namespace DispelTools.DataEditor.Export
 {
     public class ExportAsDocScheme
     {
-        private readonly static char SPACE = ' ';
-        private readonly static char UNDERSCORE = '_';
-        private readonly static string INDENTATION = new(SPACE, 4);
-
         private readonly IFileSystem fs;
         private readonly Dictionary<string, MapperDefinition> filenames = new();
 
@@ -66,7 +63,7 @@ namespace DispelTools.DataEditor.Export
             return foundDirectory;
         }
 
-        private List<MapperDefinition> FindAllMappers()
+        private static List<MapperDefinition> FindAllMappers()
         {
             var mappers = Assembly.GetExecutingAssembly()
                 .GetTypes()
@@ -92,93 +89,9 @@ namespace DispelTools.DataEditor.Export
         {
             using var file = fs.File.Create(filename);
             using var stringWriter = new StreamWriter(file);
-            StringBuilder sb = new();
-            int byteOffsetCounter = 0;
-            sb.Append("struct ");
-            sb.AppendLine(ConvertMapperNameToFilename(mapper.GetMapperName()));
-            sb.AppendLine("{");
-            if (mapper.CounterSize > 0)
-            {
-                AddVariableTypeAndName(sb, Field.DisplayType.HEX, mapper.CounterSize, "entries_count");
-                sb.AppendLine();
-            }
-            AddComment(sb, "First entry scheme");
-            foreach (var descriptor in mapper.CreateDescriptors())
-            {
-                if (descriptor.Name.StartsWith("?"))
-                {
-                    byteOffsetCounter += descriptor.ItemFieldDescriptorType.ByteSize;
-                }
-                else
-                {
-                    if (byteOffsetCounter > 0)
-                    {
-                        AddComment(sb, $"... Unknown {byteOffsetCounter} bytes");
-                        byteOffsetCounter = 0;
-                    }
-                    AddFieldScheme(descriptor, sb);
-                }
-            }
-            AddComment(sb, "... Remaining entries");
-            sb.AppendLine("}");
-            stringWriter.Write(sb);
-        }
-
-        private static void AddFieldScheme(ItemFieldDescriptor fieldDescriptor, StringBuilder sb)
-        {
-            var size = fieldDescriptor.ItemFieldDescriptorType.ByteSize;
-            AddVariableTypeAndName(sb, fieldDescriptor.ItemFieldDescriptorType.VisualFieldType, size, fieldDescriptor.Name);
-            var commentOffset = (int)Math.Ceiling(fieldDescriptor.Name.Length / 8.0);
-            sb.Append(new string(SPACE, commentOffset * 8 - fieldDescriptor.Name.Length));
-            sb.Append("  // ");
-            var beforeBytes = sb.Length;
-            sb.Append(size);
-            sb.Append(size > 1 ? " bytes" : " byte");
-            if (!string.IsNullOrEmpty(fieldDescriptor.Description))
-            {
-                sb.Append(new string(SPACE, 12 - (sb.Length - beforeBytes)));
-                sb.Append(fieldDescriptor.Description);
-            }
-            sb.AppendLine();
-        }
-
-        private static void AddVariableTypeAndName(StringBuilder sb, Field.DisplayType type, int size, string name)
-        {
-            sb.Append(INDENTATION);
-            var typeName = ConvertTypeName(type, size);
-            sb.Append(typeName);
-            sb.Append(new string(SPACE, 10 - typeName.Length));
-            sb.Append(name.Replace(SPACE, UNDERSCORE));
-        }
-
-        private static void AddComment(StringBuilder sb, string comment)
-        {
-            sb.Append(INDENTATION);
-            sb.AppendLine("//");
-            sb.Append(INDENTATION);
-            sb.Append("// ");
-            sb.AppendLine(comment);
-            sb.Append(INDENTATION);
-            sb.AppendLine("//");
-        }
-
-        private static string ConvertTypeName(Field.DisplayType type, int size)
-        {
-            if (type == Field.DisplayType.HEX || type == Field.DisplayType.BIN || type == Field.DisplayType.DEC) {
-                if (size == 1)
-                {
-                    return "BYTE";
-                }
-                else if (size == 2)
-                {
-                    return "INT16";
-                }
-                else if (size == 4)
-                {
-                    return "INT32";
-                }
-            }
-            return $"BYTE[{size}]";
+            SchemeConverter schemeConverter = new(mapper);
+            var stringBuilder = schemeConverter.ToTxt(fs.Path.GetFileNameWithoutExtension(filename));
+            stringWriter.Write(stringBuilder);
         }
 
         private static string ConvertMapperNameToFilename(string mapperName) => mapperName.Replace("Mapper", "", StringComparison.OrdinalIgnoreCase).Replace('*', 'X').Trim();

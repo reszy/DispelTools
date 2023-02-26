@@ -1,189 +1,207 @@
-﻿using System;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
+using static DispelTools.DataEditor.Data.Field;
 
 namespace DispelTools.DataEditor.Data
 {
-    public class Field
+    public interface IField
     {
-        private byte b_value;
-        private short s_value;
-        private int i_value;
-        private byte[] raw_value;
-        private readonly object defaultValue;
-        private static readonly Encoding asciiEncoding = Encoding.GetEncoding(437);
-        private static readonly Encoding plEncoding = Encoding.GetEncoding(1250);
-        private static readonly Encoding korEncoding = Encoding.GetEncoding(51949);
+        public bool IsReference { get; }
+        public bool IsText { get; }
 
-        private bool IsShort = false;
-        private bool IsByte = false;
-        private bool IsInt = false;
-        private bool IsRaw = false;
-
-        public object Value => GetValue();
-        public object DefaultValue => defaultValue;
-        public string Name { get; set; }
+        public string Name { get; }
+        public object Value { get; set; }
         public string? Description { get; init; }
-        public bool ReadOnly { get; set; }
-        public DisplayType Type { get; set; } = DisplayType.ASCII;
-        public enum DisplayType
+        public bool IsNameGenerated { get; init; }
+
+        public bool ReadOnly { get; init; }
+        public bool HasChanged { get; }
+
+        public DisplayType DisplayType { get; }
+
+        public string GetDecodedText();
+        public byte[] GetEncodedText();
+        public void RevertValue();
+    }
+    public interface IPrimitiveField
+    {
+        int MaxValue { get; }
+        int MinValue { get; }
+    }
+    public class PrimitiveField<T> : IField, IPrimitiveField where T : struct
+    {
+        private T _value;
+        private readonly T defaultValue;
+        public bool IsReference { get; }
+        public bool IsText => false;
+        public string Name { get; }
+        public object Value { get => _value; set => SetValue(value); }
+        public T TValue { get => _value; set => SetValue(value); }
+        public string? Description { get; init; }
+        public bool IsNameGenerated { get; init; }
+        public bool ReadOnly { get; init; }
+        public bool HasChanged => !_value.Equals(defaultValue);
+        public DisplayType DisplayType { get; }
+
+        public int MaxValue { get; }
+        public int MinValue { get; }
+
+        public PrimitiveField(string name, T value, DisplayType displayType)
         {
-            HEX, BIN, DEC,
-            ASCII, TEXT_KOR, TEXT_PL
+            if (value is byte[]) throw new ArgumentException("Expected value as number", nameof(value));
+            Name = name;
+            defaultValue = _value = value;
+            DisplayType = displayType;
+            if (value is int)
+            {
+                MaxValue = int.MaxValue;
+                MinValue = int.MinValue;
+            }
+            if (value is short)
+            {
+                MaxValue = short.MaxValue;
+                MinValue = short.MinValue;
+            }
+            if (value is byte)
+            {
+                MaxValue = byte.MaxValue;
+                MinValue = byte.MinValue;
+            }
+        }
+        public string GetDecodedText() => string.Empty;
+        public byte[] GetEncodedText() => Array.Empty<byte>();
+
+        public void RevertValue()
+        {
+            _value = defaultValue;
         }
 
-        public enum SupportedValues
+        private void SetValue(object value)
         {
-            SHORT, BYTE, INT, RAW
+            if (value is not T) throw new ArgumentException($"Expected value as {typeof(T).Name}, was {value.GetType().Name}", nameof(value));
+            _value = (T)value;
         }
+    }
 
-        public SupportedValues ValueType { get; private set; }
-        public bool IsText => Type == DisplayType.ASCII || Type == DisplayType.TEXT_PL || Type == DisplayType.TEXT_KOR;
-        public decimal DecimalValue => new decimal(IsByte ? (byte)Value : (IsShort ? (short)Value : (int)Value));
-        public int MaxValue => IsByte ? byte.MaxValue : (IsShort ? short.MaxValue : int.MaxValue);
-        public int MinValue => IsByte ? byte.MinValue : (IsShort ? short.MinValue : int.MinValue);
+    public class ByteArrayField : IField
+    {
+        private readonly byte[] defaultValue;
+        private byte[] _value;
 
-        public byte[] ByteArrayValue => raw_value;
-        public string EncodedText => GetEncoding().GetString(raw_value);
-        public Encoding GetEncoding() => Type == DisplayType.TEXT_KOR ? korEncoding : (Type == DisplayType.TEXT_PL ? plEncoding : asciiEncoding);
-        public bool HasChanged => !IsDefaultEqualToValue();
+        public bool IsReference { get; }
+        public bool IsText => false;
 
-        public Field(string name, object value, DisplayType type = DisplayType.ASCII, bool readOnly = false)
+
+        public string Name { get; }
+        public object Value { get => _value.ToArray(); set => SetValue(value); }
+        public byte[] Bytes { get => _value.ToArray(); set => SetValue(value); }
+        public string? Description { get; init; }
+        public bool IsNameGenerated { get; init; }
+
+        public bool ReadOnly { get; init; }
+        public bool HasChanged => ((ReadOnlySpan<byte>)_value).SequenceEqual(defaultValue);
+
+        public DisplayType DisplayType { get; }
+
+        public ByteArrayField(string name, byte[] value, DisplayType displayType)
         {
             Name = name;
-            ReadOnly = readOnly;
-            Type = type;
-            IsRaw = value is byte[] || value is string;
-            if (value is string)
-            {
-                raw_value = GetEncoding().GetBytes((string)value);
-                ValueType = SupportedValues.RAW;
-                defaultValue = raw_value;
-            }
-            else
-            {
-                defaultValue = value;
-            }
-            if (IsShort = value is short)
-            {
-                s_value = (short)value;
-                ValueType = SupportedValues.SHORT;
-            }
-            if (IsByte = value is byte)
-            {
-                b_value = (byte)value;
-                ValueType = SupportedValues.BYTE;
-            }
-            if (IsInt = value is int)
-            {
-                i_value = (int)value;
-                ValueType = SupportedValues.INT;
-            }
-            if (value is byte[])
-            {
-                raw_value = (byte[])value;
-                ValueType = SupportedValues.RAW;
-            }
-            if (IsText ^ IsRaw)
-            {
-                throw new ArgumentException("Value has incompatible displayType");
-            }
-        }
-        public void RevertValue() {
-            switch (ValueType)
-            {
-                case SupportedValues.SHORT:
-                    s_value = (short)defaultValue;
-                    break;
-                case SupportedValues.BYTE:
-                    b_value = (byte)defaultValue;
-                    break;
-                case SupportedValues.INT:
-                    i_value = (int)defaultValue;
-                    break;
-                case SupportedValues.RAW:
-                    raw_value = (byte[])defaultValue;
-                    break;
-                default:
-                    break;
-            }
+            defaultValue = _value = value;
+            DisplayType = displayType;
         }
 
-        public void SetValue(byte[] value)
+        public string GetDecodedText() => $"0x{Convert.ToHexString(_value)}";
+
+        public byte[] GetEncodedText() => _value.ToArray();
+
+        public void RevertValue() => _value = defaultValue.ToArray();
+
+        private void SetValue(object value)
         {
-            if (!IsRaw) { throw new ArgumentException(); }
-            raw_value = value;
+            if (value is byte[] byteArray) { _value = byteArray.ToArray(); return; }
+            if (value is string str) { _value = Convert.FromHexString(str.Replace("0x", "")); return; }
+            throw new ArgumentException("Unsupported type", nameof(value));
         }
-        public void SetValue(string value)
+    }
+
+    public class TextField : IField
+    {
+        private readonly byte[] defaultValue;
+        private byte[] _value;
+        private string decodedValue;
+        private readonly Encoding encoding;
+
+        public bool IsReference { get; }
+        public bool IsText => true;
+
+        public string Name { get; }
+        public object Value { get => _value.ToArray(); set => SetValue(value); }
+        public string? Description { get; init; }
+        public bool IsNameGenerated { get; init; }
+
+        public bool ReadOnly { get; init; }
+        public bool HasChanged => ((ReadOnlySpan<byte>)_value).SequenceEqual(defaultValue);
+
+        public DisplayType DisplayType => DisplayType.ASCII;
+
+        public TextField(string name, string value, SupportedEncoding encoding)
         {
-            if (!IsRaw) { throw new ArgumentException(); }
-            raw_value = GetEncoding().GetBytes(value);
-        }
-        public void SetValue(byte value)
-        {
-            if (!IsByte) { throw new ArgumentException(); }
-            b_value = value;
-        }
-        public void SetValue(short value)
-        {
-            if (!IsShort) { throw new ArgumentException(); }
-            s_value = value;
-        }
-        public void SetValue(int value)
-        {
-            if (!IsInt) { throw new ArgumentException(); }
-            i_value = value;
-        }
-        public void SetValue(decimal value)
-        {
-            if (IsText) { throw new ArgumentException(); }
-            switch (ValueType)
-            {
-                case SupportedValues.SHORT:
-                    s_value = Convert.ToInt16(value);
-                    break;
-                case SupportedValues.BYTE:
-                    b_value = Convert.ToByte(value);
-                    break;
-                case SupportedValues.INT:
-                    i_value = Convert.ToInt32(value);
-                    break;
-                default:
-                    break;
-            }
-        }
-        private object GetValue()
-        {
-            switch (ValueType)
-            {
-                case SupportedValues.SHORT:
-                    return s_value;
-                case SupportedValues.BYTE:
-                    return b_value;
-                case SupportedValues.INT:
-                    return i_value;
-                case SupportedValues.RAW:
-                    return raw_value;
-                default:
-                    return null;
-            }
+            this.encoding = GetEncoding(encoding);
+            Name = name;
+            defaultValue = _value = this.encoding.GetBytes(value);
+            decodedValue = value;
         }
 
-        private bool IsDefaultEqualToValue()
+        public TextField(string name, byte[] value, SupportedEncoding encoding)
         {
-            switch (ValueType)
-            {
-                case SupportedValues.SHORT:
-                    return (short)defaultValue == s_value;
-                case SupportedValues.BYTE:
-                    return (byte)defaultValue == b_value;
-                case SupportedValues.INT:
-                    return (int)defaultValue == i_value;
-                case SupportedValues.RAW:
-                    return Enumerable.SequenceEqual((byte[])defaultValue, raw_value);
-                default:
-                    throw new NotImplementedException();
-            }
+            this.encoding = GetEncoding(encoding);
+            Name = name;
+            defaultValue = _value = value;
+            decodedValue = this.encoding.GetString(value);
+        }
+        public static Encoding GetEncoding(SupportedEncoding encoding) => encoding == SupportedEncoding.KOR ? korEncoding : (encoding == SupportedEncoding.PL ? plEncoding : asciiEncoding);
+
+        public string GetDecodedText() => decodedValue;
+
+        public byte[] GetEncodedText() => _value.ToArray();
+
+        private void SetValue(object value)
+        {
+            if (value is byte[] byteArray) { SetValue(byteArray); return; }
+            if (value is string str) { SetValue(encoding.GetBytes(str)); return; }
+            throw new ArgumentException("Unsupported type", nameof(value));
+        }
+
+        public void RevertValue()
+        {
+            SetValue(defaultValue);
+        }
+
+        private void SetValue(byte[] value)
+        {
+            _value = value.ToArray();
+            decodedValue = encoding.GetString(value);
+        }
+    }
+
+    public static class Field
+    {
+        internal static readonly Encoding asciiEncoding = Encoding.GetEncoding(437);
+        internal static readonly Encoding plEncoding = Encoding.GetEncoding(1250);
+        internal static readonly Encoding korEncoding = Encoding.GetEncoding(51949);
+
+        public enum DisplayType
+        {
+            HEX_STRING = 1, 
+            HEX = HEX_STRING,
+            BIN = 2,
+            DEC = 3,
+            STRING = 4, 
+            ASCII = STRING, TEXT_KOR = STRING, TEXT_PL = STRING
+        }
+
+        public enum SupportedEncoding
+        {
+            KOR, PL, ASCII//, UTF8
         }
     }
 }

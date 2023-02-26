@@ -32,7 +32,7 @@ namespace DispelToolsTests.DataEditor.Export
             var mockFs = new MockFileSystem();
             var mapper = new TestMapper();
             var exporter = new ExportAsDocScheme(mockFs);
-            var filename = "testMapper.txt";
+            var filename = "Test.txt";
 
             exporter.Setup(new() { { filename, mapper } });
 

@@ -5,7 +5,7 @@
         private const byte FILLER = 0xcd;
         private const int NAME_STRING_MAX_LENGTH = 32;
 
-        public override int PropertyItemSize => 46 * 4;
+        public override int ItemSize => 46 * 4;
         public override string GetMapperName() => "Ext*.ref mapper";
 
         public override List<ItemFieldDescriptor> CreateDescriptors()

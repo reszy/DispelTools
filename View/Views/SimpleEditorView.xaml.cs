@@ -1,15 +1,17 @@
 ﻿using DispelTools.Common.DataProcessing;
-using DispelTools.DataEditor;
 using DispelTools.DataEditor.Data;
 using FileDialogs;
 using System;
 using System.ComponentModel;
 using System.IO.Abstractions;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Windows;
 using System.Windows.Controls;
 using View.Components;
+using View.Exceptions;
 using View.Modals;
+using View.ViewModels;
 
 namespace View.Views
 {
@@ -19,10 +21,10 @@ namespace View.Views
     public partial class SimpleEditorView : UserControl, INestedView
     {
         private SimpleEditor? editor;
-        private PropertyItem? SelectedItem;
+        private DataItem? SelectedItem;
 
         private readonly OpenFileDialog openFileDialog;
-        private readonly BackgroundWorker backgroundWorker;
+        private readonly BackgroundWorker loadFileWorker;
 
         public string ViewName => "Simple data editor";
 
@@ -31,14 +33,14 @@ namespace View.Views
             InitializeComponent();
 
             openFileDialog = new(new FileSystem(), Window.GetWindow(this), new OpenFileDialog.Configuration());
-            PropertyItem.Sample()
+            DataItem.Sample()
                 .Select(x => new DataRow(x))
                 .ToList()
                 .ForEach(x => DataPanel.Children.Add(x));
             InElementNumber.ValueChanged += ElementNumberValueChanged;
-            backgroundWorker = new();
-            backgroundWorker.DoWork += Read;
-            backgroundWorker.RunWorkerCompleted += ReadingFileCompleted;
+            loadFileWorker = new();
+            loadFileWorker.DoWork += Read;
+            loadFileWorker.RunWorkerCompleted += ReadingFileCompleted;
         }
 
         private void OpenButtonClick(object sender, EventArgs e)
@@ -46,25 +48,37 @@ namespace View.Views
 
             openFileDialog.ShowDialog(() =>
             {
-                editor = new SimpleEditor(openFileDialog.FileName);
-                if (editor.CanOpen())
-                {
-                    InElementNumber.Value = 0;
-
-                    SetMaxElementsLabel(InElementNumber.Maximum = editor.GetElementCount());
-                    OpenedFileLabel.Content = openFileDialog.FileName;
-                    backgroundWorker.RunWorkerAsync();
-                }
-                else
-                {
-                    MessageBox.Show(editor.ValidationMessage, "File unsupported", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                editor = new SimpleEditor(new FileSystem());
+                loadFileWorker.RunWorkerAsync();
             });
         }
 
-        private void ElementNumberValueChanged(object sender, RoutedEventArgs e) => backgroundWorker.RunWorkerAsync();
+        private void ElementNumberValueChanged(object sender, RoutedEventArgs e)
+        {
+            if (editor is not null)
+            {
+                try
+                {
+                    SelectedItem = editor.GetValue((int)InElementNumber.Value);
+                }
+                catch (MessageException ex)
+                {
+                    MessageBox.Show(ex.Message, ex.Header, MessageBoxButton.OK, ex.GetMessageBoxIcon());
+                }
+            }
+        }
 
-        private void SaveButtonClick(object sender, RoutedEventArgs e) => editor?.Save(SelectedItem!, (int)InElementNumber.Value);
+        private void SaveButtonClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                editor?.Save(SelectedItem!, (int)InElementNumber.Value);
+            }
+            catch (MessageException ex)
+            {
+                MessageBox.Show(ex.Message, ex.Header, MessageBoxButton.OK, ex.GetMessageBoxIcon());
+            }
+        }
 
         private void HideUnnamedIsCheckedChanged(object sender, EventArgs e)
         {
@@ -77,9 +91,20 @@ namespace View.Views
         {
             if (editor != null)
             {
-                var workReporter = new WorkReporter(backgroundWorker);
-                workReporter.DecideOnWarning = WorkPaused;
-                SelectedItem = editor.ReadValue((int)InElementNumber.Value, workReporter);
+                var workReporter = new WorkReporter(loadFileWorker)
+                {
+                    DecideOnWarning = WorkPaused
+                };
+                try
+                {
+                    editor.Load(openFileDialog.FileName, workReporter);
+                    OpenedFileLabel.Content = editor.GetLoadedContainer().Path;
+                    SelectedItem = editor.GetValue(0);
+                }
+                catch (MessageException e)
+                {
+                    MessageBox.Show(e.Message, e.Header, MessageBoxButton.OK, e.GetMessageBoxIcon());
+                }
             }
         }
 
@@ -91,6 +116,7 @@ namespace View.Views
 
         private void ReadingFileCompleted(object? sender, RunWorkerCompletedEventArgs args)
         {
+            InElementNumber.Value = 0;
             if (SelectedItem is not null)
             {
                 DataPanel.Children.Clear();
@@ -98,15 +124,19 @@ namespace View.Views
                 .ToList()
                 .ForEach(x => DataPanel.Children.Add(x));
             }
+            SetMaxElementsLabel(InElementNumber.Maximum = (editor?.GetElementCount() ?? 1) - 1);
         }
 
         private void ExportClick(object? sender, RoutedEventArgs args)
         {
-            var exportWindow = new ExportDataWindow()
+            if (editor is not null)
             {
-                Editor = editor
-            };
-            exportWindow.ShowDialog();
+                var exportWindow = new ExportDataWindow(editor.GetLoadedContainer(), (int)InElementNumber.Value)
+                {
+                    Owner = Application.Current.MainWindow
+                };
+                exportWindow.ShowDialog();
+            }
         }
     }
 }

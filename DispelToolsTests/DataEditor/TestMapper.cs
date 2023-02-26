@@ -23,7 +23,7 @@ namespace DispelTools.DataEditor.Tests
         public const byte BYTE_DATA2 = 4;
         public static readonly byte[] BYA_DATA2 = new byte[13] { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130 };
 
-        public override int PropertyItemSize => PROPERTY_ITEM_SIZE;
+        public override int ItemSize => PROPERTY_ITEM_SIZE;
 
         public override List<ItemFieldDescriptor> CreateDescriptors()
         {

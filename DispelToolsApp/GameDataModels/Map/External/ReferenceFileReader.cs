@@ -1,5 +1,6 @@
 ﻿using DispelTools.Common;
 using DispelTools.Common.DataProcessing;
+using DispelTools.DataEditor;
 using System.IO.Abstractions;
 
 namespace DispelTools.GameDataModels.Map.External
@@ -19,7 +20,7 @@ namespace DispelTools.GameDataModels.Map.External
             int mapPixelHeight = mapContainer.Model.MapSizeInPixels.Height;
             int mapNonOccludedStartY = mapContainer.Model.MapNonOccludedStart.Y;
 
-            List<MapExternalObject> objects = new List<MapExternalObject>();
+            var objects = new List<MapExternalObject>();
             var directory = $"{gamePath}\\{SpriteDirectoryName}";
             var mapRefPath = $"{directory}\\{ReferencePrefix}{mapName}.ref";
 
@@ -27,16 +28,16 @@ namespace DispelTools.GameDataModels.Map.External
 
             var names = LoadInfo($"{gamePath}{InfoRelativePath}", InfoSpriteNameColumnIndex);
 
-            MapExternalSpriteCache spriteCache = new MapExternalSpriteCache(directory, names);
+            var spriteCache = new MapExternalSpriteCache(directory, names);
 
-            var mapper = new DispelTools.DataEditor.Mapper(new FileSystem(), MapperDefinition);
-            List<DataEditor.Data.PropertyItem> items = mapper.ReadFile(mapRefPath, workReporter);
-            var fieldMapping = mapper.CreateMapping(ValuesMapping);
+            var loader = new DispelTools.DataEditor.SimpleDataLoader(new FileSystem(), MapperDefinition);
+            var dataContainer = loader.LoadData(mapRefPath, workReporter);
+            var fieldMapping = new FieldMapping(MapperDefinition, ValuesMapping);
 
-            foreach (var item in items)
+            for (int i = 0; i < dataContainer.Count; i++)
             {
-                var values = fieldMapping.Convert(item);
-                var processed = ProcessItem(item, values);
+                var values = fieldMapping.Convert(dataContainer[i]);
+                var processed = ProcessItem(dataContainer[i], values);
 
                 objects.Add(new MapExternalObject(
                     processed,
@@ -49,7 +50,7 @@ namespace DispelTools.GameDataModels.Map.External
             return objects;
         }
 
-        protected abstract OnMapSpriteInfo ProcessItem(DataEditor.Data.PropertyItem item, object[] values);
+        protected abstract OnMapSpriteInfo ProcessItem(DataEditor.Data.DataItem item, object[] values);
 
         public class OnMapSpriteInfo
         {

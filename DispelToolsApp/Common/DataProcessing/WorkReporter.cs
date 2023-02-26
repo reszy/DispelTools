@@ -17,8 +17,8 @@ namespace DispelTools.Common.DataProcessing
         public int StagesLeft => stageCount - currentStage;
 
         /// <summary>
-        /// allows to decide what to do during process.
-        /// return true if continue or false to abort
+        /// Allows to decide what to do during process.
+        /// Return true if continue or false to abort
         /// </summary>
         public Func<WorkerWarning, bool>? DecideOnWarning { get; set; }
 

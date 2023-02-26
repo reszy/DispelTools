@@ -2,8 +2,8 @@
 {
     public abstract class MapperDefinition
     {
-        public abstract int PropertyItemSize { get; }
-        public virtual byte CounterSize { get; } = 4;
+        public abstract int ItemSize { get; }
+        public virtual byte InFileCounterSize { get; } = 4;
         public virtual string GetMapperName() => GetType().Name;
         public abstract List<ItemFieldDescriptor> CreateDescriptors();
     }

@@ -7,7 +7,7 @@
 
         private readonly int elementStep = 0x2a0;
 
-        public override int PropertyItemSize => elementStep;
+        public override int ItemSize => elementStep;
 
         public override string GetMapperName() => "Npc*.ref mapper";
 

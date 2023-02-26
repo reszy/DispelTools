@@ -6,7 +6,7 @@
         private const int NAME_STRING_MAX_LENGTH = 30;
         private const int DESCRIPTION_STRING_MAX_LENGTH = 202;
 
-        public override int PropertyItemSize => 71 * 4;
+        public override int ItemSize => 71 * 4;
         public override List<ItemFieldDescriptor> CreateDescriptors()
         {
             var builder = new FileDescriptorBuilder();

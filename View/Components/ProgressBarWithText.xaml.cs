@@ -1,19 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace View.Components
 {
@@ -25,6 +12,25 @@ namespace View.Components
         private int _value = 0;
         private string text = string.Empty;
         private int lastProgressWidth = 0;
+
+        public readonly static DependencyProperty ValueTextProperty = DependencyProperty.Register(
+            "Fill",
+            typeof(Brush),
+            typeof(UserControl),
+            new FrameworkPropertyMetadata(
+                new SolidColorBrush(Color.FromRgb(0, 192, 0)),
+                FrameworkPropertyMetadataOptions.AffectsRender,
+                FillPropertyChanged
+            ));
+
+        private static void FillPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is ProgressBarWithText pbwt && e.NewValue is Brush brush)
+            {
+                pbwt.Fill = brush;
+            }
+        }
+        public Brush Fill { get => ProgressBar.Fill; set => ProgressBar.Fill = value; }
         public ProgressBarWithText()
         {
             InitializeComponent();
@@ -43,7 +49,7 @@ namespace View.Components
                 }
             }
         }
-        private int CalculateProgressWidth(int value) => (int)((double)value / Maximum * RenderSize.Width);
+        private int CalculateProgressWidth(int value) => (int)((double)value / Maximum * (RenderSize.Width - Border.BorderThickness.Right - Border.BorderThickness.Left));
 
         private void UpdateBar()
         {

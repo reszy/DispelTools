@@ -16,7 +16,7 @@ namespace DispelToolsTests.GameDataModels.Map.External
         {
             //given
             var reader = new MapExtraReader();
-            var mockedFile = new MockFileData(CreateFileContents(0xCD, reader.MapperDefinition.PropertyItemSize, 1));
+            var mockedFile = new MockFileData(CreateFileContents(0xCD, reader.MapperDefinition.ItemSize, 1));
 
             //then
             TestReader(reader, mockedFile);
@@ -27,7 +27,7 @@ namespace DispelToolsTests.GameDataModels.Map.External
         {
             //given
             var reader = new MapMonsterReader();
-            var mockedFile = new MockFileData(CreateFileContents(0xCD, reader.MapperDefinition.PropertyItemSize, 1));
+            var mockedFile = new MockFileData(CreateFileContents(0xCD, reader.MapperDefinition.ItemSize, 1));
 
             //then
             TestReader(reader, mockedFile);
@@ -38,7 +38,7 @@ namespace DispelToolsTests.GameDataModels.Map.External
         {
             //given
             var reader = new MapNpcReader();
-            var mockedFile = new MockFileData(CreateFileContents(0xCD, reader.MapperDefinition.PropertyItemSize, 1));
+            var mockedFile = new MockFileData(CreateFileContents(0xCD, reader.MapperDefinition.ItemSize, 1));
 
             //then
             TestReader(reader, mockedFile);
@@ -48,19 +48,19 @@ namespace DispelToolsTests.GameDataModels.Map.External
         {
             //given
             var mockFS = new MockFileSystem();
-            var mapper = new Mapper(mockFS, reader.MapperDefinition);
-            var mappedValues = mapper.CreateMapping(reader.ValuesMapping);
+            var mapper = new SimpleDataLoader(mockFS, reader.MapperDefinition);
+            var mappedValues = new FieldMapping(reader.MapperDefinition, reader.ValuesMapping);
 
             //when
             mockFS.AddFile("testFile", testFile);
-            var items = mapper.ReadFile("testFile", new DispelTools.Common.DataProcessing.WorkReporter(new System.ComponentModel.BackgroundWorker()));
+            var container = mapper.LoadData("testFile", new DispelTools.Common.DataProcessing.WorkReporter(new System.ComponentModel.BackgroundWorker()));
 
             //given
-            Assert.That(items, Is.Not.Null);
-            Assert.That(items, Is.Not.Empty);
-            foreach (var item in items)
+            Assert.That(container, Is.Not.Null);
+            Assert.That(container.Count, Is.Not.Zero);
+            for (int i = 0; i < container.Count; i++)
             {
-                var results = mappedValues.Convert(item);
+                var results = mappedValues.Convert(container[i]);
                 Assert.That(results, Has.Length.EqualTo(reader.ValuesMapping.Length));
             }
         }

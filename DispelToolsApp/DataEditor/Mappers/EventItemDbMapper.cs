@@ -8,7 +8,7 @@ namespace DispelTools.DataEditor.Mappers
         private const int NAME_STRING_MAX_LENGTH = 30;
         private const int DESCRIPTION_STRING_MAX_LENGTH = 202;
 
-        public override int PropertyItemSize => 60 * 4;
+        public override int ItemSize => 60 * 4;
 
         public override List<ItemFieldDescriptor> CreateDescriptors()
         {

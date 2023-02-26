@@ -14,7 +14,7 @@
 
         internal override string[] ValuesMapping { get; } = { "posX", "posY", "monId", "fileId" };
 
-        protected override OnMapSpriteInfo ProcessItem(DataEditor.Data.PropertyItem item, object[] values)
+        protected override OnMapSpriteInfo ProcessItem(DataEditor.Data.DataItem item, object[] values)
         {
             return new OnMapSpriteInfo(
                 (int)values[0],

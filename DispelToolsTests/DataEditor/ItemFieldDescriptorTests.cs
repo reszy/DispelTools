@@ -3,6 +3,7 @@ using static DispelToolsTests.TestHelpers;
 using System.IO;
 using System.Text;
 using NUnit.Framework;
+using DispelTools.DataEditor.Data;
 
 namespace DispelTools.DataEditor.Tests
 {
@@ -30,7 +31,7 @@ namespace DispelTools.DataEditor.Tests
             var reader = new BinaryReader(memory);
 
             //when
-            ifd.Write(writer, byteStr);
+            ifd.Write(writer, new ByteArrayField("", byteStr, Field.DisplayType.DEC));
             reader.SetPosition(0);
             byte[] result = reader.ReadBytes(expected.Length);
 
@@ -64,7 +65,7 @@ namespace DispelTools.DataEditor.Tests
             var reader = new BinaryReader(memory);
 
             //when
-            ifd.Write(writer, byteStr);
+            ifd.Write(writer, new ByteArrayField("", byteStr, Field.DisplayType.DEC));
             reader.SetPosition(0);
             byte[] result = reader.ReadBytes(expected.Length);
 
@@ -94,7 +95,7 @@ namespace DispelTools.DataEditor.Tests
             var reader = new BinaryReader(memory);
 
             //when
-            ifd.Write(writer, byteStr);
+            ifd.Write(writer, new ByteArrayField("", byteStr, Field.DisplayType.DEC));
             reader.SetPosition(0);
             byte[] result = reader.ReadBytes(expected.Length);
 

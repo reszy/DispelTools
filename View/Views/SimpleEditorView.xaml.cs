@@ -98,8 +98,6 @@ namespace View.Views
                 try
                 {
                     editor.Load(openFileDialog.FileName, workReporter);
-                    OpenedFileLabel.Content = editor.GetLoadedContainer().Path;
-                    SelectedItem = editor.GetValue(0);
                 }
                 catch (MessageException e)
                 {
@@ -117,6 +115,8 @@ namespace View.Views
         private void ReadingFileCompleted(object? sender, RunWorkerCompletedEventArgs args)
         {
             InElementNumber.Value = 0;
+            OpenedFileLabel.Content = editor.GetLoadedContainer().Path;
+            SelectedItem = editor.GetValue(0);
             if (SelectedItem is not null)
             {
                 DataPanel.Children.Clear();

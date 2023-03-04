@@ -55,7 +55,7 @@ namespace View.Components
                 {
                     Maximum = pField.MaxValue,
                     Minimum = pField.MinValue,
-                    Value = (int)field.Value,
+                    Value = Convert.ToInt32(field.Value),
                     IsEnabled = !field.ReadOnly,
                     Hexadecimal = field.DisplayType == Field.DisplayType.HEX
                 };
